@@ -1,0 +1,15 @@
+__pycache__
+tests
+tests/
+Venv 
+Venv / 
+Venv.bak /
+venv
+env / 
+env.bak / 
+.pytest_cache 
+.cover / 
+.coverage 
+.idea
+.idea/
+dist/
