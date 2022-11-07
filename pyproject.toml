@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "cutting-tools"
-version = "0.1.0"
+version = "0.1.2"
 description = ""
 authors = ["Andrey Nikolaevich Korenyuk <korenyuk.a.n@mail.ru>"]
 readme = "README.md"
@@ -9,6 +9,7 @@ packages = [{include = "cutting_tools"}]
 [tool.poetry.dependencies]
 python = "^3.9"
 pandas = "^1.5.1"
+openpyxl = "^3.0.10"
 
 
 [build-system]

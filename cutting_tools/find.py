@@ -12,10 +12,10 @@
 # -------------------------------------------------------------------------------
 # Содержит функции работы с базой данных по инструменту
 # -------------------------------------------------------------------------------
+import numpy as np
 import pandas as pd
 from cutting_tools.fun import connect
 from cutting_tools.obj.exceptions import ReceivedEmptyDataFrame
-from cutting_tools.obj.exceptions import UnexpectedDataInDataFrame
 from cutting_tools.obj.exceptions import InvalidValue
 from cutting_tools.obj.constants import PATH_DB_FOR_TOOLS as PATH_DB
 
@@ -40,7 +40,7 @@ def by_dia_and_type(dia: float = None,
         Тип инструмента (Сверло, резец, и т.д.).
         По умолчанию : None
     path_bd : str, optional
-        Путь к базе данных по материаллам
+        Путь к базе данных по материалам
 
     Returns
     -------
@@ -67,40 +67,64 @@ def by_dia_and_type(dia: float = None,
 
 
 def by_marking(marking: str = "2300-0041",
-               path_bd: str = PATH_DB) -> dict:
+               path_bd: str = PATH_DB) -> pd.DataFrame:
     """Открывает базу данных по инструментам (по пути 'path_bd'), запрашивает
     параметры инструмента по наименованию.
 
     Parameters
     ----------
-    marking : float, optional
+    marking : str, optional
         Наименование инструмента.
         По умолчанию : "2300-0041"
     path_bd : str, optional
-        Путь к базе данных по материаллам
+        Путь к базе данных по материалам
+
+    Returns
+    -------
+    ct : pd.DataFrame
+        Таблица найденного инструмента по обозначению.
+        Внимание! Таблица может содержать более одной строки.
+    """
+    db, cursor = connect(path_bd)
+    ct = pd.read_sql(f"SELECT * FROM cutting_tools WHERE Обозначение = '{marking}' ", db)
+    if len(ct) == 0:
+        message = f"Инструмента с обозначением {marking} найдено не было."
+        raise ReceivedEmptyDataFrame(message)
+    return ct
+
+
+def by_marking_and_stand(marking: str = "2300-0041",
+                         standart: str = "ГОСТ 886-77",
+                         path_bd: str = PATH_DB) -> dict:
+    """Формирует словарь параметров инструмента. Поиск происходит по обозначению и стандарту в базе данных
+    по пути 'path_bd'.
+
+    Parameters
+    ----------
+    marking : str, optional
+        Наименование инструмента.
+        По умолчанию : "2300-0041"
+    standart : str, optional
+        Стандарт инструмента.
+        По умолчанию : "ГОСТ 886-77"
+    path_bd : str, optional
+        Путь к базе данных по материалам
 
     Returns
     -------
     params : dict
         Словарь параметров инструмента.
     """
-    db, cursor = connect(path_bd)
-    ct = pd.read_sql(f"SELECT * FROM cutting_tools WHERE Обозначение = '{marking}' ", db)
     params = {}
-
-    if len(ct) != 1:
-        if len(ct) == 0:
-            message = f"Инструмента с обозначением {marking} найдено не было."
-            raise ReceivedEmptyDataFrame(message)
-        elif len(ct) > 1:
-            message = f"Для инструмента с обозначением {marking} в таблице найдены дубликаты. Проверь данные БД: " \
-                      f"{path_bd}. Должна быть одна строка"
-            raise UnexpectedDataInDataFrame(message)
-    else:
-        ct.dropna(how='all', axis=1, inplace=True)
-        for k, v in ct.to_dict().items():
+    ct = by_marking(marking, path_bd)
+    if len(ct) > 1:
+        ct = ct[ct["Стандарт"] == standart]
+    for k, v in ct.to_dict().items():
+        if isinstance(v[0], type(np.NaN)) or isinstance(v[0], type(np.nan)):
+            params[k] = None
+        else:
             params[k] = v[0]
-        return params
+    return params
 
 
 def full_table(table_name: str = "cutting_tools",
@@ -128,14 +152,3 @@ def full_table(table_name: str = "cutting_tools",
             raise InvalidValue(f"Переменная 'name' должна содержать название таблицы. Вы передали: {table_name}.")
         table_ct = pd.DataFrame()
     return table_ct
-
-
-if __name__ == "__main__":
-    table = full_table()
-    print(table)
-
-    params = by_marking()
-    print(params)
-
-    params = by_dia_and_type(dia_out=200, type_tool="Фреза")
-    print(params)
