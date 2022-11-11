@@ -12,7 +12,6 @@
 # -------------------------------------------------------------------------------
 # Содержит функции работы с базой данных по инструменту
 # -------------------------------------------------------------------------------
-import numpy as np
 import pandas as pd
 from cutting_tools.fun import connect
 from cutting_tools.obj.exceptions import ReceivedEmptyDataFrame
@@ -120,10 +119,7 @@ def by_marking_and_stand(marking: str = "2300-0041",
     if len(ct) > 1:
         ct = ct[ct["Стандарт"] == standart]
     for k, v in ct.to_dict().items():
-        if isinstance(v[0], type(np.NaN)) or isinstance(v[0], type(np.nan)):
-            params[k] = None
-        else:
-            params[k] = v[0]
+        params[k] = v[0]
     return params
 
 

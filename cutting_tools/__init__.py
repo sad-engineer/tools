@@ -17,5 +17,5 @@ if __name__ == "__main__":
     params = by_dia_and_type(dia_out=200, type_tool="Фреза")
     print(params)
 
-    cutting_tool = CuttingTool()
+    cutting_tool = CuttingTool('turning')
     cutting_tool.show
