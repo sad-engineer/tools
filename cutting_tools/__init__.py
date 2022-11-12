@@ -9,13 +9,14 @@ from cutting_tools.obj.cutting_tool_class import CuttingTool
 
 if __name__ == "__main__":
     table = full_table()
-    print(table)
 
-    params = by_marking_and_stand()
-    print(params)
+    print(table[table["fi_"].str.contains("°")])
 
-    params = by_dia_and_type(dia_out=200, type_tool="Фреза")
-    print(params)
-
-    cutting_tool = CuttingTool('turning')
-    cutting_tool.show
+    # params = by_marking_and_stand()
+    # print(params)
+    #
+    # params = by_dia_and_type(dia_out=200, type_tool="Фреза")
+    # print(params)
+    #
+    # cutting_tool = CuttingTool('turning')
+    # cutting_tool.show
