@@ -1,17 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # -------------------------------------------------------------------------------
-# Name:        fun
-# Purpose:     Contains functions for loading data into a table
-#
-# Author:      ANKorenuk
-#
-# Created:     28.10.2022
-# Copyright:   (c) ANKorenuk 2022
-# Licence:     <your licence>
-# -------------------------------------------------------------------------------
-# Содержит функции для загрузки данных в таблицу
-# -------------------------------------------------------------------------------
 import pandas as pd
 from tkinter import Tk
 from tkinter.filedialog import askopenfilenames

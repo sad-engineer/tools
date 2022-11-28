@@ -1,17 +1,5 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# -------------------------------------------------------------------------------
-# Name:        exceptions
-# Purpose:     Contains local exceptions
-#
-# Author:      ANKorenuk
-#
-# Created:     20.05.2022
-# Copyright:   (c) ANKorenuk 2022
-# Licence:     <your licence>
-# -------------------------------------------------------------------------------
-# Содержит локальные исключения
-# -------------------------------------------------------------------------------
 
 
 class InvalidValue(Exception):
