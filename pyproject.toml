@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "cutting-tools"
-version = "0.1.05"
+version = "0.1.06"
 description = ""
 authors = ["Andrey Nikolaevich Korenyuk <korenyuk.a.n@mail.ru>"]
 readme = "README.md"

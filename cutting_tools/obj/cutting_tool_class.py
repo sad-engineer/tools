@@ -73,14 +73,17 @@ class CuttingTool:
     angle_of_inclination:float, optional
         Угол наклона зубьев протяжки
         По умолчанию: None.
-    pitch_of_teeth:bool, optional
+    pitch_of_teeth:float, optional
         Шаг зубьев протяжки
         По умолчанию: None.
-    number_teeth_section:bool, optional
+    number_teeth_section:float, optional
         Число зубьев секции протяжки 
         По умолчанию: None.
-    difference:bool, optional
+    difference:float, optional
         Подача на зуб протяжки (размерный перепад между соседними зубьями)
+        По умолчанию: None.
+    length_of_working_part:float, optional
+        Длина режущей части протяжки
         По умолчанию: None.
     """
 
@@ -99,6 +102,7 @@ class CuttingTool:
                  pitch_of_teeth: Optional[float] = None,
                  number_teeth_section: Optional[float] = None,
                  difference: Optional[float] = None,
+                 length_of_working_part: Optional[float] = None,
                  ):
         self.kind_of_cut = kind_of_cut
         self.name = name  # Наименование инструмента
@@ -115,6 +119,7 @@ class CuttingTool:
         self.pitch_of_teeth = pitch_of_teeth
         self.number_teeth_section = number_teeth_section
         self.difference = difference
+        self.length_of_working_part = length_of_working_part
 
         self.get_default_settings()
 

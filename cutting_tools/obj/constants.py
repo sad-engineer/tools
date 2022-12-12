@@ -17,11 +17,12 @@ DEFAULT_SETTINGS_FOR_CUTTING_TOOL = {
                        "mat_of_cutting_part": "Р6М5"},
     "deployment":     {"marking": '2364-0331', "Стандарт": "ГОСТ 883-80", "quantity": 1, "type_of_mat": 0,
                        "mat_of_cutting_part": "Р6М5"},
-    "broaching":      {"pitch_of_teeth": 0.5,      # шаг зубьев
-                       "angle_of_inclination": 0,  # угол наклона зубьев
-                       "number_teeth_section": 5,  # количество зубьев в секции
-                       "type_cutter": 0,           # тип протяжки (шлицевая, круглая и пр.)
-                       "difference": 0.1,          # размерный перепад между соседними зубьями
+    "broaching":      {"pitch_of_teeth": 0.5,           # шаг зубьев
+                       "angle_of_inclination": 0,       # угол наклона зубьев
+                       "number_teeth_section": 5,       # количество зубьев в секции
+                       "type_cutter": 0,                # тип протяжки (шлицевая, круглая и пр.)
+                       "difference": 0.1,               # размерный перепад между соседними зубьями
+                       "length_of_working_part": 1000,  # длина режущей части протяжки
                        },
         }
 # Словарь индексов материалов режущей части с доступом по наименованию
