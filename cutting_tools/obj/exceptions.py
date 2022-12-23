@@ -23,15 +23,3 @@ class ReceivedEmptyDataFrame(Exception):
     def __init__(self, message="") -> None:
         self.message = message
         super().__init__(self.message)
-
-
-class UnexpectedDataInDataFrame(Exception):
-    """Выкидывать ошибку, если данные в DataFrame не похожи на ожидаемый результат (Больше строк, чем предполагалось;
-    пустой DataFrame; и т.д.).
-
-    Атрибуты:
-        message: объяснение ошибки.
-    """
-    def __init__(self, message="") -> None:
-        self.message = message
-        super().__init__(self.message)

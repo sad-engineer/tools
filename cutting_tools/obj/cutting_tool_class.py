@@ -145,3 +145,13 @@ class CuttingTool:
 
     def show(self):
         show_cutting_tool(self)
+
+    def __getstate__(self) -> dict:  # Как мы будем "сохранять" класс
+        """ Создает словарь всех параметров класса 'Режущий инструмент'."""
+        state = self.__dict__.copy()
+        return state
+
+    def __setstate__(self, state: dict):  # Как мы будем восстанавливать класс из байтов
+        """ Загружает все параметры класса из словаря"""
+        for key, val in state.items():
+            setattr(self, key, val)

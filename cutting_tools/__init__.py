@@ -19,6 +19,7 @@ from cutting_tools.obj.constants import NAMES_OF_MATERIALS_OF_CUTTING_PART
     # print(params)
     #
     # cutting_tool = CuttingTool('broaching')
+    # cutting_tool.get_default_settings()
     # cutting_tool.show()
     #
     # print(INDEXES_OF_MATERIALS_OF_CUTTING_PART)
