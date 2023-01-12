@@ -25,10 +25,11 @@ DEFAULT_SETTINGS_FOR_CUTTING_TOOL = {
                        "length_of_working_part": 1000,  # длина режущей части протяжки
                        },
         }
+INDEXES_HARD_ALLOYS = {"Т5К12В": 0, "Т5К10": 1, "Т14К8": 2, "Т15К6":  3, "Т30К4": 4, "ВК3": 5, "ВК4": 6, "ВК6": 7,
+                       "ВК8": 8}
+INDEXES_HIGH_SPEED_STEELS = {"Р18": 9, "Р6М5": 10, "9ХС": 11, "ХГВ": 12, "У12А": 13}
 # Словарь индексов материалов режущей части с доступом по наименованию
-INDEXES_OF_MATERIALS_OF_CUTTING_PART = {"Т5К12В": 0, "Т5К10": 1, "Т14К8": 2, "Т15К6":  3, "Т30К4": 4, "ВК3": 5,
-                                        "ВК4": 6, "ВК6": 7, "ВК8": 8, "Р18": 9, "Р6М5": 10, "9ХС": 11, "ХГВ": 12,
-                                        "У12А": 13}
+INDEXES_OF_MATERIALS_OF_CUTTING_PART = INDEXES_HARD_ALLOYS | INDEXES_HIGH_SPEED_STEELS
 # Словарь наименований материалов режущей части с доступом по индексу
 NAMES_OF_MATERIALS_OF_CUTTING_PART = {v: k for k, v in INDEXES_OF_MATERIALS_OF_CUTTING_PART.items()}
 # NAMES_OF_MATERIALS_OF_CUTTING_PART = {0: "Т5К12В", 1: "Т5К10", 2: "Т14К8", 3: "Т15К6", 4: "Т30К4", 5: "ВК3", 6: "ВК4",
