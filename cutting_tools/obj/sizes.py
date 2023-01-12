@@ -3,36 +3,7 @@
 # ----------------------------------------------------------------------------------------------------------------------
 from typing import Optional
 from dataclasses import dataclass
-from abc import ABC, abstractmethod
-
-from cutting_tools.obj.exceptions import InvalidValue
-
-
-class SizesValidator (ABC):
-    """ Абстрактный класс, реализует проверку размера (должен быть типа int, float и больше 0), изменение значения
-    размера """
-    @staticmethod
-    def _is_correct_type_size(size):
-        return isinstance(size, (int, float))
-
-    @staticmethod
-    def _is_correct_value_size(size: [int, float]):
-        return size >= 0
-
-    def _is_correct_size(self, size):
-        return self._is_correct_value_size(size) if self._is_correct_type_size(size) else False
-
-    def _is_correct_sizes(self, sizes: list):
-        result = []
-        for size in sizes:
-            result.append(self._is_correct_size(size))
-        return result
-
-    def check_size(self, size):
-        if self._is_correct_size(size):
-            return size
-        else:
-            raise InvalidValue("Неверное значение размера: {size} мм")
+from cutting_tools.obj.sizes_validator import SizesValidator
 
 
 @dataclass
@@ -52,7 +23,7 @@ class AxialSizes(SizesValidator):
 
     @property
     def gabarit_str(self):
-        return f"DxL: ø{self.dia_mm}x{self.length_mm} мм"
+        return f"øDxL: ø{self.dia_mm}x{self.length_mm} мм"
 
     def update_dia(self, new_dia_mm: float):
         self.dia_mm = self.check_size(new_dia_mm)
@@ -90,25 +61,25 @@ class PrismaticSizes(SizesValidator):
 
     def update_height(self, new_height_mm: float):
         self.height_mm = self.check_size(new_height_mm)
-
-
-if __name__ == "__main__":
-    a = AxialSizes()
-    a.update_dia(50)
-    a.update_length(70)
-    print(a)
-    print(a.volume)
-    print(a.gabarit_str)
-
-    a = PrismaticSizes()
-    a.update_length(10)
-    a.update_width(20)
-    a.update_height(30)
-    print(a)
-    print(a.volume)
-    print(a.gabarit_str)
-    print(a._is_correct_size(50))
-    print(dir(a))
-
-    a = PrismaticSizes(20, "", 53)
-    print(a)
+#
+#
+# if __name__ == "__main__":
+#     a = AxialSizes()
+#     a.update_dia(50)
+#     a.update_length(70)
+#     print(a)
+#     print(a.volume)
+#     print(a.gabarit_str)
+#
+#     a = PrismaticSizes()
+#     a.update_length(10)
+#     a.update_width(20)
+#     a.update_height(30)
+#     print(a)
+#     print(a.volume)
+#     print(a.gabarit_str)
+#     print(a._is_correct_size(50))
+#     print(dir(a))
+#
+#     a = PrismaticSizes(20, "", 53)
+#     print(a)
