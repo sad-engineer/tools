@@ -2,12 +2,13 @@
 # -*- coding: utf-8 -*-
 # ----------------------------------------------------------------------------------------------------------------------
 from typing import Optional, Union
-from dataclasses import dataclass, field
-from typing import Dict
+from dataclasses import dataclass
 from typing import ClassVar
 
 from cutting_tools.obj.constants import INDEXES_OF_MATERIALS_OF_CUTTING_PART
 from cutting_tools.obj.constants import INDEXES_HARD_ALLOYS, INDEXES_HIGH_SPEED_STEELS
+from cutting_tools.obj.sizes import AxialSizes, PrismaticSizes
+
 
 @dataclass
 class Tool:
@@ -25,50 +26,6 @@ class Tool:
     @property
     def name(self):
         return " ".join([self.type_of_tool, self.marking, self.standard])
-
-
-@dataclass
-class AxialSize:
-    """ДатаКласс 'Осевые размеры'. Хранит состояние габаритных характеристик осевого предмета
-
-    Parameters:
-        dia_mm : (float, optional) : диаметр инструмента.
-        length_mm : (float, optional) : длина инструмента.
-    """
-    dia_mm: Optional[float] = None
-    length_mm: Optional[float] = None
-
-    @property
-    def volume(self):
-        return self.dia_mm ** 2 * self.length_mm
-
-    @property
-    def gabarit_str(self):
-        return f"DxL: ø{self.dia_mm}x{self.length_mm} мм"
-
-
-
-
-@dataclass
-class PrismaticSize:
-    """ДатаКласс 'Призматические размеры'. Хранит состояние габаритных характеристик призматического предмета
-
-    Parameters:
-        length_mm : (float, optional) : длина инструмента.
-        width_mm : (float, optional) : ширина  инструмента.
-        height_mm : (float, optional) : высота инструмента.
-    """
-    length_mm: Optional[float] = None
-    width_mm: Optional[float] = None
-    height_mm: Optional[float] = None
-
-    @property
-    def volume(self):
-        return self.height_mm * self.width_mm * self.length_mm
-
-    @property
-    def gabarit_str(self):
-        return f"LxBxH: ø{self.length_mm}x{self.width_mm}x{self.height_mm} мм"
 
 
 @dataclass
@@ -94,7 +51,7 @@ class BladeMaterial:
 
 
 @dataclass
-class MillingCutter(BladeMaterial, AxialSize, Tool):
+class MillingCutter(BladeMaterial, AxialSizes, Tool):
     # def __init__(self, brand: Optional[str] = None):
 
     pass

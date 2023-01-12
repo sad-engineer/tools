@@ -5,7 +5,7 @@ from abc import ABC
 from cutting_tools.obj.exceptions import InvalidValue
 
 
-class SizesValidator (ABC):
+class SizesValidator(ABC):
     """ Абстрактный класс, реализует проверку размера (должен быть типа int, float и больше 0), изменение значения
     размера """
     @staticmethod

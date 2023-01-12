@@ -34,3 +34,18 @@ INDEXES_OF_MATERIALS_OF_CUTTING_PART = INDEXES_HARD_ALLOYS | INDEXES_HIGH_SPEED_
 NAMES_OF_MATERIALS_OF_CUTTING_PART = {v: k for k, v in INDEXES_OF_MATERIALS_OF_CUTTING_PART.items()}
 # NAMES_OF_MATERIALS_OF_CUTTING_PART = {0: "Т5К12В", 1: "Т5К10", 2: "Т14К8", 3: "Т15К6", 4: "Т30К4", 5: "ВК3", 6: "ВК4",
 #                                       7: "ВК6", 8: "ВК8", 9: "Р18", 10: "Р6М5", 11: "9ХС", 12: "ХГВ", 13: "У12А"}
+
+
+
+
+# Словарь наименований группы инструмента
+GROUPS_TOOL = {"Инструмент": 0,
+               "Резец": 1,
+               "Фреза": 2,
+               "Сверло": 3,
+               "Зенкер": 4,
+               "Развертка": 5,
+               "Протяжка": 6,
+               }
+# Типы стандартов инструмента
+TYPES_STANDARD = ["ГОСТ", "ОСТ", ]
