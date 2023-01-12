@@ -4,11 +4,16 @@
 from abc import ABC
 from cutting_tools.obj.exceptions import InvalidValue
 from cutting_tools.obj.constants import GROUPS_TOOL, TYPES_STANDARD
+from typing import ClassVar
 
 
 class StandartToolValidator(ABC):
     """ Абстрактный класс, реализует проверки полей стандартного инструмента
-    ------
+
+    Сostants:
+        GROUPS_TOOL : Словарь наименований группы инструмента
+        TYPES_STANDARD : Типы стандартов инструмента
+
     Methods:
         check_group(group) : Проверяет на соответствие группы инструмента (группа инструмента должна быть строкой и из
             списка наименований групп инструмента)
@@ -21,6 +26,8 @@ class StandartToolValidator(ABC):
         _is_correct_standard(any_standard) : Бросит True если any_standard содержит одно из слов списка типов стандарта
             (ГОСТ, ОСТ))
         """
+    GROUPS_TOOL: ClassVar[dict] = GROUPS_TOOL
+    TYPES_STANDARD: ClassVar[dict] = TYPES_STANDARD
 
     def check_group(self, group):
         if self._is_correct_group(group):
@@ -41,16 +48,14 @@ class StandartToolValidator(ABC):
         else:
             raise InvalidValue(f"Неверное задано обозначение инструмента: '{marking}'")
 
-    @staticmethod
-    def _is_correct_group(any_group):
+    def _is_correct_group(self, any_group):
         if isinstance(any_group, str):
-            return any_group in GROUPS_TOOL
+            return any_group in self.GROUPS_TOOL
         return False
 
-    @staticmethod
-    def _is_correct_standard(any_standard):
+    def _is_correct_standard(self, any_standard):
         if isinstance(any_standard, str):
-            for item in TYPES_STANDARD:
+            for item in self.TYPES_STANDARD:
                 if any_standard.find(item) != -1:
                     if any_standard.find("-") != -1:
                         return True
