@@ -18,7 +18,7 @@ class AxialSizes(SizesValidator):
     length_mm: Optional[float] = None
 
     @property
-    def volume(self):
+    def gabarit_volume(self):
         return self.dia_mm ** 2 * self.length_mm
 
     @property
@@ -46,7 +46,7 @@ class PrismaticSizes(SizesValidator):
     height_mm: Optional[float] = 0
 
     @property
-    def volume(self):
+    def gabarit_volume(self):
         return self.height_mm * self.width_mm * self.length_mm
 
     @property

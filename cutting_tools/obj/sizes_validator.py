@@ -6,8 +6,8 @@ from cutting_tools.obj.exceptions import InvalidValue
 
 
 class SizesValidator(ABC):
-    """ Абстрактный класс, реализует проверку размера (должен быть типа int, float и больше 0), изменение значения
-    размера """
+    """ Абстрактный класс, реализует проверку размера или угла (должен быть типа int, float и больше 0), изменение
+    значения размера или угла """
     @staticmethod
     def _is_correct_type_size(size):
         return isinstance(size, (int, float))
@@ -29,4 +29,4 @@ class SizesValidator(ABC):
         if self._is_correct_size(size):
             return size
         else:
-            raise InvalidValue(f"Неверное значение размера: {size} мм")
+            raise InvalidValue(f"Неверное значение размера(или угла): {size} мм(град)")

@@ -13,13 +13,13 @@ class Tool:
     """ДатаКласс 'Инструмент'. Хранит состояние инструмента
 
     Parameters:
-        group : (str, optional) : группа инструмента.
-        marking : (str, optional) : обозначение инструмента.
-        standard : (str, optional) : стандарт инструмента.
+        group : (str) : группа инструмента.
+        marking : (str) : обозначение инструмента.
+        standard : (str) : стандарт инструмента.
     """
-    group: Optional[str] = "Инструмент"
-    marking: Optional[str] = "0000-0000"
-    standard: Optional[str] = "ГОСТ 5555-99"
+    group: str = "Инструмент"
+    marking: str = "0000-0000"
+    standard: str = "ГОСТ 5555-99"
 
 
     @property
