@@ -1,22 +1,40 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # ----------------------------------------------------------------------------------------------------------------------
-from typing import Optional
-from dataclasses import dataclass
-from cutting_tools.obj.sizes_validator import SizesValidator
+from cutting_tools.obj.abstract_classes import SizesValidator
+from cutting_tools.obj.data_classes import AxialSizesData, PrismaticSizesData
+from cutting_tools.obj.exceptions import InvalidValue
 
 
-@dataclass
-class AxialSizes(SizesValidator):
-    """ДатаКласс 'Осевые размеры'. Хранит состояние габаритных характеристик осевого предмета
+class SizeValidator(SizesValidator):
+    """ Абстрактный класс, реализует проверку размера или угла (должен быть типа int, float и больше 0), изменение
+    значения размера или угла """
+    @staticmethod
+    def _is_correct_type_size(size):
+        return isinstance(size, (int, float))
 
-    Parameters:
-        dia_mm : (float, optional) : диаметр инструмента.
-        length_mm : (float, optional) : длина инструмента.
-    """
-    dia_mm: Optional[float] = None
-    length_mm: Optional[float] = None
+    @staticmethod
+    def _is_correct_value_size(size: [int, float]):
+        return size >= 0
 
+    def _is_correct_size(self, size):
+        return self._is_correct_value_size(size) if self._is_correct_type_size(size) else False
+
+    def _is_correct_sizes(self, sizes: list):
+        result = []
+        for size in sizes:
+            result.append(self._is_correct_size(size))
+        return result
+
+    def check_size(self, size):
+        if self._is_correct_size(size):
+            return size
+        else:
+            raise InvalidValue(f"Неверное значение размера(или угла): {size} мм(град)")
+
+
+class AxialSizesInterface(AxialSizesData, SizeValidator):
+    """Управляет полями класса 'AxialSizes'. """
     @property
     def gabarit_volume(self):
         return self.dia_mm ** 2 * self.length_mm
@@ -32,19 +50,8 @@ class AxialSizes(SizesValidator):
         self.length_mm = self.check_size(new_length_mm)
 
 
-@dataclass
-class PrismaticSizes(SizesValidator):
-    """ДатаКласс 'Призматические размеры'. Хранит состояние габаритных характеристик призматического предмета
-
-    Parameters:
-        length_mm : (float, optional) : длина инструмента.
-        width_mm : (float, optional) : ширина  инструмента.
-        height_mm : (float, optional) : высота инструмента.
-    """
-    length_mm: Optional[float] = 0
-    width_mm: Optional[float] = 0
-    height_mm: Optional[float] = 0
-
+class PrismaticSizesInterface(PrismaticSizesData, SizeValidator):
+    """Управляет полями класса 'PrismaticSizes'. """
     @property
     def gabarit_volume(self):
         return self.height_mm * self.width_mm * self.length_mm
@@ -61,25 +68,3 @@ class PrismaticSizes(SizesValidator):
 
     def update_height(self, new_height_mm: float):
         self.height_mm = self.check_size(new_height_mm)
-#
-#
-# if __name__ == "__main__":
-#     a = AxialSizes()
-#     a.update_dia(50)
-#     a.update_length(70)
-#     print(a)
-#     print(a.volume)
-#     print(a.gabarit_str)
-#
-#     a = PrismaticSizes()
-#     a.update_length(10)
-#     a.update_width(20)
-#     a.update_height(30)
-#     print(a)
-#     print(a.volume)
-#     print(a.gabarit_str)
-#     print(a._is_correct_size(50))
-#     print(dir(a))
-#
-#     a = PrismaticSizes(20, "", 53)
-#     print(a)
