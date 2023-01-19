@@ -12,7 +12,7 @@ class CheckerInDictionary:
         if isinstance(index, type(list(dict.keys())[0])):
             return index in dict
         if isinstance(value, type(list(dict.values())[0])):
-            return index in dict
+            return value in list(dict.values())
         return False
 
     def check_in_dict(self, index, value, dict, err_message):
