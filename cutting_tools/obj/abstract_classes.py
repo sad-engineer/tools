@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 # ----------------------------------------------------------------------------------------------------------------------
 from abc import ABC, abstractmethod
+import pandas as pd
 
 
 class AnglesController(ABC):
@@ -86,3 +87,18 @@ class MillingCutterController(ABC):
 
     @abstractmethod
     def update_large_tooth(self, new_large_tooth): pass
+
+
+class RecordRequester(ABC):
+    """ Абстрактный класс, реализующий работу с какой-либо БД"""
+    @abstractmethod
+    def get_records(self, values_dict: dict) -> pd.DataFrame:
+        """ Реализация метода должна обеспечивать получение записей по словарю столбцов:значений, передаваемых в
+        values_dict """
+        pass
+
+    @property
+    @abstractmethod
+    def get_all_records(self) -> pd.DataFrame:
+        """ Возвращает DataFrame со всеми записями таблицы tablename."""
+        pass
