@@ -10,21 +10,34 @@ class Finder:
     def __init__(self, record_requester: RecordRequester = RequestRecordFromSQLyte):
         self._requester = record_requester
 
-    def find_by_dia(self, dia): pass
-        # self._requester.get_records()
+    def find_by_dia(self, dia: float, dia_out: float=None):
+        """ Возвращает найденные записи по значению диаметра.
 
-    def find_by_type(self, type_tool):
+        Аргументы
+        ---------
+        dia: str
+            Значение диаметра инструмента
+        dia_out: str
+            Значение диаметра инструмента (указывается для насадных инструментов)
+        """
+        if not isinstance(dia_out, type(None)):
+            df = self._requester.get_records({"D": dia_out})
+        else:
+            df = self._requester.get_records({"d_": dia})
+        return df if not df.empty else None
+
+    def find_by_type(self, type_tool: str):
         """ Возвращает найденные записи по указанному обозначению.
 
         Аргументы
         ---------
-        marking: str
-            Обозначение для поиска в БД
+        type_tool: str
+            Тип инструмента (Сверло, резец, и т.д.) для поиска в БД
         """
         df = self._requester.get_records({"Тип_инструмента": type_tool})
         return df if not df.empty else None
 
-    def find_by_marking(self, marking):
+    def find_by_marking(self, marking: str):
         """ Возвращает найденные записи по указанному обозначению.
 
         Аргументы
@@ -35,7 +48,7 @@ class Finder:
         df = self._requester.get_records({"Обозначение": marking})
         return df if not df.empty else None
 
-    def find_by_stand(self, standart):
+    def find_by_stand(self, standart: str):
         """ Возвращает найденные записи по указанному стандарту.
 
         Аргументы
@@ -46,9 +59,23 @@ class Finder:
         df = self._requester.get_records({"Стандарт": standart})
         return df if not df.empty else None
 
-    def find_by_dia_and_type(self): pass
+    def find_by_dia_and_type(self, dia: float, dia_out: float, type_tool: str):
+        """ Возвращает найденные записи по значению диаметра.
 
-    def find_by_marking_and_stand(self, marking, standart):
+        Аргументы
+        ---------
+        dia: str
+            Значение диаметра инструмента
+        dia_out: str
+            Значение диаметра инструмента (указывается для насадных инструментов)
+        type_tool: str
+            Тип инструмента (Сверло, резец, и т.д.) для поиска в БД
+        """
+        df = self.find_by_dia(dia, dia_out)
+        if not isinstance(df, type(None)):
+            return df[df["Тип_инструмента"] == type_tool] if not df.empty else None
+
+    def find_by_marking_and_stand(self, marking: str, standart: str):
         """ Возвращает найденные записи по указанному стандарту.
 
         Аргументы
@@ -62,6 +89,6 @@ class Finder:
         return df if not df.empty else None
 
     def find_all(self):
+        """ Возвращает все записи из таблицы. """
         df = self._requester.get_all_records
         return df if not df.empty else None
-
