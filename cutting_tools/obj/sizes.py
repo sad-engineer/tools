@@ -33,7 +33,7 @@ class SizeValidator(SizesValidator):
             raise InvalidValue(f"Неверное значение размера(или угла): {size} мм(град)")
 
 
-class AxialSizesInterface(AxialSizesData, SizeValidator):
+class AxialSizes(AxialSizesData, SizeValidator):
     """Управляет полями класса 'AxialSizes'. """
     @property
     def gabarit_volume(self):
@@ -50,7 +50,7 @@ class AxialSizesInterface(AxialSizesData, SizeValidator):
         self.length_mm = self.check_size(new_length_mm)
 
 
-class PrismaticSizesInterface(PrismaticSizesData, SizeValidator):
+class PrismaticSizes(PrismaticSizesData, SizeValidator):
     """Управляет полями класса 'PrismaticSizes'. """
     @property
     def gabarit_volume(self):

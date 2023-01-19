@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 # ----------------------------------------------------------------------------------------------------------------------
 from abc import ABC, abstractmethod
-from typing import ClassVar
 
 
 class AnglesController(ABC):
@@ -15,13 +14,6 @@ class AnglesController(ABC):
 
     @abstractmethod
     def update_inclination_of_main_blade(self, new_angle: float): pass
-
-
-class BladeMaterialValidator(ABC):
-    """ Абстрактный класс, реализует проверки полей класса "BladeMaterial" """
-    @property
-    @abstractmethod
-    def _is_correct_mat_of_cutting_part(self): pass
 
 
 class BladeMaterialController(ABC):
@@ -55,7 +47,7 @@ class ToolValidator(ABC):
     """ Абстрактный класс, реализует проверки полей стандартного инструмента """
 
     @abstractmethod
-    def check_group(self, group): pass
+    def _is_correct_standard(self, any_standard): pass
 
     @abstractmethod
     def check_standard(self, standard): pass
@@ -63,12 +55,6 @@ class ToolValidator(ABC):
     @staticmethod
     @abstractmethod
     def check_marking(marking): pass
-
-    @abstractmethod
-    def _is_correct_group(self, any_group): pass
-
-    @abstractmethod
-    def _is_correct_standard(self, any_standard): pass
 
 
 class ToolController(ABC):
@@ -82,3 +68,21 @@ class ToolController(ABC):
 
     @abstractmethod
     def update_standard(self, new_standard): pass
+
+
+class MillingCutterController(ABC):
+    """ Абстрактный класс, реализует проверки полей класса "MillingCutter" """
+    @abstractmethod
+    def update_type_cutter(self, new_type): pass
+
+    @abstractmethod
+    def update_type_of_cutting_part(self, new_type): pass
+
+    @abstractmethod
+    def update_num_of_cutting_blades(self, new_num_of_cutting_blades): pass
+
+    @abstractmethod
+    def update_radius_of_cutting_vertex(self, new_radius): pass
+
+    @abstractmethod
+    def update_large_tooth(self, new_large_tooth): pass
