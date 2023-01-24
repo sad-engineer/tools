@@ -50,3 +50,8 @@ class RequestRecordFromSQLyte(RecordRequester):
         self.conn.close()
         return df
 
+
+if __name__ == '__main__':
+    rrq = RequestRecordFromSQLyte()
+    result = rrq.get_records({"Обозначение": "2100-0001"})
+    print(result)

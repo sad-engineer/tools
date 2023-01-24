@@ -1,18 +1,48 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # ----------------------------------------------------------------------------------------------------------------------
-from cutting_tools.obj.abstract_classes import AnglesController
-from cutting_tools.obj.data_classes import AnglesData
-from cutting_tools.obj.sizes import SizeValidator
+from cutting_tools.obj.exceptions import InvalidValue
 
 
-class Angles(AnglesData, AnglesController, SizeValidator):
+class Angles:
     """ Управляет полями класса "Angles" """
-    def update_main_angle_grad(self, new_angle: float):
-        self.main_angle_grad = self.check_size(new_angle)
+    def __init__(self, main_angle_grad: float = 45, front_angle_grad: float = 45,
+                 inclination_of_main_blade_grad: float = 0):
+        self._main_angle_grad = None
+        self._front_angle_grad = None
+        self._inclination_of_main_blade_grad = None
 
-    def update_front_angle_grad(self, new_angle: float):
-        self.front_angle_grad = self.check_size(new_angle)
+        self.main_angle_grad = main_angle_grad
+        self.front_angle_grad = front_angle_grad
+        self.inclination_of_main_blade_grad = inclination_of_main_blade_grad
 
-    def update_inclination_of_main_blade(self, new_angle: float):
-        self.inclination_of_main_blade_grad = self.check_size(new_angle)
+    @property
+    def main_angle_grad(self):
+        return self._main_angle_grad
+
+    @property
+    def front_angle_grad(self):
+        return self._front_angle_grad
+
+    @property
+    def inclination_of_main_blade_grad(self):
+        return self._inclination_of_main_blade_grad
+
+    @main_angle_grad.setter
+    def main_angle_grad(self, any_angle_grad):
+        if not isinstance(any_angle_grad, (int, float)):
+            raise InvalidValue(f'Значение угла должно быть целым или дробным.')
+        self._main_angle_grad = any_angle_grad
+
+    @front_angle_grad.setter
+    def front_angle_grad(self, any_angle_grad):
+        if not isinstance(any_angle_grad, (int, float)):
+            raise InvalidValue(f'Значение угла должно быть целым или дробным.')
+        self._front_angle_grad = any_angle_grad
+
+    @inclination_of_main_blade_grad.setter
+    def inclination_of_main_blade_grad(self, any_angle_grad):
+        if not isinstance(any_angle_grad, (int, float)):
+            raise InvalidValue(f'Значение угла должно быть целым или дробным.')
+        self._inclination_of_main_blade_grad = any_angle_grad
+

@@ -1,49 +1,97 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # ----------------------------------------------------------------------------------------------------------------------
-from typing import ClassVar
-
-from cutting_tools.obj.abstract_classes import ToolValidator, ToolController
-from cutting_tools.obj.data_classes import ToolData
+from typing import Union, ClassVar
+from cutting_tools.obj.constants import GROUPS_TOOL, TYPES_STANDARD
 from cutting_tools.obj.exceptions import InvalidValue
-from cutting_tools.obj.checker_in_dict import CheckerInDictionary
 
 
-class Tool(ToolData, ToolValidator, ToolController, CheckerInDictionary):
-    """ Класс 'Инструмент' """
-    @staticmethod
-    def check_marking(marking):
-        if isinstance(marking, str):
-            return marking
-        else:
-            raise InvalidValue(f"Неверное задано обозначение инструмента: '{marking}'")
+class Tool:
+    """ДатаКласс 'Инструмент'. Хранит состояние инструмента
 
-    def _is_correct_standard(self, any_standard):
-        if isinstance(any_standard, str):
-            for item in self.TYPES_STANDARD:
-                if any_standard.find(item) != -1:
-                    if any_standard.find("-") != -1:
-                        return True
-        return False
+    Parameters:
+        group : (str) : группа инструмента.
+        marking : (str) : обозначение инструмента.
+        standard : (str) : стандарт инструмента.
 
-    def check_standard(self, standard):
-        if self._is_correct_standard(standard):
-            return standard
-        else:
-            raise InvalidValue(f"Неверное задан стандарт инструмента: '{standard}'")
+    Сostants:
+        GROUPS_TOOL : Словарь наименований группы инструмента
+        TYPES_STANDARD : Типы стандартов инструмента
+    """
+    GROUPS_TOOL: ClassVar[dict] = GROUPS_TOOL
+    TYPES_STANDARD: ClassVar[dict] = TYPES_STANDARD
 
-    def update_group(self, new_group):
-        if not isinstance(new_group, type(None)):
-            self.group = self.check_index_in_dict(new_group, self.GROUPS_TOOL,
-                                                  f"Неверное задана группа инструмента: '{new_group}'")
+    def __init__(self, group: Union[str, int] = "Инструмент", marking: str = "0000-0000", standard: str = "ГОСТ 5555-99"):
+        self._group = None
+        self._marking = None
+        self._standard = None
 
-    def update_marking(self, new_marking):
-        if not isinstance(new_marking, type(None)):
-            self.marking = self.check_marking(new_marking)
+        self.group = group
+        self.marking = marking
+        self.standard = standard
 
-    def update_standard(self, new_standard):
-        if not isinstance(new_standard, type(None)):
-            self.standard = self.check_standard(new_standard)
+    @property
+    def group(self):
+        return self._group
+
+    @group.setter
+    def group(self, group):
+        if isinstance(group, (int, float)) and group not in self.GROUPS_TOOL.values():
+            raise InvalidValue(f'Неверное значение индекса группы инструмента. Значение должно быть из '
+                             f'{self.GROUPS_TOOL}.')
+        if isinstance(group, str) and group not in self.GROUPS_TOOL:
+            raise InvalidValue(f'Неверное значение группы инструмента. Значение должно быть из {self.GROUPS_TOOL}.')
+        if not isinstance(group, (int, float, str)):
+            raise InvalidValue(f'Неверное значение группы инструмента. Значение должно быть из {self.GROUPS_TOOL}.')
+        self._group = group if isinstance(group, str) else [k for k, v in self.GROUPS_TOOL.items() if v == group][0]
+
+    @property
+    def marking(self):
+        return self._marking
+
+    @marking.setter
+    def marking(self, any_marking):
+        if not isinstance(any_marking, str):
+            raise InvalidValue(f'Неверное обозначение инструмента.')
+        self._marking = any_marking
+
+    @property
+    def standard(self):
+        return self._standard
+
+    @standard.setter
+    def standard(self, any_standard):
+        if not isinstance(any_standard, str):
+            raise InvalidValue(f'Неверное значение стандарта инструмента.')
+        if any_standard.split(" ")[0] not in self.TYPES_STANDARD:
+            raise InvalidValue(f'Неверное значение стандарта инструмента.')
+        if not any_standard.find("-") != -1:
+            raise InvalidValue(f'Неверное значение стандарта инструмента (возможно не указан год).')
+        self._standard = any_standard
+
+    @property
+    def name(self):
+        return " ".join([self.group, self.marking, self.standard])
+
+
+if __name__ == "__main__":
+    obj = Tool()
+
+    obj.group = "Резец"
+    print(obj.group)
+    print(obj.GROUPS_TOOL)
+    # obj.group = "Плашка"
+    # print(obj.group)
+    print(obj.name)
+
+    obj = Tool(group=0, )
+    print(obj.group)
+    print(obj.name)
+
+    obj = Tool(group="Фреза", )
+    print(obj.group)
+    print(obj.name)
+
 
 
 

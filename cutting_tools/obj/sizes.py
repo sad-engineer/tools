@@ -1,70 +1,108 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # ----------------------------------------------------------------------------------------------------------------------
-from cutting_tools.obj.abstract_classes import SizesValidator
-from cutting_tools.obj.data_classes import AxialSizesData, PrismaticSizesData
 from cutting_tools.obj.exceptions import InvalidValue
+from cutting_tools.obj.abstract_classes import Size
 
 
-class SizeValidator(SizesValidator):
-    """ Абстрактный класс, реализует проверку размера или угла (должен быть типа int, float и больше 0), изменение
-    значения размера или угла """
-    @staticmethod
-    def _is_correct_type_size(size):
-        return isinstance(size, (int, float))
+class AxialSizes(Size):
+    """"Управляет полями класса 'AxialSizes'.
 
-    @staticmethod
-    def _is_correct_value_size(size: [int, float]):
-        return size >= 0
+    Parameters:
+        dia_mm : (float, optional) : диаметр инструмента.
+        length_mm : (float, optional) : длина инструмента.
+    """
+    def __init__(self, dia_mm: float = 50, length_mm: float = 100):
+        self._dia_mm = None
+        self._length_mm = None
 
-    def _is_correct_size(self, size):
-        return self._is_correct_value_size(size) if self._is_correct_type_size(size) else False
+        self.dia_mm = dia_mm
+        self.length_mm = length_mm
 
-    def _is_correct_sizes(self, sizes: list):
-        result = []
-        for size in sizes:
-            result.append(self._is_correct_size(size))
-        return result
+    @property
+    def dia_mm(self):
+        return self._dia_mm
 
-    def check_size(self, size):
-        if self._is_correct_size(size):
-            return size
-        else:
-            raise InvalidValue(f"Неверное значение размера(или угла): {size} мм(град)")
+    @property
+    def length_mm(self):
+        return self._length_mm
 
+    @dia_mm.setter
+    def dia_mm(self, any_dia):
+        if not isinstance(any_dia, (int, float)):
+            raise InvalidValue(f'Диаметр должен быть числом (передано {any_dia})')
+        if any_dia < 0:
+            raise InvalidValue(f'Диаметр должен быть больше 0 (передано {any_dia})')
+        self._dia_mm = any_dia
 
-class AxialSizes(AxialSizesData, SizeValidator):
-    """Управляет полями класса 'AxialSizes'. """
+    @length_mm.setter
+    def length_mm(self, any_length):
+        if not isinstance(any_length, (int, float)):
+            raise InvalidValue(f'Длина должна быть числом (передано {any_length})')
+        if any_length < 0:
+            raise InvalidValue(f'Длина должна быть больше 0 (передано {any_length})')
+        self._length_mm = any_length
+
     @property
     def gabarit_volume(self):
-        return self.dia_mm ** 2 * self.length_mm
+        return self._dia_mm * self._dia_mm * self._length_mm
 
     @property
     def gabarit_str(self):
-        return f"øDxL: ø{self.dia_mm}x{self.length_mm} мм"
-
-    def update_dia(self, new_dia_mm: float):
-        self.dia_mm = self.check_size(new_dia_mm)
-
-    def update_length(self, new_length_mm: float):
-        self.length_mm = self.check_size(new_length_mm)
+        return f"øDxL: ø{self._dia_mm}x{self._length_mm} мм."
 
 
-class PrismaticSizes(PrismaticSizesData, SizeValidator):
+class PrismaticSizes(Size):
     """Управляет полями класса 'PrismaticSizes'. """
+    def __init__(self, length_mm: float = 100, width_mm: float = 25, height_mm: float = 25):
+        self._length_mm = None
+        self._width_mm = None
+        self._height_mm = None
+
+        self.length_mm = length_mm
+        self.width_mm = width_mm
+        self.height_mm = height_mm
+
+    @property
+    def length_mm(self):
+        return self._length_mm
+
+    @property
+    def width_mm(self):
+        return self._width_mm
+
+    @property
+    def height_mm(self):
+        return self._height_mm
+
+    @length_mm.setter
+    def length_mm(self, any_size):
+        if not isinstance(any_size, (int, float)):
+            raise InvalidValue(f'Длина должна быть числом (передано {any_size})')
+        if any_size < 0:
+            raise InvalidValue(f'Длина должна быть больше 0 (передано {any_size})')
+        self._length_mm = any_size
+
+    @width_mm.setter
+    def width_mm(self, any_size):
+        if not isinstance(any_size, (int, float)):
+            raise InvalidValue(f'Ширина должна быть числом (передано {any_size})')
+        if any_size < 0:
+            raise InvalidValue(f'Ширина должна быть больше 0 (передано {any_size})')
+        self._width_mm = any_size
+
+    @height_mm.setter
+    def height_mm(self, any_size):
+        if not isinstance(any_size, (int, float)):
+            raise InvalidValue(f'Высота должна быть числом (передано {any_size})')
+        if any_size < 0:
+            raise InvalidValue(f'Высота должна быть больше 0 (передано {any_size})')
+        self._height_mm = any_size
+
     @property
     def gabarit_volume(self):
         return self.height_mm * self.width_mm * self.length_mm
 
     @property
     def gabarit_str(self):
-        return f"LxBxH: ø{self.length_mm}x{self.width_mm}x{self.height_mm} мм"
-
-    def update_length(self, new_length_mm: float):
-        self.length_mm = self.check_size(new_length_mm)
-
-    def update_width(self, new_width_mm: float):
-        self.width_mm = self.check_size(new_width_mm)
-
-    def update_height(self, new_height_mm: float):
-        self.height_mm = self.check_size(new_height_mm)
+        return f"LxBxH: {self.length_mm}x{self.width_mm}x{self.height_mm} мм."

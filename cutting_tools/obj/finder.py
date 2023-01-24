@@ -8,7 +8,7 @@ from cutting_tools.obj.request_record_from_sqlyte import RequestRecordFromSQLyte
 class Finder:
     """ Содержит список методов поиска в БД, обязательных для поиска при любом типе БД """
     def __init__(self, record_requester: RecordRequester = RequestRecordFromSQLyte):
-        self._requester = record_requester
+        self._requester = record_requester()
 
     def find_by_dia(self, dia: float, dia_out: float=None):
         """ Возвращает найденные записи по значению диаметра.
@@ -45,7 +45,8 @@ class Finder:
         marking: str
             Обозначение для поиска в БД
         """
-        df = self._requester.get_records({"Обозначение": marking})
+        dict = {"Обозначение": marking}
+        df = self._requester.get_records(values_dict=dict)
         return df if not df.empty else None
 
     def find_by_stand(self, standart: str):
@@ -92,3 +93,9 @@ class Finder:
         """ Возвращает все записи из таблицы. """
         df = self._requester.get_all_records
         return df if not df.empty else None
+
+
+if __name__ == '__main__':
+    result = Finder().find_by_marking("2100-0001").dropna(how='any', axis=1)
+    print(result)
+    print(result)
