@@ -7,6 +7,7 @@ from typing import Union
 from cutting_tools.obj.constants import TYPES_OF_MILLING_CUTTER
 from cutting_tools.obj.constants import TYPES_OF_CUTTING_PART_OF_MILLING_CUTTER
 from cutting_tools.obj.constants import TYPES_OF_LARGE_TOOTH
+from cutting_tools.obj.constants import DEFAULT_SETTINGS_FOR_CUTTING_TOOL
 from cutting_tools.obj.exceptions import InvalidValue
 from cutting_tools.obj.tool import Tool
 from cutting_tools.obj.sizes import AxialSizes
@@ -16,7 +17,7 @@ from cutting_tools.obj.checker_in_dict import CheckerInDictionary
 
 
 class MillingCutter(Tool, AxialSizes, BladeMaterial, Angles, CheckerInDictionary):
-    """ Управляет полями класса "MillingCutter"
+    """ Управляет полями класса "Фреза"
 
     Parameters:
         type_cutter : (int) : Тип инструмента:
@@ -34,19 +35,31 @@ class MillingCutter(Tool, AxialSizes, BladeMaterial, Angles, CheckerInDictionary
     Сostants:
         TYPES_OF_MILLING_CUTTER : Типы фрез
         TYPES_OF_CUTTING_PART : Типы режущей части фрезы
+        TYPES_OF_LARGE_TOOTH : Типы частоты режущей части
+        DEFAULT_SETTINGS : Настройки по умолчанию
     """
 
     TYPES_OF_MILLING_CUTTER: ClassVar[dict] = TYPES_OF_MILLING_CUTTER
     TYPES_OF_CUTTING_PART: ClassVar[dict] = TYPES_OF_CUTTING_PART_OF_MILLING_CUTTER
     TYPES_OF_LARGE_TOOTH: ClassVar[dict] = TYPES_OF_LARGE_TOOTH
+    DEFAULT_SETTINGS: ClassVar[dict] = DEFAULT_SETTINGS_FOR_CUTTING_TOOL['milling']
 
-    def __init__(self, group: Union[str, int] = "Инструмент", marking: str = "0000-0000",
-                 standard: str = "ГОСТ 5555-99", dia_mm: float = 50, length_mm: float = 100,
-                 mat_of_cutting_part: Union[str, int] = 'Т15К6', main_angle_grad: float = 45,
-                 front_angle_grad: float = 45, inclination_of_main_blade_grad: float = 0,
-
-                 type_cutter: int = 1, type_of_cutting_part: int = 0, num_of_cutting_blades: int = 2,
-                 radius_of_cutting_vertex: float = 1, large_tooth: float = 0, quantity: int = 1
+    def __init__(self,
+                 group: Union[str, int] = "Фреза",
+                 marking: str = str(DEFAULT_SETTINGS["marking"]),
+                 standard: str = str(DEFAULT_SETTINGS["Стандарт"]),
+                 dia_mm: float = 40,
+                 length_mm: float = 32,
+                 mat_of_cutting_part: Union[str, int] = str(DEFAULT_SETTINGS["mat_of_cutting_part"]),
+                 main_angle_grad: float = 90,
+                 front_angle_grad: float = 0,
+                 inclination_of_main_blade_grad: float = 0,
+                 type_cutter: int = 1,
+                 type_of_cutting_part: int = 1,
+                 num_of_cutting_blades: int = 10,
+                 radius_of_cutting_vertex: float = 1,
+                 large_tooth: float = 0,
+                 quantity: int = int(DEFAULT_SETTINGS["quantity"])
                  ):
         Tool.__init__(self, group, marking, standard)
         AxialSizes.__init__(self, dia_mm, length_mm)
@@ -97,7 +110,7 @@ class MillingCutter(Tool, AxialSizes, BladeMaterial, Angles, CheckerInDictionary
     @num_of_cutting_blades.setter
     def num_of_cutting_blades(self, any_num):
         if not isinstance(any_num, int) or any_num < 0:
-            raise InvalidValue(f'Количество режущих граней должно быть целым положительным числом. (передано {any_num})')
+            raise InvalidValue(f'Количество режущих граней должно быть целым положительным числом (передано {any_num})')
         self._num_of_cutting_blades = any_num
 
     @property
@@ -107,7 +120,7 @@ class MillingCutter(Tool, AxialSizes, BladeMaterial, Angles, CheckerInDictionary
     @radius_of_cutting_vertex.setter
     def radius_of_cutting_vertex(self, any_radius):
         if not isinstance(any_radius, (int, float)) or any_radius < 0:
-            raise InvalidValue(f'Радиус вершины должен быть положительным числом. (передано {any_radius})')
+            raise InvalidValue(f'Радиус вершины должен быть положительным числом (передано {any_radius})')
         self._radius_of_cutting_vertex = any_radius
 
     @property
@@ -128,22 +141,12 @@ class MillingCutter(Tool, AxialSizes, BladeMaterial, Angles, CheckerInDictionary
     @quantity.setter
     def quantity(self, any_quantity):
         if not isinstance(any_quantity, int) or any_quantity < 0:
-            raise InvalidValue(f'Количество должно быть целым положительным числом. (передано {any_quantity})')
+            raise InvalidValue(f'Количество должно быть целым положительным числом (передано {any_quantity})')
         self._quantity = any_quantity
 
 
 if __name__ == "__main__":
-
     cutter = MillingCutter()
-    # print(dir(cutter))
-    # print(cutter.__doc__)
-    # print(cutter.GROUPS_TOOL)
-    # print(cutter.HARD_ALLOYS)
-    # print(cutter.HIGH_SPEED_STEELS)
-    # print(cutter.MATS_OF_CUTTING_PART)
-    # print(cutter.TYPES_STANDARD)
-    # print(cutter.TYPES_OF_MILLING_CUTTER)
-
     cutter.group = "Резец"
     cutter.quantity = -1
     print(cutter.quantity)

@@ -45,4 +45,3 @@ class Angles:
         if not isinstance(any_angle_grad, (int, float)):
             raise InvalidValue(f'Значение угла должно быть целым или дробным.')
         self._inclination_of_main_blade_grad = any_angle_grad
-
