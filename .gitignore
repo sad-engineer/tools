@@ -14,3 +14,4 @@ env.bak /
 .idea/
 dist/
 temp/
+logs/
