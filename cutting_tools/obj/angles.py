@@ -2,9 +2,10 @@
 # -*- coding: utf-8 -*-
 # ----------------------------------------------------------------------------------------------------------------------
 from cutting_tools.obj.exceptions import InvalidValue
+from cutting_tools.obj.abstract_classes import Dictionarer
 
 
-class Angles:
+class Angles(Dictionarer):
     """ Управляет полями класса "Angles" """
     def __init__(self, main_angle_grad: float = 45, front_angle_grad: float = 45,
                  inclination_of_main_blade_grad: float = 0):
@@ -45,3 +46,7 @@ class Angles:
         if not isinstance(any_angle_grad, (int, float)):
             raise InvalidValue(f'Значение угла должно быть целым или дробным.')
         self._inclination_of_main_blade_grad = any_angle_grad
+
+    def _dict_parameters(self):
+        return {"main_angle_grad": self._main_angle_grad, "front_angle_grad": self._front_angle_grad,
+                "inclination_of_main_blade_grad": self._inclination_of_main_blade_grad, }

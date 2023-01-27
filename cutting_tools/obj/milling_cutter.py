@@ -144,9 +144,19 @@ class MillingCutter(Tool, AxialSizes, BladeMaterial, Angles, CheckerInDictionary
             raise InvalidValue(f'Количество должно быть целым положительным числом (передано {any_quantity})')
         self._quantity = any_quantity
 
+    def _dict_parameters(self):
+        tool_parameters = Tool._dict_parameters(self)
+        size_parameters = AxialSizes._dict_parameters(self)
+        blade_material_parameters = BladeMaterial._dict_parameters(self)
+        angles_parameters = Angles._dict_parameters(self)
+        parameters = {"type_cutter": self._type_cutter, "type_of_cutting_part": self._type_of_cutting_part,
+                      "num_of_cutting_blades": self._num_of_cutting_blades, "large_tooth": self._large_tooth,
+                      "radius_of_cutting_vertex": self._radius_of_cutting_vertex, "quantity": self._quantity}
+        return tool_parameters | size_parameters | blade_material_parameters | angles_parameters | parameters
+
 
 if __name__ == "__main__":
     cutter = MillingCutter()
-    cutter.group = "Резец"
-    cutter.quantity = -1
-    print(cutter.quantity)
+    cutter.group = "Фреза"
+    # cutter.quantity = -1
+    print(cutter.dict_parameters)

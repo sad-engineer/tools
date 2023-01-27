@@ -43,5 +43,5 @@ class CountersinkingCutter(DrillingCutter):
 if __name__ == "__main__":
     cutter = CountersinkingCutter()
     cutter.group = "Зенкер"
-    cutter.quantity = -1
-    print(cutter.quantity)
+    # cutter.quantity = -1
+    print(cutter.dict_parameters)

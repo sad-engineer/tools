@@ -4,9 +4,10 @@
 from typing import Union, ClassVar
 from cutting_tools.obj.constants import GROUPS_TOOL, TYPES_STANDARD
 from cutting_tools.obj.exceptions import InvalidValue
+from cutting_tools.obj.abstract_classes import Dictionarer
 
 
-class Tool:
+class Tool(Dictionarer):
     """ДатаКласс 'Инструмент'. Хранит состояние инструмента
 
     Parameters:
@@ -73,6 +74,9 @@ class Tool:
     def name(self):
         return " ".join([self.group, self.marking, self.standard])
 
+    def _dict_parameters(self):
+        return {"group": self._group, "marking": self._marking, "standard": self._standard, "name": self.name}
+
 
 if __name__ == "__main__":
     obj = Tool()
@@ -90,7 +94,7 @@ if __name__ == "__main__":
 
     obj = Tool(group="Фреза", )
     print(obj.group)
-    print(obj.name)
+    print(obj.dict_parameters())
 
 
 

@@ -15,7 +15,8 @@ class RequestRecordFromSQLyte(RecordRequester):
 
     def __init__(self, filename=FILENAME, tablename="cutting_tools"):
         """Инициализация объекта"""
-        self.conn = sqlite3.connect(filename)
+        self.filename = filename
+        # self.conn = sqlite3.connect(filename)
         self.tablename = tablename
 
     def get_records(self, values_dict: dict) -> pd.DataFrame:
@@ -32,22 +33,20 @@ class RequestRecordFromSQLyte(RecordRequester):
         DataFrame
             DataFrame с записями, соответствующими данным столбцам и значениям.
         """
-        query = f"SELECT * FROM {self.tablename} WHERE "
-        for column, value in values_dict.items():
-            query += f"{column} = '{value}' AND "
-        query = query[:-4]
-        df = pd.read_sql(query, self.conn)
-        # self.conn.commit()
-        self.conn.close()
+        with sqlite3.connect(self.filename) as conn:
+            query = f"SELECT * FROM {self.tablename} WHERE "
+            for column, value in values_dict.items():
+                query += f"{column} = '{value}' AND "
+            query = query[:-4]
+            df = pd.read_sql(query, conn)
         return df
 
     @property
     def get_all_records(self) -> pd.DataFrame:
         """ Возвращает DataFrame со всеми записями таблицы tablename."""
-        query = f"SELECT * FROM {self.tablename}"
-        df = pd.read_sql(query, self.conn)
-        # self.conn.commit()
-        self.conn.close()
+        with sqlite3.connect(self.filename) as conn:
+            query = f"SELECT * FROM {self.tablename}"
+            df = pd.read_sql(query, conn)
         return df
 
 

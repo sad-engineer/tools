@@ -43,5 +43,5 @@ class DeploymentCutter(DrillingCutter):
 if __name__ == "__main__":
     cutter = DeploymentCutter()
     cutter.group = "Развертка"
-    cutter.quantity = -1
-    print(cutter.quantity)
+    # cutter.quantity = -1
+    print(cutter.dict_parameters)

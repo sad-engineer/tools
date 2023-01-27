@@ -8,47 +8,6 @@ from cutting_tools.obj.constants import PATH_DB_FOR_TOOLS as PATH_DB
 from cutting_tools.obj.constants import MATERIALS_OF_CUTTING_PART
 from cutting_tools.obj.exceptions import InvalidValue
 
-from cutting_tools.obj.finder import Finder
-from cutting_tools.obj.creator import Creator
-
-
-def connect(filename: str) -> tuple[sqlite3.Connection, sqlite3.Cursor]:
-    """ Создает и подключает базу данных если ее нет. Если БД есть - подключает ее
-
-    :param filename: Имя файла БД.
-    :return: Указатель на подключенную БД, указатель на курсор БД
-    """
-    db = sqlite3.connect(filename)
-    cursor = db.cursor()
-    db.commit()
-    return db, cursor
-
-
-def save_table(name: str = "", table=None, path_bd: str = PATH_DB) -> bool:
-    """ Сохраняет таблицу DataFrame в БД. Если таблица существует - заменяет ее
-
-    :param name: Имя таблицы в БД.
-    :param table: DataFrame для сохранения в БД.
-    :param path_bd: Путь к базе данных по материалам.
-    :return: True - если данные были записаны/перезаписаны: InvalidValue - если на вход дали некорректное имя таблицы
-    или таблицу, тип которой отличается от pd.DataFrame
-    """
-    is_correct_name = isinstance(name, str) and name not in ["", " ", "  "]
-    is_correct_table = isinstance(table, pd.DataFrame)
-    if is_correct_name and is_correct_table:
-        db, cursor = connect(path_bd)
-        cursor.execute(f"DROP TABLE IF EXISTS {name}")
-        table.to_sql(name=f'{name}', con=db)
-        db.commit()
-        db.close()
-        return True
-    else:
-        if not is_correct_name:
-            raise InvalidValue(f"Переменная 'name' должна содержать название таблицы. Вы передали: {name}.")
-        elif not is_correct_table:
-            raise InvalidValue("Переменная 'table' должна содержать таблицу типа pd.DataFrame. Проверьте входные "
-                               "данные.")
-
 
 def get_name(params: dict, mat_of_cutting_part: str):
     """ Определяет наименование инструмента в зависимости от ГОСТа
@@ -320,35 +279,7 @@ def get_index_type_cutter(type_cutter: str = None, condition: str = None,) -> in
     return index
 
 
-def get_float_value(str_value: Optional[str]) -> Optional[float]:
-    """ Вернет численное значение параметра, записанного строкой.
 
-    :param str_value: численное значение, записанное строкой.
-    :return: Численное значение параметра в формате float. Или None, если в функцию передали None.
-    """
-    return float(str_value) if not isinstance(str_value, type(None)) else None
-
-
-def get_int_value(str_value: Optional[str]) -> Optional[float]:
-    """ Вернет численное значение параметра, записанного строкой.
-
-    :param str_value: численное значение, записанное строкой.
-    :return: Численное значение параметра в формате int. Или None, если в функцию передали None.
-    """
-    return int(str_value) if not isinstance(str_value, type(None)) else None
-
-
-def get_diameter(params: dict) -> Optional[float]:
-    """ Вернет численное значение диаметра.
-
-    :param params: словарь параметров инструмента.
-    :return: Численное значение диаметра в формате float.
-    """
-    if 'D' in params and not isinstance(params['D'], type(None)):
-        return float(params['D'])
-    elif 'd_' in params and not isinstance(params['d_'], type(None)):
-        return float(params['d_'].replace("М", ""))
-    return
 
 
 def show_cutting_tool(cutting_tool) -> None:
@@ -413,31 +344,3 @@ def show_cutting_tool(cutting_tool) -> None:
         if not isinstance(cutting_tool.blade_length, type(None)):
             print(f"""Длина лезвия инструмента: {cutting_tool.blade_length}. """)
 
-
-
-# def prepare_dict_param(raw_dict):
-#     attribute_names = {'Обозначение': 'marking',
-#
-#
-#     }
-#     dict_param = {}
-#     for key, val in raw_dict.items():
-#
-#
-# group='Инструмент', standard='ГОСТ 5555-99', mat_of_cutting_part='Т15К6', dia_mm=50, length_mm=100, type_cutter=1, type_of_cutting_part=0, num_of_cutting_blades=2, radius_of_cutting_vertex=1, large_tooth=0)
-# {'index': 1190, 'd_': '16.0', 'd_1_': '25', 'l_': '18.0', 'L': 32.0, 'z': 10.0, 'fi_': 90.0, 'type_cutter_': 'Торцовая', 'mat_': '0, 1', 'type_of_cutting_part_': 1.0, 'Группа': 'Тип 1', 'Тип_инструмента': 'Фреза', 'Стандарт': 'ГОСТ 9304-69', 'D': 40.0, 'Направление': 'Праворежущие'}
-#
-#
-# # group='Инструмент', marking='0000-0000', standard='ГОСТ 5555-99', mat_of_cutting_part='Т15К6', dia_mm=50, length_mm=100, type_cutter=1, type_of_cutting_part=0, num_of_cutting_blades=2, radius_of_cutting_vertex=1, large_tooth=0)
-# # {'index': 1190, 'Обозначение': '2210-0061', 'd_': '16.0', 'd_1_': '25', 'l_': '18.0', 'L': 32.0, 'z': 10.0, 'fi_': 90.0, 'type_cutter_': 'Торцовая', 'mat_': '0, 1', 'type_of_cutting_part_': 1.0, 'Группа': 'Тип 1', 'Тип_инструмента': 'Фреза', 'Стандарт': 'ГОСТ 9304-69', 'D': 40.0, 'Направление': 'Праворежущие'}
-#
-#
-#
-#
-# def get_tool(marking):
-#     """ как получить параметры инструмента в соответствующем классе"""
-#     finder = Finder()
-#     params_table = finder.find_by_marking(marking)
-#     raw_dict = params_table.dropna(how='any', axis=1).loc[0].to_dict()
-#     print(raw_dict)
-#     # return Creator().get_tool(dict_param)

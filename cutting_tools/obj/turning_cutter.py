@@ -11,9 +11,10 @@ from cutting_tools.obj.sizes import PrismaticSizes
 from cutting_tools.obj.blade_material import BladeMaterial
 from cutting_tools.obj.angles import Angles
 from cutting_tools.obj.checker_in_dict import CheckerInDictionary
+from cutting_tools.obj.abstract_classes import Dictionarer
 
 
-class TurningCutter(Tool, PrismaticSizes, BladeMaterial, Angles, CheckerInDictionary):
+class TurningCutter(Tool, PrismaticSizes, BladeMaterial, Angles, CheckerInDictionary, Dictionarer):
     """ Управляет полями класса "Фреза"
 
     Parameters:
@@ -119,10 +120,18 @@ class TurningCutter(Tool, PrismaticSizes, BladeMaterial, Angles, CheckerInDictio
             raise InvalidValue('Передайте "True" если резец имеет глубокий и сложный профиль')
         self._is_complex_profile = any_value
 
+    def _dict_parameters(self):
+        tool_parameters = Tool._dict_parameters(self)
+        size_parameters = PrismaticSizes._dict_parameters(self)
+        blade_material_parameters = BladeMaterial._dict_parameters(self)
+        angles_parameters = Angles._dict_parameters(self)
+        parameters = {"radius_of_cutting_vertex": self._radius_of_cutting_vertex, "quantity": self._quantity,
+                      "turret": self._turret, "load": self._load, "is_complex_profile": self._is_complex_profile}
+        return tool_parameters | size_parameters | blade_material_parameters | angles_parameters | parameters
 
 
 if __name__ == "__main__":
     cutter = TurningCutter()
     cutter.group = "Резец"
     # cutter.quantity = -1
-    print(cutter.is_complex_profile)
+    print(cutter.dict_parameters)

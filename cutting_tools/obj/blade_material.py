@@ -6,9 +6,10 @@ from typing import Union, ClassVar
 from cutting_tools.obj.constants import MATERIALS_OF_CUTTING_PART
 from cutting_tools.obj.constants import HARD_ALLOYS, HIGH_SPEED_STEELS
 from cutting_tools.obj.exceptions import InvalidValue
+from cutting_tools.obj.abstract_classes import Dictionarer
 
 
-class BladeMaterial:
+class BladeMaterial(Dictionarer):
     """ДатаКласс 'Материал лезвия'.
 
     Parameters:
@@ -49,3 +50,6 @@ class BladeMaterial:
                                f'{self.MATS_OF_CUTTING_PART}.')
         self._mat_of_cutting_part = mat if isinstance(mat, str) else \
             [k for k, v in self.MATS_OF_CUTTING_PART.items() if v == mat][0]
+
+    def _dict_parameters(self):
+        return {"mat_of_cutting_part": self._mat_of_cutting_part, "type_of_mat": self.type_of_mat}
