@@ -8,35 +8,42 @@ from cutting_tools.obj.abstract_classes import Dictionarer
 
 
 class Tool(Dictionarer):
-    """ДатаКласс 'Инструмент'. Хранит состояние инструмента
+    """Управляет полями класса 'Инструмент'.
 
     Parameters:
-        group : (str) : группа инструмента.
+        group : (str is GROUPS_TOOL) : группа инструмента.
         marking : (str) : обозначение инструмента.
-        standard : (str) : стандарт инструмента.
+        standard : (str contains one of TYPES_STANDARD) : стандарт инструмента.
+
+    Properties:
+        name : (str) : возвращает название инструмента.
+
+    Methods:
+        dict_parameters : (dict) : возвращает словарь параметров и свойств.
 
     Сostants:
-        GROUPS_TOOL : Словарь наименований группы инструмента
-        TYPES_STANDARD : Типы стандартов инструмента
+        GROUPS_TOOL : Словарь наименований группы инструмента.
+        TYPES_STANDARD : Типы стандартов инструмента.
     """
     GROUPS_TOOL: ClassVar[dict] = GROUPS_TOOL
     TYPES_STANDARD: ClassVar[dict] = TYPES_STANDARD
 
     def __init__(self, group: Union[str, int] = "Инструмент", marking: str = "0000-0000", standard: str = "ГОСТ 5555-99"):
-        self._group = None
-        self._marking = None
-        self._standard = None
+        self._name: str = None
+        self._group: str = None
+        self._marking: str = None
+        self._standard: str = None
 
         self.group = group
         self.marking = marking
         self.standard = standard
 
     @property
-    def group(self):
+    def group(self) -> str:
         return self._group
 
     @group.setter
-    def group(self, group):
+    def group(self, group) -> None:
         if isinstance(group, (int, float)) and group not in self.GROUPS_TOOL.values():
             raise InvalidValue(f'Неверное значение индекса группы инструмента. Значение должно быть из '
                              f'{self.GROUPS_TOOL}.')
@@ -47,21 +54,21 @@ class Tool(Dictionarer):
         self._group = group if isinstance(group, str) else [k for k, v in self.GROUPS_TOOL.items() if v == group][0]
 
     @property
-    def marking(self):
+    def marking(self) -> str:
         return self._marking
 
     @marking.setter
-    def marking(self, any_marking):
+    def marking(self, any_marking) -> None:
         if not isinstance(any_marking, str):
             raise InvalidValue(f'Неверное обозначение инструмента.')
         self._marking = any_marking
 
     @property
-    def standard(self):
+    def standard(self) -> str:
         return self._standard
 
     @standard.setter
-    def standard(self, any_standard):
+    def standard(self, any_standard) -> None:
         if not isinstance(any_standard, str):
             raise InvalidValue(f'Неверное значение стандарта инструмента.')
         if any_standard.split(" ")[0] not in self.TYPES_STANDARD:
@@ -71,10 +78,15 @@ class Tool(Dictionarer):
         self._standard = any_standard
 
     @property
-    def name(self):
-        return " ".join([self.group, self.marking, self.standard])
+    def name(self) -> str:
+        self._name = " ".join([self.group, self.marking, self.standard])
+        return self._name
 
-    def _dict_parameters(self):
+    @name.setter
+    def name(self, value) -> None:
+        self._name = value
+
+    def _dict_parameters(self) -> dict:
         return {"group": self._group, "marking": self._marking, "standard": self._standard, "name": self.name}
 
 
@@ -88,13 +100,13 @@ if __name__ == "__main__":
     # print(obj.group)
     print(obj.name)
 
-    obj = Tool(group=0, )
+    obj = Tool(group=0)
     print(obj.group)
     print(obj.name)
 
-    obj = Tool(group="Фреза", )
+    obj = Tool(group="Фреза")
     print(obj.group)
-    print(obj.dict_parameters())
+    print(obj.dict_parameters)
 
 
 

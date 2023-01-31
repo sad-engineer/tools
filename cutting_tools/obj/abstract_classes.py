@@ -4,6 +4,7 @@
 from abc import ABC, abstractmethod
 import pandas as pd
 
+
 class Dictionarer(ABC):
     """ Абстрактный класс, наследовать для вывода словаря параметров класса"""
     @abstractmethod
@@ -45,3 +46,6 @@ class Size(ABC):
     @property
     @abstractmethod
     def gabarit_str(self): pass
+
+
+

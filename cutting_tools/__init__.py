@@ -14,13 +14,8 @@ from cutting_tools.obj.constants import TYPES_OF_TOOL_HOLDER
 from cutting_tools.obj.constants import TYPES_OF_LOADS
 
 # Методы пакета
-# from cutting_tools.find import by_dia_and_type
-# from cutting_tools.find import by_marking_and_stand
-# from cutting_tools.find import full_table
 from cutting_tools.fun import get_name
-# from cutting_tools.obj.cutting_tool_class import CuttingTool
-from cutting_tools.obj.constants import MATERIALS_OF_CUTTING_PART
-from cutting_tools.obj.constants import MATERIALS_OF_CUTTING_PART
+
 
 # Классы пакета
 from cutting_tools.obj.milling_cutter import MillingCutter

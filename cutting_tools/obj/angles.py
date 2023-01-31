@@ -6,7 +6,16 @@ from cutting_tools.obj.abstract_classes import Dictionarer
 
 
 class Angles(Dictionarer):
-    """ Управляет полями класса "Angles" """
+    """ Управляет полями класса "Angles"
+
+    Parameters:
+        main_angle_grad : (float >= 0) : главный угол в плане.
+        front_angle_grad  : (float >= 0) : передний угол.
+        inclination_of_main_blade_grad  : (float >= 0) : наклон передней грани
+
+    Methods:
+        dict_parameters : (dict) : возвращает словарь параметров и свойств.
+    """
     def __init__(self, main_angle_grad: float = 45, front_angle_grad: float = 45,
                  inclination_of_main_blade_grad: float = 0):
         self._main_angle_grad = None

@@ -13,13 +13,18 @@ class BladeMaterial(Dictionarer):
     """ДатаКласс 'Материал лезвия'.
 
     Parameters:
-        mat_of_cutting_part : (str) : материал режущей пластины.
+        mat_of_cutting_part : (str, int is MATERIALS_OF_CUTTING_PART) : материал режущей пластины.
+
+    Properties:
         type_of_mat  : (int) : тип материала режущей пластины: 0-быстрорез; 1-твердый сплав.
 
+    Methods:
+        dict_parameters : (dict) : возвращает словарь параметров и свойств.
+
     Сostants:
-        HARD_ALLOYS : перечень доступных твердосплавных материалов
-        HIGH_SPEED_STEELS : перечень доступных быстрорежущих материалов
-        MATS_OF_CUTTING_PART : перечень доступных материалов режущей части (общий)
+        HARD_ALLOYS : перечень доступных твердосплавных материалов.
+        HIGH_SPEED_STEELS : перечень доступных быстрорежущих материалов.
+        MATS_OF_CUTTING_PART : перечень доступных материалов режущей части (общий).
     """
     MATS_OF_CUTTING_PART: ClassVar[dict] = MATERIALS_OF_CUTTING_PART
     HARD_ALLOYS: ClassVar[dict] = HARD_ALLOYS

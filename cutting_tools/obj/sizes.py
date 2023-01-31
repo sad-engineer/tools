@@ -10,8 +10,15 @@ class AxialSizes(Size, Dictionarer):
     """"Управляет полями класса 'AxialSizes'.
 
     Parameters:
-        dia_mm : (float, optional) : диаметр инструмента.
-        length_mm : (float, optional) : длина инструмента.
+        dia_mm : (float >= 0) : диаметр инструмента.
+        length_mm : (float >= 0) : длина инструмента.
+
+    Properties:
+        gabarit_volume : (float) : возвращает габаритный объем.
+        gabarit_str : (str) : возвращает габарит, записанный строкой.
+
+    Methods:
+        dict_parameters : (dict) : возвращает словарь параметров и свойств.
     """
     def __init__(self, dia_mm: float = 50, length_mm: float = 100):
         self._dia_mm = None
@@ -58,7 +65,20 @@ class AxialSizes(Size, Dictionarer):
 
 
 class PrismaticSizes(Size, Dictionarer):
-    """Управляет полями класса 'PrismaticSizes'. """
+    """Управляет полями класса 'PrismaticSizes'.
+
+    Parameters:
+        length_mm : (float >= 0) : длина инструмента.
+        width_mm : (float >= 0) : ширина инструмента.
+        height_mm : (float >= 0) : высота инструмента.
+
+    Properties:
+        gabarit_volume : (float) : возвращает габаритный объем.
+        gabarit_str : (str) : возвращает габарит, записанный строкой.
+
+    Methods:
+        dict_parameters : (dict) : возвращает словарь параметров и свойств.
+    """
     def __init__(self, length_mm: float = 100, width_mm: float = 25, height_mm: float = 25):
         self._length_mm = None
         self._width_mm = None

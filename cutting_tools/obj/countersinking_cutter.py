@@ -12,12 +12,38 @@ class CountersinkingCutter(DrillingCutter):
     """ Управляет полями класса "Зенкер"
 
     Parameters:
-        num_of_cutting_blades : (int) : количество режущих граней.
-        radius_of_cutting_vertex : (float) : радиус режущей вершины.
-        quantity : (int) : Количество одновременно работающих инструментов. По умолчанию: None.
+        group : (str in GROUPS_TOOL) : группа инструмента.
+        marking : (str) : обозначение инструмента.
+        standard : (str contains one of TYPES_STANDARD) : стандарт инструмента.
+        dia_mm : (float >= 0) : диаметр инструмента.
+        length_mm : (float >= 0) : длина инструмента.
+        mat_of_cutting_part : (str, int in MATERIALS_OF_CUTTING_PART) : материал режущей пластины.
+        main_angle_grad : (float >= 0) : главный угол в плане.
+        front_angle_grad  : (float >= 0) : передний угол.
+        inclination_of_main_blade_grad  : (float >= 0) : наклон передней грани.
+        tolerance : (str, int содержит по одному из ACCURACY_STANDARDS, TOLERANCE_FIELDS) : допуск.
+        num_of_cutting_blades : (int >= 0) : количество режущих граней.
+        radius_of_cutting_vertex : (float >= 0) : радиус режущей вершины.
+        quantity : (int >= 0) : количество одновременно работающих инструментов.
+
+    Properties:
+        name : (str) : возвращает название инструмента.
+        gabarit_volume : (float) : возвращает габаритный объем.
+        gabarit_str : (str) : возвращает габарит, записанный строкой.
+        type_of_mat  : (int) : тип материала режущей пластины: 0-быстрорез; 1-твердый сплав.
+
+    Methods:
+        dict_parameters : (dict) : возвращает словарь параметров и свойств.
 
     Сostants:
-        DEFAULT_SETTINGS : Настройки по умолчанию
+        GROUPS_TOOL : Словарь наименований группы инструмента.
+        TYPES_STANDARD : Типы стандартов инструмента.
+        HARD_ALLOYS : перечень доступных твердосплавных материалов.
+        HIGH_SPEED_STEELS : перечень доступных быстрорежущих материалов.
+        MATS_OF_CUTTING_PART : перечень доступных материалов режущей части (общий).
+        ACCURACY_STANDARDS : Квалитеты точности обработки.
+        TOLERANCE_FIELDS : Поля допусков.
+        DEFAULT_SETTINGS : Настройки по умолчанию.
     """
     DEFAULT_SETTINGS: ClassVar[dict] = DEFAULT_SETTINGS_FOR_CUTTING_TOOL["countersinking"]
 
@@ -33,15 +59,16 @@ class CountersinkingCutter(DrillingCutter):
                  inclination_of_main_blade_grad: float = 0,
                  num_of_cutting_blades: int = 2,
                  radius_of_cutting_vertex: float = 1,
-                 quantity: int = int(DEFAULT_SETTINGS["quantity"])
+                 quantity: int = int(DEFAULT_SETTINGS["quantity"]),
+                 accuracy: Union[str, int, float] = DEFAULT_SETTINGS["tolerance"],
                  ):
         DrillingCutter.__init__(self, group, marking, standard, dia_mm, length_mm, mat_of_cutting_part, main_angle_grad,
                                 front_angle_grad, inclination_of_main_blade_grad, num_of_cutting_blades,
-                                radius_of_cutting_vertex, quantity)
+                                radius_of_cutting_vertex, quantity, accuracy)
 
 
 if __name__ == "__main__":
     cutter = CountersinkingCutter()
-    cutter.group = "Зенкер"
-    # cutter.quantity = -1
+    print(cutter.dict_parameters)
+    cutter.standard = 'ГОСТ 12489-71'
     print(cutter.dict_parameters)
