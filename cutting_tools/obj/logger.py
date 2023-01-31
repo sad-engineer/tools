@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # ----------------------------------------------------------------------------------------------------------------------
-from cutting_tools.obj.terminal_printer import TerminalPrinter as _Terminal
+from cutting_tools.obj.terminal_printer import StandardResultTerminalPrinter as _Terminal
 
 
 class Logger:

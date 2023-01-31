@@ -109,7 +109,9 @@ DECODING = {"type_cutter": "Тип инструмента: {obj}.",
             "load": "Нагрузка на инструмент: {obj}.",
             "main_angle_grad": "Главный угол в плане: {obj} град.",
             "front_angle_grad": "Передний угол в плане: {obj} град.",
-            "inclination_of_main_blade": "Угол наклона переднего лезвия: {obj} град.",
+            "inclination_of_main_blade_grad": "Угол наклона переднего лезвия: {obj} град.",
             "radius_of_cutting_vertex": "Радиус режущей вершины инструмента: {obj} град.",
             "blade_length": "Длина лезвия инструмента: {obj} град.",
+            "tolerance": "Допуск инструмента: {obj}.",
+
             }

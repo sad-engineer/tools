@@ -26,46 +26,47 @@ from cutting_tools.obj.turning_cutter import TurningCutter
 from cutting_tools.obj.finder import Finder
 from cutting_tools.obj.data_preparer import DataPreparer
 from cutting_tools.obj.logger import Logger
-from cutting_tools.obj.file_printer import FilePrinter
+from cutting_tools.obj.terminal_printer import StandardResultTerminalPrinter, StandardObjectTerminalPrinter
+from cutting_tools.obj.file_printer import StandardResultFilePrinter, StandardObjectFilePrinter
 
 
 if __name__ == "__main__":
+    file_printer = StandardResultTerminalPrinter
+    # file_printer = StandardObjectTerminalPrinter
+    # file_printer = StandardResultFilePrinter
+    # file_printer = StandardObjectFilePrinter
+
     marking = DEFAULT_SETTINGS_FOR_CUTTING_TOOL["milling"]["marking"]
     raw_table = Finder().find_by_marking(marking).dropna(how='any', axis=1)
     raw_param = raw_table.loc[0].to_dict()
     param = DataPreparer(raw_param).get_params
     cutter = MillingCutter(**param)
-    Logger().log(cutter, message='### Параметры применяемого инструмента ###')
-    Logger().log(cutter, notifier=FilePrinter, message='### Параметры применяемого инструмента ###')
+    Logger().log(cutter, notifier=file_printer, message='### Параметры применяемого инструмента ###')
 
     marking = DEFAULT_SETTINGS_FOR_CUTTING_TOOL["drilling"]["marking"]
     raw_table = Finder().find_by_marking(marking).dropna(how='any', axis=1)
     raw_param = raw_table.loc[0].to_dict()
     param = DataPreparer(raw_param).get_params
     cutter = DrillingCutter(**param)
-    Logger().log(cutter, message='### Параметры применяемого инструмента ###')
-    Logger().log(cutter, notifier=FilePrinter, message='### Параметры применяемого инструмента ###')
+    Logger().log(cutter, notifier=file_printer, message='### Параметры применяемого инструмента ###')
 
     marking = DEFAULT_SETTINGS_FOR_CUTTING_TOOL["countersinking"]["marking"]
     raw_table = Finder().find_by_marking(marking).dropna(how='any', axis=1)
     raw_param = raw_table.loc[0].to_dict()
     param = DataPreparer(raw_param).get_params
     cutter = CountersinkingCutter(**param)
-    Logger().log(cutter, message='### Параметры применяемого инструмента ###')
-    Logger().log(cutter, notifier=FilePrinter, message='### Параметры применяемого инструмента ###')
+    Logger().log(cutter, notifier=file_printer, message='### Параметры применяемого инструмента ###')
 
     marking = DEFAULT_SETTINGS_FOR_CUTTING_TOOL["deployment"]["marking"]
     raw_table = Finder().find_by_marking(marking).dropna(how='any', axis=1)
     raw_param = raw_table.loc[0].to_dict()
     param = DataPreparer(raw_param).get_params
     cutter = DeploymentCutter(**param)
-    Logger().log(cutter, message='### Параметры применяемого инструмента ###')
-    Logger().log(cutter, notifier=FilePrinter, message='### Параметры применяемого инструмента ###')
+    Logger().log(cutter, notifier=file_printer, message='### Параметры применяемого инструмента ###')
 
     marking = DEFAULT_SETTINGS_FOR_CUTTING_TOOL["turning"]["marking"]
     raw_table = Finder().find_by_marking(marking).dropna(how='any', axis=1)
     raw_param = raw_table.loc[0].to_dict()
     param = DataPreparer(raw_param).get_params
     cutter = TurningCutter(**param)
-    Logger().log(cutter, message='### Параметры применяемого инструмента ###')
-    Logger().log(cutter, notifier=FilePrinter, message='### Параметры применяемого инструмента ###')
+    Logger().log(cutter, notifier=file_printer, message='### Параметры применяемого инструмента ###')
