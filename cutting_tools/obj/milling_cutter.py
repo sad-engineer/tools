@@ -27,7 +27,6 @@ class MillingCutter(Tool, AxialSizes, BladeMaterial, Angles, Tolerance, ITypeCut
     """ Управляет полями класса "Фреза".
 
     Parameters:
-        group : (str in GROUPS_TOOL) : группа инструмента.
         marking : (str) : обозначение инструмента.
         standard : (str contains one of TYPES_STANDARD) : стандарт инструмента.
         dia_mm : (float >= 0) : диаметр инструмента.
@@ -74,7 +73,6 @@ class MillingCutter(Tool, AxialSizes, BladeMaterial, Angles, Tolerance, ITypeCut
     DEFAULT_SETTINGS: ClassVar[dict] = DEFAULT_SETTINGS_FOR_CUTTING_TOOL['milling']
 
     def __init__(self,
-                 group: Union[str, int] = "Фреза",
                  marking: str = str(DEFAULT_SETTINGS["marking"]),
                  standard: str = str(DEFAULT_SETTINGS["Стандарт"]),
                  dia_mm: float = 40,
@@ -94,7 +92,7 @@ class MillingCutter(Tool, AxialSizes, BladeMaterial, Angles, Tolerance, ITypeCut
                  number: Optional[str] = None,
                  module: Optional[float] = None,
                  ):
-        Tool.__init__(self, group, marking, standard)
+        Tool.__init__(self, "Фреза", marking, standard)
         AxialSizes.__init__(self, dia_mm, length_mm)
         BladeMaterial.__init__(self, mat_of_cutting_part)
         Angles.__init__(self, main_angle_grad, front_angle_grad, inclination_of_main_blade_grad)

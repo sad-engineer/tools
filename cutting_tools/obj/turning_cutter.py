@@ -22,7 +22,6 @@ class TurningCutter(Tool, PrismaticSizes, BladeMaterial, Angles, IRadius, IQuant
     """ Управляет полями класса "Фреза"
 
     Parameters:
-        group : (str in GROUPS_TOOL) : группа инструмента.
         marking : (str) : обозначение инструмента.
         standard : (str contains one of TYPES_STANDARD) : стандарт инструмента.
         length_mm : (float >= 0) : длина инструмента.
@@ -60,7 +59,6 @@ class TurningCutter(Tool, PrismaticSizes, BladeMaterial, Angles, IRadius, IQuant
     DEFAULT_SETTINGS: ClassVar[dict] = DEFAULT_SETTINGS_FOR_CUTTING_TOOL['turning']
 
     def __init__(self,
-                 group: Union[str, int] = "Резец",
                  marking: str = str(DEFAULT_SETTINGS["marking"]),
                  standard: str = str(DEFAULT_SETTINGS["Стандарт"]),
                  length_mm: float = 100,
@@ -76,7 +74,7 @@ class TurningCutter(Tool, PrismaticSizes, BladeMaterial, Angles, IRadius, IQuant
                  load: Union[str, int] = 0,
                  is_complex_profile: bool = False,
                  ):
-        Tool.__init__(self, group, marking, standard)
+        Tool.__init__(self, "Резец", marking, standard)
         PrismaticSizes.__init__(self, length_mm, width_mm, height_mm)
         BladeMaterial.__init__(self, mat_of_cutting_part)
         Angles.__init__(self, main_angle_grad, front_angle_grad, inclination_of_main_blade_grad)

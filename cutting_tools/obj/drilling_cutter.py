@@ -18,12 +18,11 @@ class DrillingCutter(Tool, AxialSizes, BladeMaterial, Angles, Tolerance, INumOfB
     """ Управляет полями класса "Сверло"
 
     Parameters:
-        group : (str in GROUPS_TOOL) : группа инструмента.
         marking : (str) : обозначение инструмента.
         standard : (str contains one of TYPES_STANDARD) : стандарт инструмента.
         dia_mm : (float >= 0) : диаметр инструмента.
         length_mm : (float >= 0) : длина инструмента.
-        mat_of_cutting_part : (str, int in MATERIALS_OF_CUTTING_PART) : материал режущей пластины.
+        mat_of_cutting_part : (str, int is MATERIALS_OF_CUTTING_PART) : материал режущей пластины.
         main_angle_grad : (float >= 0) : главный угол в плане.
         front_angle_grad  : (float >= 0) : передний угол.
         inclination_of_main_blade_grad  : (float >= 0) : наклон передней грани.
@@ -54,7 +53,6 @@ class DrillingCutter(Tool, AxialSizes, BladeMaterial, Angles, Tolerance, INumOfB
     DEFAULT_SETTINGS: ClassVar[dict] = DEFAULT_SETTINGS_FOR_CUTTING_TOOL['drilling']
 
     def __init__(self,
-                 group: Union[str, int] = "Сверло",
                  marking: str = str(DEFAULT_SETTINGS["marking"]),
                  standard: str = str(DEFAULT_SETTINGS["Стандарт"]),
                  dia_mm: float = 2.4,
@@ -68,7 +66,7 @@ class DrillingCutter(Tool, AxialSizes, BladeMaterial, Angles, Tolerance, INumOfB
                  quantity: int = int(DEFAULT_SETTINGS["quantity"]),
                  tolerance: Union[str, int, float] = DEFAULT_SETTINGS["tolerance"],
                  ):
-        Tool.__init__(self, group, marking, standard)
+        Tool.__init__(self, "Сверло", marking, standard)
         AxialSizes.__init__(self, dia_mm, length_mm)
         BladeMaterial.__init__(self, mat_of_cutting_part)
         Angles.__init__(self, main_angle_grad, front_angle_grad, inclination_of_main_blade_grad)

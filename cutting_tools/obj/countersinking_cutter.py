@@ -12,7 +12,6 @@ class CountersinkingCutter(DrillingCutter):
     """ Управляет полями класса "Зенкер"
 
     Parameters:
-        group : (str in GROUPS_TOOL) : группа инструмента.
         marking : (str) : обозначение инструмента.
         standard : (str contains one of TYPES_STANDARD) : стандарт инструмента.
         dia_mm : (float >= 0) : диаметр инструмента.
@@ -48,7 +47,6 @@ class CountersinkingCutter(DrillingCutter):
     DEFAULT_SETTINGS: ClassVar[dict] = DEFAULT_SETTINGS_FOR_CUTTING_TOOL["countersinking"]
 
     def __init__(self,
-                 group: Union[str, int] = "Зенкер",
                  marking: str = str(DEFAULT_SETTINGS["marking"]),
                  standard: str = str(DEFAULT_SETTINGS["Стандарт"]),
                  dia_mm: float = 2.4,
@@ -62,9 +60,10 @@ class CountersinkingCutter(DrillingCutter):
                  quantity: int = int(DEFAULT_SETTINGS["quantity"]),
                  accuracy: Union[str, int, float] = DEFAULT_SETTINGS["tolerance"],
                  ):
-        DrillingCutter.__init__(self, group, marking, standard, dia_mm, length_mm, mat_of_cutting_part, main_angle_grad,
+        DrillingCutter.__init__(self, marking, standard, dia_mm, length_mm, mat_of_cutting_part, main_angle_grad,
                                 front_angle_grad, inclination_of_main_blade_grad, num_of_cutting_blades,
                                 radius_of_cutting_vertex, quantity, accuracy)
+        self.group = "Зенкер"
 
 
 if __name__ == "__main__":
