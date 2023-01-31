@@ -10,27 +10,54 @@ from cutting_tools.obj.tool import Tool
 from cutting_tools.obj.sizes import PrismaticSizes
 from cutting_tools.obj.blade_material import BladeMaterial
 from cutting_tools.obj.angles import Angles
-from cutting_tools.obj.checker_in_dict import CheckerInDictionary
-from cutting_tools.obj.abstract_classes import Dictionarer
+
+from cutting_tools.obj.interfaces import IRadius
+from cutting_tools.obj.interfaces import IQuantity
+from cutting_tools.obj.interfaces import ITurret
+from cutting_tools.obj.interfaces import ILoad
+from cutting_tools.obj.interfaces import IComplexProfile
 
 
-class TurningCutter(Tool, PrismaticSizes, BladeMaterial, Angles, CheckerInDictionary, Dictionarer):
+class TurningCutter(Tool, PrismaticSizes, BladeMaterial, Angles, IRadius, IQuantity, ITurret, ILoad, IComplexProfile):
     """ Управляет полями класса "Фреза"
 
     Parameters:
-        radius_of_cutting_vertex : (float) : радиус режущей вершины.
-        quantity : (int) : Количество одновременно работающих инструментов. По умолчанию: None.
-        turret : (int, str) :  Наличие револьверной головки: 0-резец в резцедержателе, 1-резец в револьверной головке.
-        load : (int, str) : Нагрузка на резец: 0-равномерная, 1-неравномерная, 2-неравномерная с большой неравномерностью.
-        is_complex_profile : (bool) : Показатель наличия глубокого или сложного профиля. По умолчанию: None.
+        group : (str in GROUPS_TOOL) : группа инструмента.
+        marking : (str) : обозначение инструмента.
+        standard : (str contains one of TYPES_STANDARD) : стандарт инструмента.
+        length_mm : (float >= 0) : длина инструмента.
+        width_mm : (float >= 0) : ширина инструмента.
+        height_mm : (float >= 0) : высота инструмента.
+        mat_of_cutting_part : (str, int is MATERIALS_OF_CUTTING_PART) : материал режущей пластины.
+        main_angle_grad : (float >= 0) : главный угол в плане.
+        front_angle_grad  : (float >= 0) : передний угол.
+        inclination_of_main_blade_grad  : (float >= 0) : наклон передней грани
+        radius_of_cutting_vertex : (float >= 0) : радиус режущей вершины.
+        quantity : (int >= 0) : количество одновременно работающих инструментов.
+        turret : (int, str in TYPES_OF_TOOL_HOLDER) :  Наличие револьверной головки.
+        load : (int, str in TYPES_OF_TOOL_HOLDER) : Нагрузка на резец.
+        is_complex_profile : (Optional[bool]) : Показатель наличия глубокого или сложного профиля. По умолчанию: None.
+
+    Properties:
+        name : (str) : возвращает название инструмента.
+        gabarit_volume : (float) : возвращает габаритный объем.
+        gabarit_str : (str) : возвращает габарит, записанный строкой.
+        type_of_mat  : (int) : тип материала режущей пластины: 0-быстрорез; 1-твердый сплав.
+
+    Methods:
+        dict_parameters : (dict) : возвращает словарь параметров и свойств.
 
     Сostants:
+        GROUPS_TOOL : Словарь наименований группы инструмента.
+        TYPES_STANDARD : Типы стандартов инструмента.
+        HARD_ALLOYS : перечень доступных твердосплавных материалов.
+        HIGH_SPEED_STEELS : перечень доступных быстрорежущих материалов.
+        MATS_OF_CUTTING_PART : перечень доступных материалов режущей части (общий).
+        TYPES_OF_TOOL_HOLDER : Типы установки резца.
+        TYPES_OF_LOADS : Типы нагрузок на резец.
         DEFAULT_SETTINGS : Настройки по умолчанию
     """
     DEFAULT_SETTINGS: ClassVar[dict] = DEFAULT_SETTINGS_FOR_CUTTING_TOOL['turning']
-    TYPES_OF_TOOL_HOLDER: ClassVar[dict] = {"В резцедержателе": 0, "В револьверной головке": 1}
-    TYPES_OF_LOADS: ClassVar[dict] = {"Равномерная": 0, "Неравномерная": 1,
-                                      "Неравномерная с большой неравномерностью": 2}
 
     def __init__(self,
                  group: Union[str, int] = "Резец",
@@ -53,81 +80,23 @@ class TurningCutter(Tool, PrismaticSizes, BladeMaterial, Angles, CheckerInDictio
         PrismaticSizes.__init__(self, length_mm, width_mm, height_mm)
         BladeMaterial.__init__(self, mat_of_cutting_part)
         Angles.__init__(self, main_angle_grad, front_angle_grad, inclination_of_main_blade_grad)
-
-        self._radius_of_cutting_vertex = None
-        self._quantity = None
-        self._turret = None
-        self._load = None
-        self._is_complex_profile = None
-
-        self.radius_of_cutting_vertex = radius_of_cutting_vertex
-        self.quantity = quantity
-        self.turret = turret
-        self.load = load
-        self.is_complex_profile = is_complex_profile
-
-    @property
-    def radius_of_cutting_vertex(self):
-        return self._radius_of_cutting_vertex
-
-    @radius_of_cutting_vertex.setter
-    def radius_of_cutting_vertex(self, any_radius):
-        if not isinstance(any_radius, (int, float)) or any_radius < 0:
-            raise InvalidValue(f'Радиус вершины должен быть положительным числом (передано {any_radius})')
-        self._radius_of_cutting_vertex = any_radius
-
-    @property
-    def quantity(self):
-        return self._quantity
-
-    @quantity.setter
-    def quantity(self, any_quantity):
-        if not isinstance(any_quantity, int) or any_quantity < 0:
-            raise InvalidValue(f'Количество должно быть целым положительным числом (передано {any_quantity})')
-        self._quantity = any_quantity
-
-    @property
-    def turret(self):
-        return self._turret
-
-    @turret.setter
-    def turret(self, any_type):
-        err_message = f'Неверное значение типа резцедержателя. Должно быть из: {self.TYPES_OF_TOOL_HOLDER}.\n ' \
-                      f'Передано {any_type}.'
-        any_type = self._check_in_dict(any_type, self.TYPES_OF_TOOL_HOLDER, err_message)
-        self._turret = any_type if isinstance(any_type, (int, float)) else \
-            self.TYPES_OF_TOOL_HOLDER[any_type]
-
-    @property
-    def load(self):
-        return self._load
-
-    @load.setter
-    def load(self, any_type):
-        err_message = f'Неверное значение типа нагрузки на резец. Должно быть из: {self.TYPES_OF_LOADS}.\n ' \
-                      f'Передано {any_type}.'
-        any_type = self._check_in_dict(any_type, self.TYPES_OF_LOADS, err_message)
-        self._load = any_type if isinstance(any_type, (int, float)) else \
-            self.TYPES_OF_LOADS[any_type]
-
-    @property
-    def is_complex_profile(self):
-        return self._is_complex_profile
-
-    @is_complex_profile.setter
-    def is_complex_profile(self, any_value):
-        if not isinstance(any_value, bool):
-            raise InvalidValue('Передайте "True" если резец имеет глубокий и сложный профиль')
-        self._is_complex_profile = any_value
+        IRadius.__init__(self, radius_of_cutting_vertex)
+        IQuantity.__init__(self, quantity)
+        ITurret.__init__(self, turret)
+        ILoad.__init__(self, load)
+        IComplexProfile.__init__(self, is_complex_profile)
 
     def _dict_parameters(self):
-        tool_parameters = Tool._dict_parameters(self)
-        size_parameters = PrismaticSizes._dict_parameters(self)
-        blade_material_parameters = BladeMaterial._dict_parameters(self)
-        angles_parameters = Angles._dict_parameters(self)
-        parameters = {"radius_of_cutting_vertex": self._radius_of_cutting_vertex, "quantity": self._quantity,
-                      "turret": self._turret, "load": self._load, "is_complex_profile": self._is_complex_profile}
-        return tool_parameters | size_parameters | blade_material_parameters | angles_parameters | parameters
+        tool = Tool._dict_parameters(self)
+        size = PrismaticSizes._dict_parameters(self)
+        blade_material = BladeMaterial._dict_parameters(self)
+        angles = Angles._dict_parameters(self)
+        iradius = IRadius._dict_parameters(self)
+        iquantity = IQuantity._dict_parameters(self)
+        iturret = ITurret._dict_parameters(self)
+        iload = ILoad._dict_parameters(self)
+        icomplexprofile = IComplexProfile._dict_parameters(self)
+        return tool | size | blade_material | angles | iradius | iquantity | iturret | iload | icomplexprofile
 
 
 if __name__ == "__main__":

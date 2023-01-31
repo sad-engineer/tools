@@ -5,8 +5,14 @@ from typing import ClassVar
 from typing import Union, Optional
 
 from cutting_tools.obj.checker_in_dict import CheckerInDictionary
-from cutting_tools.obj.constants import ACCURACY_STANDARDS, TOLERANCE_FIELDS, ACCURACY_CLASS_STANDARDS, \
-    TYPES_OF_MILLING_CUTTER, TYPES_OF_CUTTING_PART_OF_MILLING_CUTTER, TYPES_OF_LARGE_TOOTH
+from cutting_tools.obj.constants import ACCURACY_STANDARDS
+from cutting_tools.obj.constants import TOLERANCE_FIELDS
+from cutting_tools.obj.constants import ACCURACY_CLASS_STANDARDS
+from cutting_tools.obj.constants import TYPES_OF_MILLING_CUTTER
+from cutting_tools.obj.constants import TYPES_OF_CUTTING_PART_OF_MILLING_CUTTER
+from cutting_tools.obj.constants import TYPES_OF_LARGE_TOOTH
+from cutting_tools.obj.constants import TYPES_OF_TOOL_HOLDER
+from cutting_tools.obj.constants import TYPES_OF_LOADS
 from cutting_tools.obj.abstract_classes import Dictionarer
 from cutting_tools.obj.exceptions import InvalidValue
 
@@ -280,7 +286,7 @@ class ILargeTooth(CheckerInDictionary, Dictionarer):
         return {"large_tooth": self._large_tooth}
 
 
-class IСutterNumber(Dictionarer):
+class ICutterNumber(Dictionarer):
     """ Интерфейс работы с номером фрезы
 
     Parameters:
@@ -328,3 +334,87 @@ class IModule(Dictionarer):
 
     def _dict_parameters(self) -> dict:
         return {"module": self._module}
+
+
+class ITurret(CheckerInDictionary, Dictionarer):
+    """ Интерфейс работы с полем наличия револьверной головки
+
+    Parameters:
+        turret : (int, str in TYPES_OF_TOOL_HOLDER) :  Наличие револьверной головки.
+
+    Сostants:
+        TYPES_OF_TOOL_HOLDER : Типы установки резца.
+    """
+    TYPES_OF_TOOL_HOLDER: ClassVar[dict] = TYPES_OF_TOOL_HOLDER
+
+    def __init__(self, turret: Union[str, int, float] = 1) -> None:
+        self._turret = None
+        self.turret = turret
+
+    @property
+    def turret(self):
+        return self._turret
+
+    @turret.setter
+    def turret(self, any_type):
+        err_message = f'Неверное значение типа установки резца.' \
+                      f' Значение должно быть из {self.TYPES_OF_TOOL_HOLDER}.\n Передано {any_type}.'
+        any_type = self._check_in_dict(any_type, self.TYPES_OF_TOOL_HOLDER, err_message)
+        self._type_cutter = any_type if isinstance(any_type, (int, float)) else self.TYPES_OF_TOOL_HOLDER[any_type]
+
+    def _dict_parameters(self) -> dict:
+        return {"turret": self._turret}
+
+
+class ILoad(CheckerInDictionary, Dictionarer):
+    """ Интерфейс работы с полем нагрузки на резец
+
+    Parameters:
+        load : (int, str in TYPES_OF_TOOL_HOLDER) : Нагрузка на резец.
+
+    Сostants:
+        TYPES_OF_LOADS : Типы нагрузок на резец.
+    """
+    TYPES_OF_LOADS: ClassVar[dict] = TYPES_OF_LOADS
+
+    def __init__(self, load: Union[str, int, float] = 1) -> None:
+        self._load = None
+        self.load = load
+
+    @property
+    def load(self):
+        return self._load
+
+    @load.setter
+    def load(self, any_type):
+        err_message = f'Неверное значение типа нагрузки на резец.' \
+                      f' Значение должно быть из {self.TYPES_OF_LOADS}.\n Передано {any_type}.'
+        any_type = self._check_in_dict(any_type, self.TYPES_OF_LOADS, err_message)
+        self._load = any_type if isinstance(any_type, (int, float)) else self.TYPES_OF_LOADS[any_type]
+
+    def _dict_parameters(self) -> dict:
+        return {"load": self._load}
+
+
+class IComplexProfile(CheckerInDictionary, Dictionarer):
+    """ Интерфейс работы с полем наличия глубокого или сложного профиля.
+
+    Parameters:
+        is_complex_profile : (Optional[bool]) : Показатель наличия глубокого или сложного профиля. По умолчанию: None.
+    """
+    def __init__(self, is_complex_profile: bool = False) -> None:
+        self._is_complex_profile = None
+        self.is_complex_profile = is_complex_profile
+
+    @property
+    def is_complex_profile(self):
+        return self._is_complex_profile
+
+    @is_complex_profile.setter
+    def is_complex_profile(self, any_value):
+        if not isinstance(any_value, bool):
+            raise InvalidValue('Передайте "True" если резец имеет глубокий и сложный профиль')
+        self._is_complex_profile = any_value
+
+    def _dict_parameters(self) -> dict:
+        return {"is_complex_profile": self._is_complex_profile}

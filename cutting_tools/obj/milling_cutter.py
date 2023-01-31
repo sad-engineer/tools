@@ -17,13 +17,13 @@ from cutting_tools.obj.interfaces import IAccuracyClass
 from cutting_tools.obj.interfaces import ITypeCutter
 from cutting_tools.obj.interfaces import ITypeOfCuttingPart
 from cutting_tools.obj.interfaces import ILargeTooth
-from cutting_tools.obj.interfaces import IСutterNumber
+from cutting_tools.obj.interfaces import ICutterNumber
 from cutting_tools.obj.interfaces import IModule
 from cutting_tools.fun import get_name
 
 
 class MillingCutter(Tool, AxialSizes, BladeMaterial, Angles, Tolerance, ITypeCutter, ITypeOfCuttingPart, ILargeTooth,
-                    INumOfBlades, IRadius, IQuantity, IAccuracyClass, IСutterNumber, IModule):
+                    INumOfBlades, IRadius, IQuantity, IAccuracyClass, ICutterNumber, IModule):
     """ Управляет полями класса "Фреза".
 
     Parameters:
@@ -106,7 +106,7 @@ class MillingCutter(Tool, AxialSizes, BladeMaterial, Angles, Tolerance, ITypeCut
         IRadius.__init__(self, radius_of_cutting_vertex)
         IQuantity.__init__(self, quantity)
         IAccuracyClass.__init__(self, accuracy_class)
-        IСutterNumber.__init__(self, number)
+        ICutterNumber.__init__(self, number)
         IModule.__init__(self, module)
 
     @property
@@ -130,7 +130,7 @@ class MillingCutter(Tool, AxialSizes, BladeMaterial, Angles, Tolerance, ITypeCut
         inumofblades = INumOfBlades._dict_parameters(self)
         iradius = IRadius._dict_parameters(self)
         iquantity = IQuantity._dict_parameters(self)
-        inumber = IСutterNumber._dict_parameters(self)
+        inumber = ICutterNumber._dict_parameters(self)
         imodule = IModule._dict_parameters(self)
         return tool_parameters | size_parameters | blade_material_parameters | angles_parameters | \
                tolerance_parameters | itypecutter | itypeofcuttingpart | ilargetooth | inumofblades | iradius | \
