@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 # ----------------------------------------------------------------------------------------------------------------------
 from cutting_tools.obj.exceptions import InvalidValue
-from cutting_tools.obj.abstract_classes import Dictionarer
+from logger import Dictionarer
 
 
 class Angles(Dictionarer):

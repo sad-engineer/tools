@@ -4,7 +4,7 @@
 from typing import Union, ClassVar
 from cutting_tools.obj.constants import GROUPS_TOOL, TYPES_STANDARD
 from cutting_tools.obj.exceptions import InvalidValue
-from cutting_tools.obj.abstract_classes import Dictionarer
+from logger import Dictionarer
 
 
 class Tool(Dictionarer):

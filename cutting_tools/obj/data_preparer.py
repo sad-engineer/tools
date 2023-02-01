@@ -7,7 +7,7 @@ from typing import ClassVar
 
 def select_data_for_milling(raw_data: dict, default_settings: dict) -> dict:
     param = dict()
-    param["group"] = raw_data.get('Тип_инструмента')
+    # param["group"] = raw_data.get('Тип_инструмента')
     param["marking"] = raw_data.get('Обозначение')
     param["standard"] = raw_data.get('Стандарт')
     param["mat_of_cutting_part"] = default_settings["mat_of_cutting_part"]
@@ -34,7 +34,7 @@ def select_data_for_milling(raw_data: dict, default_settings: dict) -> dict:
 def select_data_for_drilling(raw_data: dict, DEFAULT_SETTINGS: dict) -> dict:
     """ Из словаря данных, полученных из БД (сырых), выбирает данные для класса 'Сверло'. """
     param = dict()
-    param["group"] = raw_data.get('Тип_инструмента')
+    # param["group"] = raw_data.get('Тип_инструмента')
     param["marking"] = raw_data.get('Обозначение')
     param["standard"] = raw_data.get('Стандарт')
     param["mat_of_cutting_part"] = DEFAULT_SETTINGS["mat_of_cutting_part"]
@@ -52,7 +52,7 @@ def select_data_for_drilling(raw_data: dict, DEFAULT_SETTINGS: dict) -> dict:
 def select_data_for_turning(raw_data: dict, DEFAULT_SETTINGS: dict) -> dict:
     """ Из словаря данных, полученных из БД (сырых), выбирает данные для класса 'Резец'. """
     param = dict()
-    param["group"] = raw_data.get('Тип_инструмента')
+    # param["group"] = raw_data.get('Тип_инструмента')
     param["marking"] = raw_data.get('Обозначение')
     param["standard"] = raw_data.get('Стандарт')
     param["mat_of_cutting_part"] = DEFAULT_SETTINGS["mat_of_cutting_part"]
@@ -85,7 +85,7 @@ class DataPreparer:
         kind_of_cut = self.GROUPS_TOOL[self._raw_data['Тип_инструмента']]
         script = self.SCRIPTS[kind_of_cut]
         param = script(self._raw_data, self.DEFAULT_SETTINGS[kind_of_cut])
-        return param
+        return kind_of_cut, param
 
 
 if __name__ == "__main__":

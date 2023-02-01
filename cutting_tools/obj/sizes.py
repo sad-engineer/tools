@@ -3,7 +3,7 @@
 # ----------------------------------------------------------------------------------------------------------------------
 from cutting_tools.obj.exceptions import InvalidValue
 from cutting_tools.obj.abstract_classes import Size
-from cutting_tools.obj.abstract_classes import Dictionarer
+from logger import Dictionarer
 
 
 class AxialSizes(Size, Dictionarer):
