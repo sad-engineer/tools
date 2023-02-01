@@ -53,7 +53,7 @@ class MillingCutter(Tool, AxialSizes, BladeMaterial, Angles, Tolerance, ITypeCut
         type_of_mat  : (int) : тип материала режущей пластины: 0-быстрорез; 1-твердый сплав.
 
     Methods:
-        dict_parameters : (dict) : возвращает словарь параметров и свойств.
+        parameters : (dict) : возвращает словарь параметров и свойств.
 
     Сostants:
         GROUPS_TOOL : Словарь наименований группы инструмента.
@@ -116,20 +116,20 @@ class MillingCutter(Tool, AxialSizes, BladeMaterial, Angles, Tolerance, ITypeCut
         unique_name = get_name(tool_parameters)
         return unique_name if not isinstance(unique_name, type(None)) else standard_name
 
-    def _dict_parameters(self):
-        tool_parameters = Tool._dict_parameters(self)
-        size_parameters = AxialSizes._dict_parameters(self)
-        blade_material_parameters = BladeMaterial._dict_parameters(self)
-        angles_parameters = Angles._dict_parameters(self)
-        tolerance_parameters = Tolerance._dict_parameters(self)
-        itypecutter = ITypeCutter._dict_parameters(self)
-        itypeofcuttingpart = ITypeOfCuttingPart._dict_parameters(self)
-        ilargetooth = ILargeTooth._dict_parameters(self)
-        inumofblades = INumOfBlades._dict_parameters(self)
-        iradius = IRadius._dict_parameters(self)
-        iquantity = IQuantity._dict_parameters(self)
-        inumber = ICutterNumber._dict_parameters(self)
-        imodule = IModule._dict_parameters(self)
+    def _parameters(self):
+        tool_parameters = Tool._parameters(self)
+        size_parameters = AxialSizes._parameters(self)
+        blade_material_parameters = BladeMaterial._parameters(self)
+        angles_parameters = Angles._parameters(self)
+        tolerance_parameters = Tolerance._parameters(self)
+        itypecutter = ITypeCutter._parameters(self)
+        itypeofcuttingpart = ITypeOfCuttingPart._parameters(self)
+        ilargetooth = ILargeTooth._parameters(self)
+        inumofblades = INumOfBlades._parameters(self)
+        iradius = IRadius._parameters(self)
+        iquantity = IQuantity._parameters(self)
+        inumber = ICutterNumber._parameters(self)
+        imodule = IModule._parameters(self)
         return tool_parameters | size_parameters | blade_material_parameters | angles_parameters | \
                tolerance_parameters | itypecutter | itypeofcuttingpart | ilargetooth | inumofblades | iradius | \
                iquantity | inumber | imodule
@@ -139,4 +139,4 @@ if __name__ == "__main__":
     cutter = MillingCutter()
     cutter.group = "Фреза"
     # cutter.quantity = -1
-    print(cutter.dict_parameters)
+    print(cutter.parameters)

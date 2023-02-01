@@ -21,7 +21,7 @@ from cutting_tools.obj.interfaces import IComplexProfile
 class TurningCutter(Tool, PrismaticSizes, BladeMaterial, Angles, IRadius, IQuantity, ITurret, ILoad, IComplexProfile):
     """ Управляет полями класса "Фреза"
 
-    Parameters:
+    parameters:
         marking : (str) : обозначение инструмента.
         standard : (str contains one of TYPES_STANDARD) : стандарт инструмента.
         length_mm : (float >= 0) : длина инструмента.
@@ -44,7 +44,7 @@ class TurningCutter(Tool, PrismaticSizes, BladeMaterial, Angles, IRadius, IQuant
         type_of_mat  : (int) : тип материала режущей пластины: 0-быстрорез; 1-твердый сплав.
 
     Methods:
-        dict_parameters : (dict) : возвращает словарь параметров и свойств.
+        parameters : (dict) : возвращает словарь параметров и свойств.
 
     Сostants:
         GROUPS_TOOL : Словарь наименований группы инструмента.
@@ -84,16 +84,16 @@ class TurningCutter(Tool, PrismaticSizes, BladeMaterial, Angles, IRadius, IQuant
         ILoad.__init__(self, load)
         IComplexProfile.__init__(self, is_complex_profile)
 
-    def _dict_parameters(self):
-        tool = Tool._dict_parameters(self)
-        size = PrismaticSizes._dict_parameters(self)
-        blade_material = BladeMaterial._dict_parameters(self)
-        angles = Angles._dict_parameters(self)
-        iradius = IRadius._dict_parameters(self)
-        iquantity = IQuantity._dict_parameters(self)
-        iturret = ITurret._dict_parameters(self)
-        iload = ILoad._dict_parameters(self)
-        icomplexprofile = IComplexProfile._dict_parameters(self)
+    def _parameters(self):
+        tool = Tool._parameters(self)
+        size = PrismaticSizes._parameters(self)
+        blade_material = BladeMaterial._parameters(self)
+        angles = Angles._parameters(self)
+        iradius = IRadius._parameters(self)
+        iquantity = IQuantity._parameters(self)
+        iturret = ITurret._parameters(self)
+        iload = ILoad._parameters(self)
+        icomplexprofile = IComplexProfile._parameters(self)
         return tool | size | blade_material | angles | iradius | iquantity | iturret | iload | icomplexprofile
 
 
@@ -101,4 +101,4 @@ if __name__ == "__main__":
     cutter = TurningCutter()
     cutter.group = "Резец"
     # cutter.quantity = -1
-    print(cutter.dict_parameters)
+    print(cutter.parameters)

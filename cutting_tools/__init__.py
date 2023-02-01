@@ -14,6 +14,7 @@ from cutting_tools.obj.constants import ACCURACY_STANDARDS
 from cutting_tools.obj.constants import TOLERANCE_FIELDS
 from cutting_tools.obj.constants import ACCURACY_CLASS_STANDARDS
 from cutting_tools.obj.constants import DECODING
+from cutting_tools.obj.constants import SAVED_FIELDS
 # Методы пакета
 # from cutting_tools.fun import get_name
 # Классы пакета
@@ -29,7 +30,7 @@ from cutting_tools.obj.data_preparer import DataPreparer
 if __name__ == "__main__":
     from logger import Logger
     from logger import StandardResultTerminalPrinter, StandardObjectTerminalPrinter
-    from logger import StandardResultFilePrinter, StandardObjectFilePrinter
+    from logger import StandardResultFilePrinter, StandardObjectFilePrinter, StandardObjectFileSaver
 
     variants = ["milling",
                 "turning",
@@ -48,11 +49,7 @@ if __name__ == "__main__":
                      }
 
     logger = Logger()
-    # file_printer = StandardResultTerminalPrinter
-    # file_printer = StandardObjectTerminalPrinter
-    # file_printer = StandardResultFilePrinter
-    file_printer = StandardObjectFilePrinter
-    file_printer.DECODING = DECODING
+
 
     for variant in variants:
         marking = DEFAULT_SETTINGS_FOR_CUTTING_TOOL[variant]["marking"]
@@ -61,32 +58,15 @@ if __name__ == "__main__":
         kind_of_cut, param = DataPreparer(raw_param).get_params
         cutter_class = cutter_clases[variant]
         cutter = cutter_class(**param)
-        logger.log(cutter, notifier=file_printer, message='### Параметры применяемого инструмента ###')
 
-    # marking = DEFAULT_SETTINGS_FOR_CUTTING_TOOL["drilling"]["marking"]
-    # raw_table = Finder().find_by_marking(marking).dropna(how='any', axis=1)
-    # raw_param = raw_table.loc[0].to_dict()
-    # param = DataPreparer(raw_param).get_params
-    # cutter = DrillingCutter(**param)
-    # Logger().log(cutter, notifier=file_printer, message='### Параметры применяемого инструмента ###')
-    #
-    # marking = DEFAULT_SETTINGS_FOR_CUTTING_TOOL["countersinking"]["marking"]
-    # raw_table = Finder().find_by_marking(marking).dropna(how='any', axis=1)
-    # raw_param = raw_table.loc[0].to_dict()
-    # param = DataPreparer(raw_param).get_params
-    # cutter = CountersinkingCutter(**param)
-    # Logger().log(cutter, notifier=file_printer, message='### Параметры применяемого инструмента ###')
-    #
-    # marking = DEFAULT_SETTINGS_FOR_CUTTING_TOOL["deployment"]["marking"]
-    # raw_table = Finder().find_by_marking(marking).dropna(how='any', axis=1)
-    # raw_param = raw_table.loc[0].to_dict()
-    # param = DataPreparer(raw_param).get_params
-    # cutter = DeploymentCutter(**param)
-    # Logger().log(cutter, notifier=file_printer, message='### Параметры применяемого инструмента ###')
-    #
-    # marking = DEFAULT_SETTINGS_FOR_CUTTING_TOOL["turning"]["marking"]
-    # raw_table = Finder().find_by_marking(marking).dropna(how='any', axis=1)
-    # raw_param = raw_table.loc[0].to_dict()
-    # param = DataPreparer(raw_param).get_params
-    # cutter = TurningCutter(**param)
-    # Logger().log(cutter, notifier=file_printer, message='### Параметры применяемого инструмента ###')
+        # file_printer = StandardResultTerminalPrinter
+        # file_printer = StandardObjectTerminalPrinter
+        # file_printer = StandardResultFilePrinter
+        # file_printer = StandardObjectFilePrinter
+        # file_printer.DECODING = DECODING
+        # logger.log(cutter, notifier=file_printer, message='### Параметры применяемого инструмента ###')
+
+        printer = StandardObjectFileSaver
+        printer.SAVED_FIELDS = SAVED_FIELDS
+        logger.log(cutter, notifier=printer)
+

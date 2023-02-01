@@ -43,7 +43,7 @@ class IAccuracy(CheckerInDictionary, Dictionarer):
         any_accuracy = self._check_in_dict(any_accuracy, self.ACCURACY_STANDARDS, err_message)
         self._accuracy = any_accuracy if isinstance(any_accuracy, str) else self.ACCURACY_STANDARDS[any_accuracy]
 
-    def _dict_parameters(self) -> dict:
+    def _parameters(self) -> dict:
         return {"accuracy": self._accuracy}
 
 
@@ -74,7 +74,7 @@ class IAccuracyClass(CheckerInDictionary, Dictionarer):
         self._accuracy_class = any_accuracy_class if isinstance(any_accuracy_class, str) \
             else self.ACCURACY_CLASS_STANDARDS[any_accuracy_class]
 
-    def _dict_parameters(self) -> dict:
+    def _parameters(self) -> dict:
         return {"accuracy_class": self._accuracy_class}
 
 
@@ -98,7 +98,7 @@ class IQuantity(Dictionarer):
             raise InvalidValue(f'Количество должно быть целым положительным числом (передано {any_quantity})')
         self._quantity = any_quantity
 
-    def _dict_parameters(self) -> dict:
+    def _parameters(self) -> dict:
         return {"quantity": self._quantity}
 
 
@@ -122,7 +122,7 @@ class INumOfBlades(Dictionarer):
             raise InvalidValue(f'Количество режущих граней должно быть целым положительным числом (передано {any_num})')
         self._num_of_cutting_blades = any_num
 
-    def _dict_parameters(self) -> dict:
+    def _parameters(self) -> dict:
         return {"num_of_cutting_blades": self._num_of_cutting_blades}
 
 
@@ -146,7 +146,7 @@ class IRadius(Dictionarer):
             raise InvalidValue(f'Радиус вершины должен быть положительным числом (передано {any_radius})')
         self._radius_of_cutting_vertex = any_radius
 
-    def _dict_parameters(self) -> dict:
+    def _parameters(self) -> dict:
         return {"radius_of_cutting_vertex": self._radius_of_cutting_vertex}
 
 
@@ -176,7 +176,7 @@ class IToleranceField(CheckerInDictionary, Dictionarer):
         any_field = self._check_in_dict(any_field, self.TOLERANCE_FIELDS, err_message)
         self._tolerance_field = any_field if isinstance(any_field, str) else self.TOLERANCE_FIELDS[any_field]
 
-    def _dict_parameters(self) -> dict:
+    def _parameters(self) -> dict:
         return {"tolerance_field": self._tolerance_field}
 
 
@@ -221,7 +221,7 @@ class ITypeCutter(CheckerInDictionary, Dictionarer):
         any_type = self._check_in_dict(any_type, self.TYPES_OF_MILLING_CUTTER, err_message)
         self._type_cutter = any_type if isinstance(any_type, (int, float)) else self.TYPES_OF_MILLING_CUTTER[any_type]
 
-    def _dict_parameters(self) -> dict:
+    def _parameters(self) -> dict:
         return {"type_cutter": self._type_cutter}
 
 
@@ -252,7 +252,7 @@ class ITypeOfCuttingPart(CheckerInDictionary, Dictionarer):
         self._type_of_cutting_part = any_type if isinstance(any_type, (int, float)) else \
             self.TYPES_OF_CUTTING_PART[any_type]
 
-    def _dict_parameters(self) -> dict:
+    def _parameters(self) -> dict:
         return {"type_of_cutting_part": self._type_of_cutting_part}
 
 
@@ -282,7 +282,7 @@ class ILargeTooth(CheckerInDictionary, Dictionarer):
         any_type = self._check_in_dict(any_large_tooth, self.TYPES_OF_LARGE_TOOTH, err_message)
         self._large_tooth = any_type if isinstance(any_type, (int, float)) else self.TYPES_OF_LARGE_TOOTH[any_type]
 
-    def _dict_parameters(self) -> dict:
+    def _parameters(self) -> dict:
         return {"large_tooth": self._large_tooth}
 
 
@@ -307,7 +307,7 @@ class ICutterNumber(Dictionarer):
                 raise InvalidValue(f'Номер фрезы должен быть задан строкой (передано {any_num})')
         self._cutter_number = any_num
 
-    def _dict_parameters(self) -> dict:
+    def _parameters(self) -> dict:
         return {"cutter_number": self._cutter_number}
 
 
@@ -332,7 +332,7 @@ class IModule(Dictionarer):
                 raise InvalidValue(f'Модуль фрезы должен быть положительным числом (передано {any_module})')
         self._module = any_module
 
-    def _dict_parameters(self) -> dict:
+    def _parameters(self) -> dict:
         return {"module": self._module}
 
 
@@ -362,7 +362,7 @@ class ITurret(CheckerInDictionary, Dictionarer):
         any_type = self._check_in_dict(any_type, self.TYPES_OF_TOOL_HOLDER, err_message)
         self._type_cutter = any_type if isinstance(any_type, (int, float)) else self.TYPES_OF_TOOL_HOLDER[any_type]
 
-    def _dict_parameters(self) -> dict:
+    def _parameters(self) -> dict:
         return {"turret": self._turret}
 
 
@@ -392,7 +392,7 @@ class ILoad(CheckerInDictionary, Dictionarer):
         any_type = self._check_in_dict(any_type, self.TYPES_OF_LOADS, err_message)
         self._load = any_type if isinstance(any_type, (int, float)) else self.TYPES_OF_LOADS[any_type]
 
-    def _dict_parameters(self) -> dict:
+    def _parameters(self) -> dict:
         return {"load": self._load}
 
 
@@ -416,5 +416,5 @@ class IComplexProfile(CheckerInDictionary, Dictionarer):
             raise InvalidValue('Передайте "True" если резец имеет глубокий и сложный профиль')
         self._is_complex_profile = any_value
 
-    def _dict_parameters(self) -> dict:
+    def _parameters(self) -> dict:
         return {"is_complex_profile": self._is_complex_profile}

@@ -19,7 +19,7 @@ class Tool(Dictionarer):
         name : (str) : возвращает название инструмента.
 
     Methods:
-        dict_parameters : (dict) : возвращает словарь параметров и свойств.
+        parameters : (dict) : возвращает словарь параметров и свойств.
 
     Сostants:
         GROUPS_TOOL : Словарь наименований группы инструмента.
@@ -86,7 +86,7 @@ class Tool(Dictionarer):
     def name(self, value) -> None:
         self._name = value
 
-    def _dict_parameters(self) -> dict:
+    def _parameters(self) -> dict:
         return {"group": self._group, "marking": self._marking, "standard": self._standard, "name": self.name}
 
 
@@ -106,7 +106,7 @@ if __name__ == "__main__":
 
     obj = Tool(group="Фреза")
     print(obj.group)
-    print(obj.dict_parameters)
+    print(obj.parameters)
 
 
 

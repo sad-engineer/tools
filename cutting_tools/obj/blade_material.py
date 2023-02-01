@@ -19,7 +19,7 @@ class BladeMaterial(Dictionarer):
         type_of_mat  : (int) : тип материала режущей пластины: 0-быстрорез; 1-твердый сплав.
 
     Methods:
-        dict_parameters : (dict) : возвращает словарь параметров и свойств.
+        parameters : (dict) : возвращает словарь параметров и свойств.
 
     Сostants:
         HARD_ALLOYS : перечень доступных твердосплавных материалов.
@@ -56,5 +56,5 @@ class BladeMaterial(Dictionarer):
         self._mat_of_cutting_part = mat if isinstance(mat, str) else \
             [k for k, v in self.MATS_OF_CUTTING_PART.items() if v == mat][0]
 
-    def _dict_parameters(self):
+    def _parameters(self):
         return {"mat_of_cutting_part": self._mat_of_cutting_part, "type_of_mat": self.type_of_mat}

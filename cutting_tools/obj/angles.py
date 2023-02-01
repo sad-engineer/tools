@@ -14,7 +14,7 @@ class Angles(Dictionarer):
         inclination_of_main_blade_grad  : (float >= 0) : наклон передней грани
 
     Methods:
-        dict_parameters : (dict) : возвращает словарь параметров и свойств.
+        parameters : (dict) : возвращает словарь параметров и свойств.
     """
     def __init__(self, main_angle_grad: float = 45, front_angle_grad: float = 45,
                  inclination_of_main_blade_grad: float = 0):
@@ -56,6 +56,6 @@ class Angles(Dictionarer):
             raise InvalidValue(f'Значение угла должно быть целым или дробным.')
         self._inclination_of_main_blade_grad = any_angle_grad
 
-    def _dict_parameters(self):
+    def _parameters(self):
         return {"main_angle_grad": self._main_angle_grad, "front_angle_grad": self._front_angle_grad,
                 "inclination_of_main_blade_grad": self._inclination_of_main_blade_grad, }

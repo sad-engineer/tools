@@ -43,19 +43,19 @@ class Tolerance(IAccuracy, IToleranceField):
         self.accuracy = re.findall(r'\d+', any_tolerance)[0]
         self.tolerance_field = any_tolerance.replace(re.findall(r'\d+', any_tolerance)[0], "")
 
-    def _dict_parameters(self) -> dict:
-        itolerancefield = IToleranceField._dict_parameters(self)
-        iaccuracy = IAccuracy._dict_parameters(self)
+    def _parameters(self) -> dict:
+        itolerancefield = IToleranceField._parameters(self)
+        iaccuracy = IAccuracy._parameters(self)
         return itolerancefield | iaccuracy | {"tolerance": self.tolerance}
 
 
 if __name__ == "__main__":
     obj = Tolerance(tolerance_field="K", accuracy="10")
     print(obj.tolerance)
-    print(obj.dict_parameters)
+    print(obj.parameters)
     obj = Tolerance(tolerance="h12")
     print(obj.tolerance)
-    print(obj.dict_parameters)
+    print(obj.parameters)
     obj = Tolerance("H7")
     print(obj.tolerance)
-    print(obj.dict_parameters)
+    print(obj.parameters)

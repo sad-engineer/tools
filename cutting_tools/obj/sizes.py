@@ -18,7 +18,7 @@ class AxialSizes(Size, Dictionarer):
         gabarit_str : (str) : возвращает габарит, записанный строкой.
 
     Methods:
-        dict_parameters : (dict) : возвращает словарь параметров и свойств.
+        parameters : (dict) : возвращает словарь параметров и свойств.
     """
     def __init__(self, dia_mm: float = 50, length_mm: float = 100):
         self._dia_mm = None
@@ -59,7 +59,7 @@ class AxialSizes(Size, Dictionarer):
     def gabarit_str(self):
         return f"øDxL: ø{self._dia_mm}x{self._length_mm} мм."
 
-    def _dict_parameters(self):
+    def _parameters(self):
         return {"dia_mm": self.dia_mm, "length_mm": self.length_mm, "gabarit_volume": self.gabarit_volume,
                 "gabarit_str": self.gabarit_str}
 
@@ -77,7 +77,7 @@ class PrismaticSizes(Size, Dictionarer):
         gabarit_str : (str) : возвращает габарит, записанный строкой.
 
     Methods:
-        dict_parameters : (dict) : возвращает словарь параметров и свойств.
+        parameters : (dict) : возвращает словарь параметров и свойств.
     """
     def __init__(self, length_mm: float = 100, width_mm: float = 25, height_mm: float = 25):
         self._length_mm = None
@@ -132,6 +132,6 @@ class PrismaticSizes(Size, Dictionarer):
     def gabarit_str(self):
         return f"LxBxH: {self.length_mm}x{self.width_mm}x{self.height_mm} мм."
 
-    def _dict_parameters(self):
+    def _parameters(self):
         return {"length_mm": self._length_mm, "width_mm": self._width_mm, "height_mm": self._height_mm,
                 "gabarit_volume": self.gabarit_volume, "gabarit_str": self.gabarit_str}

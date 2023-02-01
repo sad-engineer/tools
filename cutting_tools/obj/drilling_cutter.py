@@ -38,7 +38,7 @@ class DrillingCutter(Tool, AxialSizes, BladeMaterial, Angles, Tolerance, INumOfB
         type_of_mat  : (int) : тип материала режущей пластины: 0-быстрорез; 1-твердый сплав.
 
     Methods:
-        dict_parameters : (dict) : возвращает словарь параметров и свойств.
+        parameters : (dict) : возвращает словарь параметров и свойств.
 
     Сostants:
         GROUPS_TOOL : Словарь наименований группы инструмента.
@@ -83,15 +83,15 @@ class DrillingCutter(Tool, AxialSizes, BladeMaterial, Angles, Tolerance, INumOfB
         unique_name = get_name(tool_parameters)
         return unique_name if not isinstance(unique_name, type(None)) else standard_name
 
-    def _dict_parameters(self):
-        tool_parameters = Tool._dict_parameters(self)
-        size_parameters = AxialSizes._dict_parameters(self)
-        blade_material_parameters = BladeMaterial._dict_parameters(self)
-        angles_parameters = Angles._dict_parameters(self)
-        tolerance_parameters = Tolerance._dict_parameters(self)
-        inumofblades = INumOfBlades._dict_parameters(self)
-        iradius = IRadius._dict_parameters(self)
-        iquantity = IQuantity._dict_parameters(self)
+    def _parameters(self):
+        tool_parameters = Tool._parameters(self)
+        size_parameters = AxialSizes._parameters(self)
+        blade_material_parameters = BladeMaterial._parameters(self)
+        angles_parameters = Angles._parameters(self)
+        tolerance_parameters = Tolerance._parameters(self)
+        inumofblades = INumOfBlades._parameters(self)
+        iradius = IRadius._parameters(self)
+        iquantity = IQuantity._parameters(self)
         return tool_parameters | size_parameters | blade_material_parameters | angles_parameters | \
                tolerance_parameters | inumofblades | iradius | iquantity
 
@@ -99,9 +99,9 @@ class DrillingCutter(Tool, AxialSizes, BladeMaterial, Angles, Tolerance, INumOfB
 if __name__ == "__main__":
     cutter = DrillingCutter()
     cutter.standard = 'ГОСТ 10903-77'
-    print(cutter.dict_parameters)
+    print(cutter.parameters)
     cutter.tolerance = 'H8'
-    print(cutter.dict_parameters)
+    print(cutter.parameters)
 
     cutter.tolerance = 'H12'
-    print(cutter.dict_parameters)
+    print(cutter.parameters)

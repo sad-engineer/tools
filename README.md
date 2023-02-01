@@ -104,4 +104,3 @@
             params = cutter.dict_parameters
 
 ---
-Поддерживаемые классы (основные):
