@@ -116,6 +116,6 @@ DECODING = {"type_cutter": "Тип инструмента: {obj}.",
             }
 # =====================================================================================================================
 # Поля для сохранения в файл
-SAVED_FIELDS = ['name', 'marking', 'mat_of_cutting_part', 'tolerance', "quantity", "accuracy_class", "number", "module",
-                "turret", "load", "is_complex_profile", "pitch_of_teeth", "angle_of_inclination",
+SAVED_FIELDS = ['name', 'standard', 'marking', 'mat_of_cutting_part', 'tolerance', "quantity", "accuracy_class",
+                "number", "module", "turret", "load", "is_complex_profile", "pitch_of_teeth", "angle_of_inclination",
                 "number_teeth_section", "type_cutter", "difference", "length_of_working_part"]
