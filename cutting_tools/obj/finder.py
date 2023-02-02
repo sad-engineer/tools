@@ -24,7 +24,7 @@ class Finder:
             df = self._requester.get_records({"D": dia_out})
         else:
             df = self._requester.get_records({"d_": dia})
-        return df if not df.empty else None
+        return df.dropna(how='any', axis=1) if not df.empty else None
 
     def find_by_type(self, type_tool: str):
         """ Возвращает найденные записи по указанному обозначению.
@@ -35,7 +35,7 @@ class Finder:
             Тип инструмента (Сверло, резец, и т.д.) для поиска в БД
         """
         df = self._requester.get_records({"Тип_инструмента": type_tool})
-        return df if not df.empty else None
+        return df.dropna(how='any', axis=1) if not df.empty else None
 
     def find_by_marking(self, marking: str):
         """ Возвращает найденные записи по указанному обозначению.
@@ -47,7 +47,7 @@ class Finder:
         """
         dict = {"Обозначение": marking}
         df = self._requester.get_records(values_dict=dict)
-        return df if not df.empty else None
+        return df.dropna(how='any', axis=1) if not df.empty else None
 
     def find_by_stand(self, standart: str):
         """ Возвращает найденные записи по указанному стандарту.
@@ -58,7 +58,7 @@ class Finder:
             Обозначение стандарта для поиска в БД
         """
         df = self._requester.get_records({"Стандарт": standart})
-        return df if not df.empty else None
+        return df.dropna(how='any', axis=1) if not df.empty else None
 
     def find_by_dia_and_type(self, dia: float, dia_out: float, type_tool: str):
         """ Возвращает найденные записи по значению диаметра.
@@ -74,7 +74,7 @@ class Finder:
         """
         df = self.find_by_dia(dia, dia_out)
         if not isinstance(df, type(None)):
-            return df[df["Тип_инструмента"] == type_tool] if not df.empty else None
+            return df[df["Тип_инструмента"] == type_tool].dropna(how='any', axis=1) if not df.empty else None
 
     def find_by_marking_and_stand(self, marking: str, standart: str):
         """ Возвращает найденные записи по указанному стандарту.
@@ -87,15 +87,14 @@ class Finder:
             Обозначение стандарта для поиска в БД
         """
         df = self._requester.get_records({"Обозначение": marking, "Стандарт": standart})
-        return df if not df.empty else None
+        return df.dropna(how='any', axis=1) if not df.empty else None
 
     def find_all(self):
         """ Возвращает все записи из таблицы. """
         df = self._requester.get_all_records
-        return df if not df.empty else None
+        return df.dropna(how='any', axis=1) if not df.empty else None
 
 
 if __name__ == '__main__':
     result = Finder().find_by_marking("2100-0001").dropna(how='any', axis=1)
-    print(result)
     print(result)
