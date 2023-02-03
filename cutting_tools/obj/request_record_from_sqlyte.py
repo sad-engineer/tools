@@ -3,20 +3,16 @@
 # -------------------------------------------------------------------------------
 import pandas as pd
 import sqlite3
-from typing import ClassVar
 
-from cutting_tools.obj.constants import PATH_DB_FOR_TOOLS
 from cutting_tools.obj.abstract_classes import RecordRequester
 
 
 class RequestRecordFromSQLyte(RecordRequester):
     """Класс запросов для работы с таблицами в базе данных."""
-    FILENAME: ClassVar[dict] = PATH_DB_FOR_TOOLS
 
-    def __init__(self, filename=FILENAME, tablename="cutting_tools"):
+    def __init__(self, filename: str, tablename: str):
         """Инициализация объекта"""
         self.filename = filename
-        # self.conn = sqlite3.connect(filename)
         self.tablename = tablename
 
     def get_records(self, values_dict: dict) -> pd.DataFrame:
@@ -48,9 +44,3 @@ class RequestRecordFromSQLyte(RecordRequester):
             query = f"SELECT * FROM {self.tablename}"
             df = pd.read_sql(query, conn)
         return df
-
-
-if __name__ == '__main__':
-    rrq = RequestRecordFromSQLyte()
-    result = rrq.get_records({"Обозначение": "2100-0001"})
-    print(result)
