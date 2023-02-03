@@ -27,6 +27,8 @@ from cutting_tools.obj.finder import Finder
 from cutting_tools.obj.data_preparer import DataPreparer
 
 
+
+
 if __name__ == "__main__":
     from logger import Logger
     from logger import StandardResultTerminalPrinter, StandardObjectTerminalPrinter
