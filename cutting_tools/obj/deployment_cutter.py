@@ -9,7 +9,8 @@ from cutting_tools.obj.drilling_cutter import DrillingCutter
 
 
 class DeploymentCutter(DrillingCutter):
-    DEFAULT_SETTINGS: ClassVar[dict] = DEFAULT_SETTINGS_FOR_CUTTING_TOOL["deployment"]
+    CUTTER_NAME: ClassVar[str] = 'Развертка'
+    DEFAULT_SETTINGS: ClassVar[dict] = DEFAULT_SETTINGS_FOR_CUTTING_TOOL[CUTTER_NAME]
 
     def __init__(self,
                  marking: str = str(DEFAULT_SETTINGS["marking"]),

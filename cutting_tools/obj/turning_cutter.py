@@ -56,7 +56,9 @@ class TurningCutter(Tool, PrismaticSizes, BladeMaterial, Angles, IRadius, IQuant
         TYPES_OF_LOADS : Типы нагрузок на резец.
         DEFAULT_SETTINGS : Настройки по умолчанию
     """
-    DEFAULT_SETTINGS: ClassVar[dict] = DEFAULT_SETTINGS_FOR_CUTTING_TOOL['turning']
+    CUTTER_NAME: ClassVar[str] = 'Резец'
+
+    DEFAULT_SETTINGS: ClassVar[dict] = DEFAULT_SETTINGS_FOR_CUTTING_TOOL[CUTTER_NAME]
 
     def __init__(self,
                  marking: str = str(DEFAULT_SETTINGS["marking"]),
@@ -74,7 +76,7 @@ class TurningCutter(Tool, PrismaticSizes, BladeMaterial, Angles, IRadius, IQuant
                  load: Union[str, int] = 0,
                  is_complex_profile: bool = False,
                  ):
-        Tool.__init__(self, "Резец", marking, standard)
+        Tool.__init__(self, self.CUTTER_NAME, marking, standard)
         PrismaticSizes.__init__(self, length_mm, width_mm, height_mm)
         BladeMaterial.__init__(self, mat_of_cutting_part)
         Angles.__init__(self, main_angle_grad, front_angle_grad, inclination_of_main_blade_grad)

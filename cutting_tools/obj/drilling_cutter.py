@@ -48,9 +48,11 @@ class DrillingCutter(Tool, AxialSizes, BladeMaterial, Angles, Tolerance, INumOfB
         MATS_OF_CUTTING_PART : перечень доступных материалов режущей части (общий).
         ACCURACY_STANDARDS : Квалитеты точности обработки.
         TOLERANCE_FIELDS : Поля допусков.
+        CUTTER_NAME : Наименование класса инструмента.
         DEFAULT_SETTINGS : Настройки по умолчанию.
     """
-    DEFAULT_SETTINGS: ClassVar[dict] = DEFAULT_SETTINGS_FOR_CUTTING_TOOL['drilling']
+    CUTTER_NAME: ClassVar[str] = 'Сверло'
+    DEFAULT_SETTINGS: ClassVar[dict] = DEFAULT_SETTINGS_FOR_CUTTING_TOOL[CUTTER_NAME]
 
     def __init__(self,
                  marking: str = str(DEFAULT_SETTINGS["marking"]),
@@ -66,7 +68,7 @@ class DrillingCutter(Tool, AxialSizes, BladeMaterial, Angles, Tolerance, INumOfB
                  quantity: int = int(DEFAULT_SETTINGS["quantity"]),
                  tolerance: Union[str, int, float] = DEFAULT_SETTINGS["tolerance"],
                  ):
-        Tool.__init__(self, "Сверло", marking, standard)
+        Tool.__init__(self, self.CUTTER_NAME, marking, standard)
         AxialSizes.__init__(self, dia_mm, length_mm)
         BladeMaterial.__init__(self, mat_of_cutting_part)
         Angles.__init__(self, main_angle_grad, front_angle_grad, inclination_of_main_blade_grad)
