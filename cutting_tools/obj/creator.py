@@ -1,66 +1,41 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # ----------------------------------------------------------------------------------------------------------------------
-from typing import ClassVar
-from cutting_tools.obj.milling_cutter import MillingCutter
-from cutting_tools.obj.exceptions import InvalidValue
 import re
 from ast import literal_eval
+
 from cutting_tools.obj.finder import Finder
 from cutting_tools.obj.data_preparer import DataPreparer
 from cutting_tools.obj.cataloger import Cataloger
 
 
-# class Creator:
-#
-#     TOOL_CLASSES: ClassVar[dict] = {"Резец": None, "Фреза": MillingCutter, "Сверло": None, "Зенкер": None,
-#                                     "Развертка": None, "Протяжка": None, }
-#
-#     def get_slass_tool(self, type_tool):
-#         return self.TOOL_CLASSES[type_tool]
-#
-#     def get_tool(self, dict_par):
-#         type_tool = dict_par["Тип_инструмента"]
-#         class_tool = self.TOOL_CLASSES[type_tool]
-#         if class_tool:
-#             return class_tool(dict_par)
-#         else:
-#             raise InvalidValue(f"Класс для инструмента '{dict_par['Тип_инструмента']}' не определен.")
-
-
-
 class CreatorFromLogLine:
     """ Создает объект из лога """
-    def create(self, text_line: str):
+    def __init__(self, finder: Finder, catalog: Cataloger, preparer: DataPreparer):
+        self._finder = finder
+        self._catalog = catalog
+        self._preparer = preparer
+
+        self._class_name: str = ""
+        self._dict_params_from_log: dict = {}
+        self._dict_params_from_bd: dict = {}
+        self._prepare_dict_params: dict = {}
+
+    def _read_line(self, text_line: str) -> None:
         objects = re.split("[\(\)]", text_line)
-        class_name = objects[0]
-        dict_params = literal_eval(objects[1])
-        del dict_params['name']
+        self._class_name = objects[0]
+        self._dict_params_from_log = literal_eval(objects[1])
 
-        return class_name, dict_params
+    def _find(self):
+        params = self._dict_params_from_log
+        dict_params_from_bd = self._finder.find_by_marking_and_stand(params["marking"], params["standard"])
+        self._dict_params_from_bd = dict_params_from_bd.loc[0].to_dict()
+        self._preparer._raw_data = self._dict_params_from_bd
+        self._prepare_dict_params = self._preparer.get_params
 
-
-if __name__ == "__main__":
-    text = "MillingCutter({'name': 'Фреза 2214-0507 ГОСТ 28719-90', 'standard': 'ГОСТ 28719-90', 'marking': '2214-0507', 'mat_of_cutting_part': 'Р6М5', 'tolerance': 'h14', 'quantity': 1, 'type_cutter': 1})"
-
-    create = CreatorFromLogLine().str
-    class_name, dict_params = create(text)
-    print(class_name, dict_params)
-
-    del dict_params['name']
-    print(class_name, dict_params)
-
-    raw_table = Finder().find_by_marking_and_stand(dict_params["marking"], dict_params["standard"]).dropna(how='any', axis=1)
-    print(raw_table)
-
-    raw_param = raw_table.loc[0].to_dict()
-    kind_of_cut, param = DataPreparer(raw_param).get_params
-    print(class_name, param)
-
-    cataloger = Cataloger()
-    class_ = cataloger.get_class(class_name)
-
-    cutter = class_(**param)
-    print(cutter)
-    print(cutter.__doc__)
-    print(cutter.parameters)
+    def create(self, log_line: str):
+        if not isinstance(log_line, type(None)):
+            if isinstance(log_line, str):
+                self._read_line(log_line)
+                self._find()
+                return self._catalog.get_class_by_name(self._class_name,)(**self._prepare_dict_params)
