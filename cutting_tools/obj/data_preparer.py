@@ -14,6 +14,7 @@ def select_data_for_milling(raw_data: dict, default_settings: dict) -> dict:
     param["main_angle_grad"] = float(raw_data.get('fi_', 45))
     param["front_angle_grad"] = float(raw_data.get('gamma_', 0))
     param["inclination_of_main_blade_grad"] = float(raw_data.get('lambda_', 0))
+    param["tolerance"] = default_settings["tolerance"]
 
     # TODO: Переделать выбор типа фрезы для вариантов 'Торцовая, Цилиндрическая', 
     #  'Концевая (для T-образных пазов)', 'Концевая (для обработки Т-образного паза)'
@@ -27,6 +28,9 @@ def select_data_for_milling(raw_data: dict, default_settings: dict) -> dict:
     param["radius_of_cutting_vertex"] = float(raw_data.get('r_', 1.0))
     param["large_tooth"] = raw_data.get('large_tooth', 0)
     param["quantity"] = int(default_settings["quantity"])
+    param["accuracy_class"] = None
+    param["number"] = None
+    param["module"] = None
     return param
 
 

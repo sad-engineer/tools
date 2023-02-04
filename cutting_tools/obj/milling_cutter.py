@@ -70,27 +70,28 @@ class MillingCutter(Tool, AxialSizes, BladeMaterial, Angles, Tolerance, ITypeCut
         DEFAULT_SETTINGS : Настройки по умолчанию.
     """
     CUTTER_NAME: ClassVar[str] = 'Фреза'
-    DEFAULT_SETTINGS: ClassVar[dict] = DEFAULT_SETTINGS_FOR_CUTTING_TOOL[CUTTER_NAME]
 
     def __init__(self,
-                 marking: str = str(DEFAULT_SETTINGS["marking"]),
-                 standard: str = str(DEFAULT_SETTINGS["Стандарт"]),
-                 dia_mm: float = 40,
-                 length_mm: float = 32,
-                 mat_of_cutting_part: Union[str, int] = str(DEFAULT_SETTINGS["mat_of_cutting_part"]),
-                 main_angle_grad: float = 90,
-                 front_angle_grad: float = 0,
-                 inclination_of_main_blade_grad: float = 0,
-                 tolerance: Union[str, int, float] = DEFAULT_SETTINGS["tolerance"],
-                 type_cutter: int = 1,
-                 type_of_cutting_part: int = 1,
-                 num_of_cutting_blades: int = 10,
-                 radius_of_cutting_vertex: float = 1,
-                 large_tooth: float = 0,
-                 quantity: int = int(DEFAULT_SETTINGS["quantity"]),
-                 accuracy_class: Optional[Union[str, int]] = None,
-                 number: Optional[str] = None,
-                 module: Optional[float] = None,
+                 marking: str,
+                 standard: str,
+                 dia_mm: float,
+                 length_mm: float,
+                 mat_of_cutting_part: Union[str, int],
+
+                 main_angle_grad: float,
+                 front_angle_grad: float,
+                 inclination_of_main_blade_grad: float,
+
+                 tolerance: Union[str, int, float],
+                 type_cutter: int,
+                 type_of_cutting_part: Union[str, int, float],
+                 num_of_cutting_blades: int,
+                 radius_of_cutting_vertex: float,
+                 large_tooth: float,
+                 quantity: int,
+                 accuracy_class: Optional[Union[str, int]],
+                 number: Optional[str],
+                 module: Optional[float],
                  ):
         Tool.__init__(self, self.CUTTER_NAME, marking, standard)
         AxialSizes.__init__(self, dia_mm, length_mm)

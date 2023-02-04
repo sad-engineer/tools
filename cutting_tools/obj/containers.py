@@ -13,7 +13,7 @@ from cutting_tools.obj.data_preparer import DataPreparer
 from cutting_tools.obj.cataloger import Cataloger
 from cutting_tools.obj.constants import PATH_DB_FOR_TOOLS, DEFAULT_SETTINGS_FOR_CUTTING_TOOL, GROUPS_TOOL
 from cutting_tools.obj.turning_cutter import TurningCutter
-
+from cutting_tools.obj.milling_cutter import MillingCutter
 
 class Container(containers.DeclarativeContainer):
 
@@ -69,6 +69,28 @@ class Container(containers.DeclarativeContainer):
         is_complex_profile=False,
     )
 
+    milling_cutter = providers.Singleton(
+        MillingCutter,
+        marking=config.default_settings.for_cutting_tool["Фреза"]["marking"].as_(str),
+        standard=config.default_settings.for_cutting_tool["Фреза"]["Стандарт"].as_(str),
+        mat_of_cutting_part=config.default_settings.for_cutting_tool["Фреза"]["mat_of_cutting_part"].as_(str),
+        quantity=config.default_settings.for_cutting_tool["Фреза"]["quantity"].as_int(),
+        tolerance=config.default_settings.for_cutting_tool["Фреза"]["tolerance"].as_(str),
+        dia_mm=40,
+        length_mm=100,
+        main_angle_grad=90,
+        front_angle_grad=0,
+        inclination_of_main_blade_grad=0,
+        type_cutter=1,
+        type_of_cutting_part=1,
+        num_of_cutting_blades=10,
+        radius_of_cutting_vertex=1,
+        large_tooth=0,
+        accuracy_class=None,
+        number=None,
+        module=None,
+    )
+
 
 if __name__ == "__main__":
     ct = Container()
@@ -93,17 +115,17 @@ if __name__ == "__main__":
     #     print(cutter)
     #     print(cutter.name)
 
-    cutter = ct.turning_cutter()
-    print(cutter.width_mm)
+    cutter = ct.milling_cutter()
+    print(cutter.length_mm)
 
-    ct.turning_cutter.reset()
-    cutter = ct.turning_cutter(width_mm=16)
-    print(cutter.width_mm)
+    ct.milling_cutter.reset()
+    cutter = ct.milling_cutter(length_mm=16)
+    print(cutter.length_mm)
 
-    ct.turning_cutter.reset()
-    cutter = ct.turning_cutter()
-    print(cutter.width_mm)
+    ct.milling_cutter.reset()
+    cutter = ct.milling_cutter()
+    print(cutter.length_mm)
 
-    cutter.width_mm = 40
-    print(cutter.width_mm)
+    cutter.length_mm = 40
+    print(cutter.length_mm)
     print(cutter.__class__.__name__)
