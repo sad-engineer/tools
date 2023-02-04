@@ -153,13 +153,13 @@ if __name__ == "__main__":
     # cataloger = ct.cataloger()
     # print(cataloger.classes)
 
-    # creator = ct.creator_from_log_line
-    # with open(os.getcwd().replace('obj', 'logs\\log.txt'), mode='r', encoding="utf8") as f:
-    #     context = f.readlines()
-    # for line in context:
-    #     cutter = creator().create(log_line=line)
-    #     print(cutter)
-    #     print(cutter.name)
+    creator = ct.creator_from_log_line
+    with open(os.getcwd().replace('obj', 'logs\\log.txt'), mode='r', encoding="utf8") as f:
+        context = f.readlines()
+    for line in context:
+        cutter = creator().create(log_line=line)
+        print(cutter)
+        print(cutter.name)
 
     cutter = ct.drilling_cutter()
     print(cutter.length_mm)

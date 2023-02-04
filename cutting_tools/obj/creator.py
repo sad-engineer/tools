@@ -38,4 +38,4 @@ class CreatorFromLogLine:
             if isinstance(log_line, str):
                 self._read_line(log_line)
                 self._find()
-                return self._catalog.get_class_by_name(self._class_name,)(**self._prepare_dict_params)
+                return self._catalog.get_class_by_name(self._class_name)(**self._prepare_dict_params)

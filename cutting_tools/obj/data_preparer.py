@@ -49,6 +49,7 @@ def select_data_for_drilling(raw_data: dict, default_settings: dict) -> dict:
     param["num_of_cutting_blades"] = int(raw_data.get('z', 2))
     param["radius_of_cutting_vertex"] = float(raw_data.get('r_', 0.2))
     param["quantity"] = int(default_settings["quantity"])
+    param["tolerance"] = str(default_settings["tolerance"])
     return param
 
 

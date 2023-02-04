@@ -22,10 +22,10 @@ class DeploymentCutter(DrillingCutter):
                  num_of_cutting_blades: int,
                  radius_of_cutting_vertex: float,
                  quantity: int,
-                 accuracy: Union[str, int, float],
+                 tolerance: Union[str, int, float],
                  ):
         DrillingCutter.__init__(self, marking, standard, dia_mm, length_mm, mat_of_cutting_part, main_angle_grad,
                                 front_angle_grad, inclination_of_main_blade_grad, num_of_cutting_blades,
-                                radius_of_cutting_vertex, quantity, accuracy)
+                                radius_of_cutting_vertex, quantity, tolerance)
         self.__doc__ = DrillingCutter.__doc__.replace("Сверло", "Развертка")
         self.group = "Развертка"
