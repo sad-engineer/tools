@@ -67,7 +67,6 @@ class MillingCutter(Tool, AxialSizes, BladeMaterial, Angles, Tolerance, ITypeCut
         TYPES_OF_CUTTING_PART : Типы режущей части фрезы.
         TYPES_OF_LARGE_TOOTH : Типы частоты режущей части.
         ACCURACY_CLASS_STANDARDS : Классы точности инструмента.
-        DEFAULT_SETTINGS : Настройки по умолчанию.
     """
     CUTTER_NAME: ClassVar[str] = 'Фреза'
 
@@ -77,11 +76,9 @@ class MillingCutter(Tool, AxialSizes, BladeMaterial, Angles, Tolerance, ITypeCut
                  dia_mm: float,
                  length_mm: float,
                  mat_of_cutting_part: Union[str, int],
-
                  main_angle_grad: float,
                  front_angle_grad: float,
                  inclination_of_main_blade_grad: float,
-
                  tolerance: Union[str, int, float],
                  type_cutter: int,
                  type_of_cutting_part: Union[str, int, float],

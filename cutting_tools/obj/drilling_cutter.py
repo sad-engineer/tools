@@ -4,7 +4,6 @@
 from typing import ClassVar
 from typing import Union
 
-from cutting_tools.obj.constants import DEFAULT_SETTINGS_FOR_CUTTING_TOOL
 from cutting_tools.obj.tool import Tool
 from cutting_tools.obj.sizes import AxialSizes
 from cutting_tools.obj.blade_material import BladeMaterial
@@ -49,24 +48,22 @@ class DrillingCutter(Tool, AxialSizes, BladeMaterial, Angles, Tolerance, INumOfB
         ACCURACY_STANDARDS : Квалитеты точности обработки.
         TOLERANCE_FIELDS : Поля допусков.
         CUTTER_NAME : Наименование класса инструмента.
-        DEFAULT_SETTINGS : Настройки по умолчанию.
     """
     CUTTER_NAME: ClassVar[str] = 'Сверло'
-    DEFAULT_SETTINGS: ClassVar[dict] = DEFAULT_SETTINGS_FOR_CUTTING_TOOL[CUTTER_NAME]
 
     def __init__(self,
-                 marking: str = str(DEFAULT_SETTINGS["marking"]),
-                 standard: str = str(DEFAULT_SETTINGS["Стандарт"]),
-                 dia_mm: float = 2.4,
-                 length_mm: float = 95,
-                 mat_of_cutting_part: Union[str, int] = str(DEFAULT_SETTINGS["mat_of_cutting_part"]),
-                 main_angle_grad: float = 59,
-                 front_angle_grad: float = 0,
-                 inclination_of_main_blade_grad: float = 0,
-                 num_of_cutting_blades: int = 2,
-                 radius_of_cutting_vertex: float = 1,
-                 quantity: int = int(DEFAULT_SETTINGS["quantity"]),
-                 tolerance: Union[str, int, float] = DEFAULT_SETTINGS["tolerance"],
+                 marking: str,
+                 standard: str,
+                 dia_mm: float,
+                 length_mm: float,
+                 mat_of_cutting_part: Union[str, int],
+                 main_angle_grad: float,
+                 front_angle_grad: float,
+                 inclination_of_main_blade_grad: float,
+                 num_of_cutting_blades: int,
+                 radius_of_cutting_vertex: float,
+                 quantity: int,
+                 tolerance: Union[str, int, float],
                  ):
         Tool.__init__(self, self.CUTTER_NAME, marking, standard)
         AxialSizes.__init__(self, dia_mm, length_mm)
@@ -94,16 +91,6 @@ class DrillingCutter(Tool, AxialSizes, BladeMaterial, Angles, Tolerance, INumOfB
         inumofblades = INumOfBlades._parameters(self)
         iradius = IRadius._parameters(self)
         iquantity = IQuantity._parameters(self)
+
         return tool_parameters | size_parameters | blade_material_parameters | angles_parameters | \
                tolerance_parameters | inumofblades | iradius | iquantity
-
-
-if __name__ == "__main__":
-    cutter = DrillingCutter()
-    cutter.standard = 'ГОСТ 10903-77'
-    print(cutter.parameters)
-    cutter.tolerance = 'H8'
-    print(cutter.parameters)
-
-    cutter.tolerance = 'H12'
-    print(cutter.parameters)

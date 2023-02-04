@@ -52,7 +52,6 @@ class TurningCutter(Tool, PrismaticSizes, BladeMaterial, Angles, IRadius, IQuant
         MATS_OF_CUTTING_PART : перечень доступных материалов режущей части (общий).
         TYPES_OF_TOOL_HOLDER : Типы установки резца.
         TYPES_OF_LOADS : Типы нагрузок на резец.
-        DEFAULT_SETTINGS : Настройки по умолчанию
     """
     CUTTER_NAME: ClassVar[str] = 'Резец'
 
