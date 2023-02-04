@@ -4,36 +4,12 @@
 # Расположение БД
 PATH_DB_FOR_TOOLS = f"{__file__}".replace("obj\\constants.py", "data\\cutting_tools.db")
 # =====================================================================================================================
-# Настройки начальных данных
-# {'Развертка', 'Зенкер', 'Резец', 'Фреза', 'Сверло'}
-# DEFAULT_SETTINGS_FOR_CUTTING_TOOL = {
-#     "milling":        {"marking": '2214-0507', "Стандарт": "ГОСТ 16223-81", "quantity": 1, "type_of_mat": 0,
-#                        "mat_of_cutting_part": "Р6М5", "tolerance": "h14"},
-#     "turning":        {"marking": '2100-0029', "Стандарт": "ГОСТ 18878-73", "quantity": 1, "type_of_mat": 0,
-#                        "mat_of_cutting_part": "Р6М5"},
-#     "planing":        {"marking": '2180-0803', "Стандарт": "ГОСТ 10046-72", "quantity": 1, "type_of_mat": 0,
-#                        "mat_of_cutting_part": "Р6М5"},
-#     "drilling":       {"marking": '2300-0041', "Стандарт": "ГОСТ 886-77", "quantity": 1, "type_of_mat": 0,
-#                        "mat_of_cutting_part": "Р6М5", "tolerance": "H14"},
-#     "countersinking": {"marking": '2320-2125', "Стандарт": "ГОСТ 21584-76", "quantity": 1, "type_of_mat": 0,
-#                        "mat_of_cutting_part": "Р6М5", "tolerance": "H10"},
-#     "deployment":     {"marking": '2364-0331', "Стандарт": "ГОСТ 883-80", "quantity": 1, "type_of_mat": 0,
-#                        "mat_of_cutting_part": "Р6М5", "tolerance": "H8"},
-#     "broaching":      {"pitch_of_teeth": 0.5,           # шаг зубьев
-#                        "angle_of_inclination": 0,       # угол наклона зубьев
-#                        "number_teeth_section": 5,       # количество зубьев в секции
-#                        "type_cutter": 0,                # тип протяжки (шлицевая, круглая и пр.)
-#                        "difference": 0.1,               # размерный перепад между соседними зубьями
-#                        "length_of_working_part": 1000,  # длина режущей части протяжки
-#                        },
-#         }
-
 DEFAULT_SETTINGS_FOR_CUTTING_TOOL = {
     "Инструмент": {"marking": '0000-0000', "Стандарт": "ГОСТ ХХХХ-ХХ"},
     "Фреза":      {"marking": '2214-0507', "Стандарт": "ГОСТ 16223-81", "quantity": 1, "type_of_mat": 0,
                    "mat_of_cutting_part": "Р6М5", "tolerance": "h14"},
     "Резец":      {"marking": '2100-0029', "Стандарт": "ГОСТ 18878-73", "quantity": 1, "type_of_mat": 0,
-                   "mat_of_cutting_part": "Р6М5"},
+                   "mat_of_cutting_part": "Р6М5", "turret": 0, "load": 0, "is_complex_profile": "False"},
     "Сверло":     {"marking": '2300-0041', "Стандарт": "ГОСТ 886-77", "quantity": 1, "type_of_mat": 0,
                    "mat_of_cutting_part": "Р6М5", "tolerance": "H14"},
     "Зенкер":     {"marking": '2320-2125', "Стандарт": "ГОСТ 21584-76", "quantity": 1, "type_of_mat": 0,

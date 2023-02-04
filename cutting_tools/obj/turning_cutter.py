@@ -4,8 +4,6 @@
 from typing import ClassVar
 from typing import Union
 
-from cutting_tools.obj.constants import DEFAULT_SETTINGS_FOR_CUTTING_TOOL
-from cutting_tools.obj.exceptions import InvalidValue
 from cutting_tools.obj.tool import Tool
 from cutting_tools.obj.sizes import PrismaticSizes
 from cutting_tools.obj.blade_material import BladeMaterial
@@ -58,23 +56,21 @@ class TurningCutter(Tool, PrismaticSizes, BladeMaterial, Angles, IRadius, IQuant
     """
     CUTTER_NAME: ClassVar[str] = 'Резец'
 
-    DEFAULT_SETTINGS: ClassVar[dict] = DEFAULT_SETTINGS_FOR_CUTTING_TOOL[CUTTER_NAME]
-
     def __init__(self,
-                 marking: str = str(DEFAULT_SETTINGS["marking"]),
-                 standard: str = str(DEFAULT_SETTINGS["Стандарт"]),
-                 length_mm: float = 100,
-                 width_mm: float = 25,
-                 height_mm: float = 25,
-                 mat_of_cutting_part: Union[str, int] = str(DEFAULT_SETTINGS["mat_of_cutting_part"]),
-                 main_angle_grad: float = 90,
-                 front_angle_grad: float = 0,
-                 inclination_of_main_blade_grad: float = 0,
-                 radius_of_cutting_vertex: float = 1,
-                 quantity: int = int(DEFAULT_SETTINGS["quantity"]),
-                 turret: Union[str, int] = 0,
-                 load: Union[str, int] = 0,
-                 is_complex_profile: bool = False,
+                 marking: str,
+                 standard: str,
+                 length_mm: float,
+                 width_mm: float,
+                 height_mm: float,
+                 mat_of_cutting_part: Union[str, int],
+                 main_angle_grad: float,
+                 front_angle_grad: float,
+                 inclination_of_main_blade_grad: float,
+                 radius_of_cutting_vertex: float,
+                 quantity: int,
+                 turret: Union[str, int],
+                 load: Union[str, int],
+                 is_complex_profile: bool,
                  ):
         Tool.__init__(self, self.CUTTER_NAME, marking, standard)
         PrismaticSizes.__init__(self, length_mm, width_mm, height_mm)

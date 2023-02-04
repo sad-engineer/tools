@@ -63,6 +63,9 @@ def select_data_for_turning(raw_data: dict, default_settings: dict) -> dict:
     param["inclination_of_main_blade_grad"] = float(raw_data.get('lambda_', 0))
     param["radius_of_cutting_vertex"] = float(raw_data.get('r_', 0.2))
     param["quantity"] = int(default_settings["quantity"])
+    param["turret"] = int(default_settings["turret"])
+    param["load"] = int(default_settings["load"])
+    param["is_complex_profile"] = bool(default_settings["is_complex_profile"])
     return param
 
 
