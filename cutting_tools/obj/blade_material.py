@@ -5,7 +5,7 @@ from typing import Union, ClassVar
 
 from cutting_tools.obj.constants import MATERIALS_OF_CUTTING_PART
 from cutting_tools.obj.constants import HARD_ALLOYS, HIGH_SPEED_STEELS
-from cutting_tools.obj.exceptions import InvalidValue
+from logger.obj.exceptions import InvalidValue
 from logger import Dictionarer
 
 

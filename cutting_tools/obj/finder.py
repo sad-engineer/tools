@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # ----------------------------------------------------------------------------------------------------------------------
-from cutting_tools.obj.abstract_classes import RecordRequester
+from logger.obj.abstract_classes import RecordRequester
 
 
 class Finder:

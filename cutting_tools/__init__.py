@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # Константы пакета
-from cutting_tools.obj.constants import DEFAULT_SETTINGS_FOR_CUTTING_TOOL
+from cutting_tools.obj.constants import DEFAULT_SETTINGS_FOR_TOOL
 from cutting_tools.obj.constants import MATERIALS_OF_CUTTING_PART
 from cutting_tools.obj.constants import GROUPS_TOOL
 from cutting_tools.obj.constants import TYPES_STANDARD
@@ -25,50 +25,35 @@ from cutting_tools.obj.deployment_cutter import DeploymentCutter
 from cutting_tools.obj.turning_cutter import TurningCutter
 from cutting_tools.obj.finder import Finder
 from cutting_tools.obj.data_preparer import DataPreparer
-
+from cutting_tools.obj.containers import Container
 
 
 
 if __name__ == "__main__":
-    from logger import Logger
-    from logger import StandardResultTerminalPrinter, StandardObjectTerminalPrinter
-    from logger import StandardResultFilePrinter, StandardObjectFilePrinter, StandardObjectFileSaver
+    import logger
+    import os
 
-    variants = ["milling",
-                "turning",
-                "planing",
-                "drilling",
-                "countersinking",
-                "deployment",
-                # "broaching",
-                ]
-    cutter_clases = {"milling": MillingCutter,
-                     "turning": TurningCutter,
-                     "planing": TurningCutter,
-                     "drilling": DrillingCutter,
-                     "countersinking": CountersinkingCutter,
-                     "deployment": DeploymentCutter,
-                     }
+    container = Container()
+    container.init_resources()
 
-    logger = Logger()
+    cutter = container.turning_cutter()
+    print(cutter)
 
+    log = logger.Container.logger().log
+    terminal_printer = Container.standard_result_terminal_printer()
+    log(cutter, notifier=terminal_printer, message="""### Инструмент""")
 
-    for variant in variants:
-        marking = DEFAULT_SETTINGS_FOR_CUTTING_TOOL[variant]["marking"]
-        raw_table = Finder().find_by_marking(marking).dropna(how='any', axis=1)
-        raw_param = raw_table.loc[0].to_dict()
-        kind_of_cut, param = DataPreparer(raw_param).get_params
-        cutter_class = cutter_clases[variant]
-        cutter = cutter_class(**param)
+    file_printer = logger.Container.standard_object_file_saver(decoding=DECODING, saved_fields=SAVED_FIELDS)
+    log(cutter, notifier=file_printer)
 
-        # file_printer = StandardResultTerminalPrinter
-        # file_printer = StandardObjectTerminalPrinter
-        # file_printer = StandardResultFilePrinter
-        # file_printer = StandardObjectFilePrinter
-        # file_printer.DECODING = DECODING
-        # logger.log(cutter, notifier=file_printer, message='### Параметры применяемого инструмента ###')
+    creator = Container.creator_from_log_line()
+    print(creator._catalog.classes)
 
-        printer = StandardObjectFileSaver
-        printer.SAVED_FIELDS = SAVED_FIELDS
-        logger.log(cutter, notifier=printer)
+    with open(os.getcwd()+'\\logs\\log.txt', mode='r', encoding="utf8") as f:
+        context = f.readlines()
+    for line in context:
+        cutter = creator.create(log_line=line)
+        print(cutter)
+        print(cutter.name)
+
 

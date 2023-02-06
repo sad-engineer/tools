@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # ----------------------------------------------------------------------------------------------------------------------
-from cutting_tools.obj.exceptions import InvalidValue
+from logger.obj.exceptions import InvalidValue
 
 
 def is_correct_dict_values(dict):

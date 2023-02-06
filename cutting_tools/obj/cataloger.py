@@ -3,7 +3,7 @@
 # ----------------------------------------------------------------------------------------------------------------------
 import inspect
 from typing import Union, Optional
-from cutting_tools.obj.exceptions import InvalidValue
+from logger.obj.exceptions import InvalidValue
 
 
 def get_class_names(module_names) -> list:
@@ -33,11 +33,14 @@ class Cataloger:
     def classes(self) -> list:
         return self._classes
 
-    def get_class_by_name(self, name: str, ):
+    def get_class_by_name(self, name: str):
         return next((class_ for class_ in self._classes if name == class_.__name__), None)
 
 
 if __name__ == "__main__":
-    cataloger = Cataloger(["logger", "cutting_tools"])
+    # cataloger = Cataloger(["logger", "cutting_tools"])
+    # print(cataloger.classes)
+    # print(cataloger.get_class_by_name("Logger"))
+
+    cataloger = Cataloger("cutting_tools")
     print(cataloger.classes)
-    print(cataloger.get_class_by_name("Logger"))

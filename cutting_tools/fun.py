@@ -1,12 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # -------------------------------------------------------------------------------
-import sqlite3
-import pandas as pd
-from typing import Optional
-from cutting_tools.obj.constants import PATH_DB_FOR_TOOLS as PATH_DB
-from cutting_tools.obj.constants import MATERIALS_OF_CUTTING_PART
-from cutting_tools.obj.exceptions import InvalidValue
+from logger.obj.exceptions import InvalidValue
 
 
 def get_name(params: dict):

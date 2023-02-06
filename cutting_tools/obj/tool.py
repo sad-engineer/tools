@@ -3,7 +3,7 @@
 # ----------------------------------------------------------------------------------------------------------------------
 from typing import Union, ClassVar
 from cutting_tools.obj.constants import GROUPS_TOOL, TYPES_STANDARD
-from cutting_tools.obj.exceptions import InvalidValue
+from logger.obj.exceptions import InvalidValue
 from logger import Dictionarer
 
 

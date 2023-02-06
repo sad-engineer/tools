@@ -8,13 +8,10 @@ packages = [{include = "cutting_tools"}]
 
 [tool.poetry.dependencies]
 python = "^3.9"
-pandas = "^1.5.1"
-openpyxl = "^3.0.10"
-dependency-injector = "^4.41.0"
-logger = {path = "I:/Программирование/Pro0.5-logger_for_my_projects/dist/logger-0.1.4.tar.gz"}
+logger = {path = "I:/Программирование/Pro0.5-logger_for_my_projects/dist/logger-0.1.11.tar.gz"}
+openpyxl = "^3.1.0"
 
 
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
-

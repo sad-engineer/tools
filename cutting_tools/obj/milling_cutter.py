@@ -4,7 +4,7 @@
 from typing import ClassVar
 from typing import Union, Optional
 
-from cutting_tools.obj.constants import DEFAULT_SETTINGS_FOR_CUTTING_TOOL
+from cutting_tools.obj.constants import DEFAULT_SETTINGS_FOR_TOOL
 from cutting_tools.obj.tool import Tool
 from cutting_tools.obj.sizes import AxialSizes
 from cutting_tools.obj.blade_material import BladeMaterial

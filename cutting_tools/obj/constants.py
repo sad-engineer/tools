@@ -2,9 +2,9 @@
 # -*- coding: utf-8 -*-
 # -------------------------------------------------------------------------------
 # Расположение БД
-PATH_DB_FOR_TOOLS = f"{__file__}".replace("obj\\constants.py", "data\\cutting_tools.db")
+PATH_DB_FOR_TOOLS = f"{__file__}".replace("obj\\constants.py", "data\\tools.db")
 # =====================================================================================================================
-DEFAULT_SETTINGS_FOR_CUTTING_TOOL = {
+DEFAULT_SETTINGS_FOR_TOOL = {
     "Инструмент": {"marking": '0000-0000', "Стандарт": "ГОСТ ХХХХ-ХХ"},
     "Фреза":      {"marking": '2214-0507', "Стандарт": "ГОСТ 16223-81", "quantity": 1, "type_of_mat": 0,
                    "mat_of_cutting_part": "Р6М5", "tolerance": "h14"},

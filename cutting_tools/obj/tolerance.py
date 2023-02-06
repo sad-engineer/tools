@@ -5,7 +5,7 @@ import re
 from typing import Optional, Union
 
 from cutting_tools.obj.interfaces import IAccuracy, IToleranceField
-from cutting_tools.obj.exceptions import InvalidValue
+from logger.obj.exceptions import InvalidValue
 
 
 class Tolerance(IAccuracy, IToleranceField):

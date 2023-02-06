@@ -13,7 +13,7 @@ from cutting_tools.obj.constants import TYPES_OF_CUTTING_PART_OF_MILLING_CUTTER
 from cutting_tools.obj.constants import TYPES_OF_LARGE_TOOTH
 from cutting_tools.obj.constants import TYPES_OF_TOOL_HOLDER
 from cutting_tools.obj.constants import TYPES_OF_LOADS
-from cutting_tools.obj.exceptions import InvalidValue
+from logger.obj.exceptions import InvalidValue
 from logger import Dictionarer
 
 
