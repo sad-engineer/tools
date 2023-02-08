@@ -35,25 +35,32 @@ if __name__ == "__main__":
 
     container = Container()
     container.init_resources()
+    #
+    # cutter = container.turning_cutter()
+    # print(cutter)
+    #
+    # log = logger.Container.logger().log
+    # terminal_printer = Container.standard_result_terminal_printer()
+    # log(cutter, notifier=terminal_printer, message="""### Инструмент""")
+    #
+    # file_printer = logger.Container.standard_object_file_saver(decoding=DECODING, saved_fields=SAVED_FIELDS)
+    # log(cutter, notifier=file_printer)
+    #
+    # creator = Container.creator_from_log_line()
+    # print(creator._catalog.classes)
+    #
+    # with open(os.getcwd()+'\\logs\\log.txt', mode='r', encoding="utf8") as f:
+    #     context = f.readlines()
+    # for line in context:
+    #     cutter = creator.create(log_line=line)
+    #     print(cutter)
+    #     print(cutter.name)
 
-    cutter = container.turning_cutter()
-    print(cutter)
-
-    log = logger.Container.logger().log
-    terminal_printer = Container.standard_result_terminal_printer()
-    log(cutter, notifier=terminal_printer, message="""### Инструмент""")
-
-    file_printer = logger.Container.standard_object_file_saver(decoding=DECODING, saved_fields=SAVED_FIELDS)
-    log(cutter, notifier=file_printer)
-
-    creator = Container.creator_from_log_line()
-    print(creator._catalog.classes)
-
-    with open(os.getcwd()+'\\logs\\log.txt', mode='r', encoding="utf8") as f:
-        context = f.readlines()
-    for line in context:
-        cutter = creator.create(log_line=line)
-        print(cutter)
-        print(cutter.name)
-
+    finder = container.finder()
+    for marking in ['2214-0507', '2100-0029',  '2300-0041',  '2320-2125',  '2364-0331',]:
+        line = finder.find_by_marking(marking)
+        # collumns = line.
+        line = line.loc[0].to_dict()
+        print(list(line.keys()))
+        print(list(line.values()))
 

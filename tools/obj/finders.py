@@ -1,15 +1,17 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # ----------------------------------------------------------------------------------------------------------------------
-from logger.obj.abstract_classes import RecordRequester
 import pandas as pd
+
+from tools.obj.requesters import RecordRequester
+
 
 class Finder:
     """ Содержит список методов поиска в БД, обязательных для поиска при любом типе БД """
     def __init__(self, record_requester: RecordRequester):
         self._requester = record_requester
 
-    def find_by_dia(self, dia: float, dia_out: float=None) -> pd.DataFrame:
+    def by_dia(self, dia: float, dia_out: float=None) -> pd.DataFrame:
         """ Возвращает найденные записи по значению диаметра в виде таблицы pd.DataFrame.
 
         Аргументы
@@ -25,7 +27,7 @@ class Finder:
             df = self._requester.get_records({"d_": dia})
         return df.dropna(how='any', axis=1) if not df.empty else None
 
-    def find_by_type(self, type_tool: str) -> pd.DataFrame:
+    def by_type(self, type_tool: str) -> pd.DataFrame:
         """ Возвращает найденные записи по указанному обозначению в виде таблицы pd.DataFrame.
 
         Аргументы
@@ -36,7 +38,7 @@ class Finder:
         df = self._requester.get_records({"Тип_инструмента": type_tool})
         return df.dropna(how='any', axis=1) if not df.empty else None
 
-    def find_by_marking(self, marking: str) -> pd.DataFrame:
+    def by_marking(self, marking: str) -> pd.DataFrame:
         """ Возвращает найденные записи по указанному обозначению в виде таблицы pd.DataFrame.
 
         Аргументы
@@ -48,7 +50,7 @@ class Finder:
         df = self._requester.get_records(values_dict=dict)
         return df.dropna(how='any', axis=1) if not df.empty else None
 
-    def find_by_stand(self, standart: str) -> pd.DataFrame:
+    def by_stand(self, standard: str) -> pd.DataFrame:
         """ Возвращает найденные записи по указанному стандарту в виде таблицы pd.DataFrame.
 
         Аргументы
@@ -56,10 +58,10 @@ class Finder:
         standart: str
             Обозначение стандарта для поиска в БД
         """
-        df = self._requester.get_records({"Стандарт": standart})
+        df = self._requester.get_records({"Стандарт": standard})
         return df.dropna(how='any', axis=1) if not df.empty else None
 
-    def find_by_dia_and_type(self, dia: float, dia_out: float, type_tool: str) -> pd.DataFrame:
+    def by_dia_and_type(self, dia: float, dia_out: float, type_tool: str) -> pd.DataFrame:
         """ Возвращает найденные записи по значению диаметра в виде таблицы pd.DataFrame.
 
         Аргументы
@@ -71,11 +73,11 @@ class Finder:
         type_tool: str
             Тип инструмента (Сверло, резец, и т.д.) для поиска в БД
         """
-        df = self.find_by_dia(dia, dia_out)
+        df = self.by_dia(dia, dia_out)
         if not isinstance(df, type(None)):
             return df[df["Тип_инструмента"] == type_tool].dropna(how='any', axis=1) if not df.empty else None
 
-    def find_by_marking_and_stand(self, marking: str, standart: str) -> pd.DataFrame:
+    def by_marking_and_stand(self, marking: str, standart: str) -> pd.DataFrame:
         """ Возвращает найденные записи по указанному стандарту в виде таблицы pd.DataFrame.
 
         Аргументы
@@ -89,7 +91,8 @@ class Finder:
         return df.dropna(how='any', axis=1) if not df.empty else None
 
     @property
-    def find_all(self) -> pd.DataFrame:
+    def all(self) -> pd.DataFrame:
         """ Возвращает все записи в виде таблицы pd.DataFrame """
         df = self._requester.get_all_records
-        return df.dropna(how='any', axis=1) if not df.empty else None
+        return df if not df.empty else None
+

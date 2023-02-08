@@ -1,6 +1,6 @@
 [tool.poetry]
-name = "cutting-tools"
-version = "0.1.42"
+name = "tools"
+version = "0.2.00"
 description = ""
 authors = ["Andrey Nikolaevich Korenyuk <korenyuk.a.n@mail.ru>"]
 readme = "README.md"
@@ -10,6 +10,7 @@ packages = [{include = "cutting_tools"}]
 python = "^3.9"
 logger = {path = "I:/Программирование/Pro0.5-logger_for_my_projects/dist/logger-0.1.11.tar.gz"}
 openpyxl = "^3.1.0"
+pyyaml = "^6.0"
 
 
 [build-system]
