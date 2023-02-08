@@ -418,3 +418,126 @@ class IComplexProfile(CheckerInDictionary, Dictionarer):
 
     def _parameters(self) -> dict:
         return {"is_complex_profile": self._is_complex_profile}
+
+
+class IAngleOfInclination(Dictionarer):
+    """ Интерфейс работы с полем угол наклона зубьев протяжки.
+
+    Parameters:
+        angle_of_inclination: (float >= 0) : Угол наклона зубьев протяжки.
+    """
+    def __init__(self, angle_of_inclination: float) -> None:
+        self._angle_of_inclination = None
+        self.angle_of_inclination = angle_of_inclination
+
+    @property
+    def angle_of_inclination(self):
+        return self._angle_of_inclination
+
+    @angle_of_inclination.setter
+    def angle_of_inclination(self, any_value):
+        if not isinstance(any_value, (int, float)) or any_value < 0:
+            raise InvalidValue(f'Угол наклона должен быть числом (передано {any_value})')
+        self._angle_of_inclination = any_value
+
+    def _parameters(self) -> dict:
+        return {"angle_of_inclination": self._angle_of_inclination}
+
+
+class IPitchOfTeeth(Dictionarer):
+    """ Интерфейс работы с полем шаг зубьев протяжки..
+
+    Parameters:
+         pitch_of_teeth: (float >= 0) : Шаг зубьев протяжки.
+    """
+    def __init__(self, pitch_of_teeth: float) -> None:
+        self._pitch_of_teeth = None
+        self.pitch_of_teeth = pitch_of_teeth
+
+    @property
+    def pitch_of_teeth(self):
+        return self._pitch_of_teeth
+
+    @pitch_of_teeth.setter
+    def pitch_of_teeth(self, any_value):
+        if not isinstance(any_value, (int, float)) or any_value < 0:
+            raise InvalidValue(f'Шаг зубьев должен быть положительным числом (передано {any_value})')
+        self._pitch_of_teeth = any_value
+
+    def _parameters(self) -> dict:
+        return {"pitch_of_teeth": self._pitch_of_teeth}
+
+
+class INumberTeethSection(Dictionarer):
+    """ Интерфейс работы с полем число зубьев секции протяжки.
+
+    Parameters:
+         number_teeth_section: (float >= 0) : Число зубьев секции протяжки.
+    """
+
+    def __init__(self, number_teeth_section: float) -> None:
+        self._number_teeth_section = None
+        self.number_teeth_section = number_teeth_section
+
+    @property
+    def number_teeth_section(self):
+        return self._number_teeth_section
+
+    @number_teeth_section.setter
+    def number_teeth_section(self, any_value):
+        if not isinstance(any_value, (int, float)) or any_value < 0:
+            raise InvalidValue(f'Число зубьев секции протяжки должно быть положительным числом (передано {any_value})')
+        self._number_teeth_section = any_value
+
+    def _parameters(self) -> dict:
+        return {"number_teeth_section": self._number_teeth_section}
+
+
+class IDifference(Dictionarer):
+    """ Интерфейс работы с полем подача на зуб протяжки .
+
+    Parameters:
+         difference: (float >= 0) : Подача на зуб протяжки (размерный перепад между соседними зубьями).
+    """
+
+    def __init__(self, difference: float) -> None:
+        self._difference = None
+        self.difference = difference
+
+    @property
+    def difference(self):
+        return self._difference
+
+    @difference.setter
+    def difference(self, any_value):
+        if not isinstance(any_value, (int, float)) or any_value < 0:
+            raise InvalidValue(f'Подача на зуб протяжки должно быть положительным числом (передано {any_value})')
+        self._difference = any_value
+
+    def _parameters(self) -> dict:
+        return {"difference": self._difference}
+
+
+class ILengthOfWorkingPart(Dictionarer):
+    """ Интерфейс работы с полем длина режущей части протяжки.
+
+    Parameters:
+         length_of_working_part: (float >= 0) : Длина режущей части протяжки.
+    """
+
+    def __init__(self, length_of_working_part: float) -> None:
+        self._length_of_working_part = None
+        self.length_of_working_part = length_of_working_part
+
+    @property
+    def length_of_working_part(self):
+        return self._length_of_working_part
+
+    @length_of_working_part.setter
+    def length_of_working_part(self, any_value):
+        if not isinstance(any_value, (int, float)) or any_value < 0:
+            raise InvalidValue(f'Длина режущей части должна быть положительным числом (передано {any_value})')
+        self._length_of_working_part = any_value
+
+    def _parameters(self) -> dict:
+        return {"length_of_working_part": self._length_of_working_part}

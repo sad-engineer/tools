@@ -51,6 +51,10 @@ def main():
     print(cutter.name)
     print(cutter.CUTTER_NAME)
 
+    cutter = container.broaching_cutter()
+    print(cutter.parameters)
+    print(cutter.CUTTER_NAME)
+
 
 if __name__ == '__main__':
     main()

@@ -51,7 +51,7 @@
     
     Класс "Фреза":
         из контейнера (с настройками по умолчанию):
-            cutter = container.MillingCutter()
+            cutter = container.milling_cutter()
         из пакета (необходимо задать начальные настройки):
             cutter = tools.MillingCutter(marking = any_marking, standard = any_standard, dia_mm = any_dia,
                 length_mm = any_length, mat_of_cutting_part = any_mat_of_cutting_part, 
@@ -65,7 +65,7 @@
         
     Класс "Резец":
         из контейнера (с настройками по умолчанию):
-            cutter = container.TurningCutter()
+            cutter = container.turning_cutter()
         из пакета (необходимо задать начальные настройки):
             cutter = cutting_tools.TurningCutter(marking = any_marking, standard = any_standard, 
                 length_mm = any_length, width_mm = any_width, height_mm = any_height, 
@@ -79,7 +79,7 @@
 
     Класс "Сверло":
         из контейнера (с настройками по умолчанию):
-            cutter = container.DrillingCutter()
+            cutter = container.drilling_cutter()
         из пакета (необходимо задать начальные настройки):
             cutter = cutting_tools.DrillingCutter(marking = any_marking, standard = any_standard, dia_mm = any_dia,
                 length_mm = any_length, mat_of_cutting_part = any_mat_of_cutting_part, 
@@ -91,7 +91,7 @@
 
     Класс "Зенкер":
         из контейнера (с настройками по умолчанию):
-            cutter = container.CountersinkingCutter()
+            cutter = container.countersinking_cutter()
         из пакета (необходимо задать начальные настройки):
             cutter = cutting_tools.CountersinkingCutter(marking = any_marking, standard = any_standard, dia_mm = any_dia,
                 length_mm = any_length, mat_of_cutting_part = any_mat_of_cutting_part, 
@@ -103,7 +103,7 @@
 
     Класс "Развертка":
         из контейнера (с настройками по умолчанию):
-            cutter = container.DeploymentCutter()
+            cutter = container.deployment_cutter()
         из пакета (необходимо задать начальные настройки):
             cutter = cutting_tools.DeploymentCutter(marking = any_marking, standard = any_standard, dia_mm = any_dia,
                 length_mm = any_length, mat_of_cutting_part = any_mat_of_cutting_part, 
@@ -113,6 +113,14 @@
                 num_of_cutting_blades = any_num_of_cutting_blades, 
                 radius_of_cutting_vertex = any_radius_of_cutting_vertex, quantity = any_quantity)
     
+    Класс "Протяжка":
+        из контейнера (с настройками по умолчанию):
+            cutter = container.broaching_cutter()
+        из пакета (необходимо задать начальные настройки):
+            cutter = container.DeploymentCutter(marking=any_marking, standard=any_standard, angle_of_inclination=any_angle, 
+            pitch_of_teeth=any_pitch, number_teeth_section=any_number, difference=any_difference, 
+            length_of_working_part=any_length, 
+
     для основных классов досупны:
         документация:
             print(cutter.__doc__)

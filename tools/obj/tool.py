@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # ----------------------------------------------------------------------------------------------------------------------
-from typing import Union, ClassVar
+from typing import Union, ClassVar, Optional
 from tools.obj.constants import GROUPS_TOOL, TYPES_STANDARD
 from logger.obj.exceptions import InvalidValue
 from logger import Dictionarer
@@ -90,6 +90,48 @@ class Tool(Dictionarer):
         return {"group": self._group, "marking": self._marking, "standard": self._standard, "name": self.name}
 
 
+class CustomTool(Tool):
+    """ Специальный инструмент. В этом инструменте в поле marking указывается только 'специальный' а поле standard
+    можно оставлять пустым.
+    """
+    def __init__(self, group: Union[str, int] = "Инструмент", marking: str = "специальный",
+                 standard: Optional[str] = None):
+        if isinstance(standard, type(None)):
+            standard = ""
+        Tool.__init__(self, group, marking, standard)
+
+    @property
+    def marking(self) -> str:
+        return self._marking
+
+    @marking.setter
+    def marking(self, any_marking) -> None:
+        if any_marking.find("пециал") == -1:
+            raise InvalidValue(f'Инструмент может быть только специальным')
+        self._marking = any_marking
+
+    @property
+    def standard(self) -> str:
+        return self._standard
+
+    @standard.setter
+    def standard(self, any_standard) -> None:
+        if any_standard != "":
+            if not isinstance(any_standard, str):
+                raise InvalidValue(f'Неверное значение стандарта инструмента.')
+            if any_standard.split(" ")[0] not in self.TYPES_STANDARD:
+                raise InvalidValue(f'Неверное значение стандарта инструмента.')
+            if not any_standard.find("-") != -1:
+                raise InvalidValue(f'Неверное значение стандарта инструмента (возможно не указан год).')
+        self._standard = any_standard
+
+    @property
+    def name(self) -> str:
+        self._name = " ".join([self.group, self.marking, self.standard]).capitalize().strip()
+        return self._name
+
+
+
 if __name__ == "__main__":
     obj = Tool()
 
@@ -105,6 +147,10 @@ if __name__ == "__main__":
     print(obj.name)
 
     obj = Tool(group="Фреза")
+    print(obj.group)
+    print(obj.parameters)
+
+    obj = CustomTool("Фреза", "специальная")
     print(obj.group)
     print(obj.parameters)
 

@@ -149,3 +149,15 @@ class ToolContainer(containers.DeclarativeContainer):
         quantity=1,
         tolerance=DS[cutters.DeploymentCutter.CUTTER_NAME]["tolerance"],
     )
+
+    broaching_cutter = providers.Factory(
+        cutters.BroachingCutter,
+        marking="специальная",
+        standard="",
+        angle_of_inclination=DS[cutters.BroachingCutter.CUTTER_NAME]["angle_of_inclination"],
+        pitch_of_teeth=DS[cutters.BroachingCutter.CUTTER_NAME]["pitch_of_teeth"],
+        number_teeth_section=DS[cutters.BroachingCutter.CUTTER_NAME]["number_teeth_section"],
+        difference=DS[cutters.BroachingCutter.CUTTER_NAME]["difference"],
+        length_of_working_part=DS[cutters.BroachingCutter.CUTTER_NAME]["length_of_working_part"],
+    )
+

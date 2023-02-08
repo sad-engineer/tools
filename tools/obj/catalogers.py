@@ -11,7 +11,7 @@ TOOLS_CLASSES_BY_TYPE = {"Инструмент": "Tool",
                "Сверло": "DrillingCutter",
                "Зенкер": "CountersinkingCutter",
                "Развертка": "DeploymentCutter",
-               # "Протяжка": "broaching",
+               "Протяжка": "BroachingCutter",
                }
 
 

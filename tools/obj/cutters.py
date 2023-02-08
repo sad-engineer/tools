@@ -4,7 +4,7 @@
 from typing import ClassVar
 from typing import Union, Optional
 
-from tools.obj.tool import Tool
+from tools.obj.tool import Tool, CustomTool
 from tools.obj.sizes import AxialSizes
 from tools.obj.sizes import PrismaticSizes
 from tools.obj.blade_material import BladeMaterial
@@ -22,6 +22,12 @@ from tools.obj.interfaces import IModule
 from tools.obj.interfaces import ITurret
 from tools.obj.interfaces import ILoad
 from tools.obj.interfaces import IComplexProfile
+from tools.obj.interfaces import IAngleOfInclination
+from tools.obj.interfaces import IPitchOfTeeth
+from tools.obj.interfaces import INumberTeethSection
+from tools.obj.interfaces import IDifference
+from tools.obj.interfaces import ILengthOfWorkingPart
+
 from tools.scr.fun import get_name
 
 
@@ -344,6 +350,55 @@ class DeploymentCutter(DrillingCutter):
                                 radius_of_cutting_vertex, quantity, tolerance)
         self.__doc__ = DrillingCutter.__doc__.replace("Сверло", "Развертка")
         self.group = "Развертка"
+
+
+class BroachingCutter(CustomTool, IAngleOfInclination, IPitchOfTeeth, INumberTeethSection, IDifference, ILengthOfWorkingPart):
+    """ Управляет полями класса "Протяжка"
+
+        Parameters:
+            marking : (str) : обозначение инструмента.
+            standard : (str contains one of TYPES_STANDARD) : стандарт инструмента.
+            angle_of_inclination: (float) : Угол наклона зубьев протяжки.
+            pitch_of_teeth: (float >= 0) : Шаг зубьев протяжки.
+            number_teeth_section: (float >= 0) : Число зубьев секции протяжки.
+            difference: (float >= 0) : Подача на зуб протяжки (размерный перепад между соседними зубьями).
+            length_of_working_part: (float >= 0) : Длина режущей части протяжки.
+
+        Properties:
+            name : (str) : возвращает название инструмента.
+
+        Methods:
+            parameters : (dict) : возвращает словарь параметров и свойств.
+
+        Сostants:
+            CUTTER_NAME : Наименование класса инструмента.
+        """
+    CUTTER_NAME: ClassVar[str] = 'Протяжка'
+
+    def __init__(self,
+                 marking: str,
+                 standard: str,
+                 angle_of_inclination: float,
+                 pitch_of_teeth: float,
+                 number_teeth_section: float,
+                 difference: float,
+                 length_of_working_part: float,
+                 ):
+        Tool.__init__(self, self.CUTTER_NAME, marking, standard)
+        IAngleOfInclination.__init__(self, angle_of_inclination)
+        IPitchOfTeeth.__init__(self, pitch_of_teeth)
+        INumberTeethSection.__init__(self, number_teeth_section)
+        IDifference.__init__(self, difference)
+        ILengthOfWorkingPart.__init__(self, length_of_working_part)
+
+    def _parameters(self):
+        tool = Tool._parameters(self)
+        angle = IAngleOfInclination._parameters(self)
+        pitch = IPitchOfTeeth._parameters(self)
+        number = INumberTeethSection._parameters(self)
+        difference = IDifference._parameters(self)
+        length = ILengthOfWorkingPart._parameters(self)
+        return tool | angle | pitch | number | difference | length
 
 
 # if __name__ == "__main__":

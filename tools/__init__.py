@@ -24,6 +24,7 @@ DrillingCutter = ToolContainer.drilling_cutter
 CountersinkingCutter = ToolContainer.countersinking_cutter
 DeploymentCutter = ToolContainer.deployment_cutter
 TurningCutter = ToolContainer.turning_cutter
+BroachingCutter = ToolContainer.broaching_cutter
 Lister = ToolContainer.lister
 Finder = ToolContainer.finder
 
