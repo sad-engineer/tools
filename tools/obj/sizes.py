@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # ----------------------------------------------------------------------------------------------------------------------
-from logger.obj.exceptions import InvalidValue
-from cutting_tools.obj.abstract_classes import Size
-from logger import Dictionarer
+from service import InvalidValue
+from tools.obj.abstract_classes import Size
+from service import Dictionarer
 
 
 class AxialSizes(Size, Dictionarer):

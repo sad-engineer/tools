@@ -8,13 +8,15 @@ from tools.obj.containers import ToolContainer
 
 def main():
     container = ToolContainer()
-    container.config.from_yaml('config.yml')
 
     tool_database_client = container.tool_database_client()
     print(tool_database_client)
 
     requester = container.requester()
     print(requester)
+
+    catalod = container.catalog()
+    print(catalod.classes)
 
     lister = container.lister()
     start_time_1 = time.time()
@@ -58,4 +60,5 @@ def main():
 
 if __name__ == '__main__':
     main()
+
 

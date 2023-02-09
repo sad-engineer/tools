@@ -16,7 +16,7 @@ def get_class_names(module_names) -> list:
 
 class Cataloger:
     """ Хранит ссылки на классы проекта"""
-    def __init__(self, module_names: Union[str, list, tuple] = "cutting_tools") -> None:
+    def __init__(self, module_names: Union[str, list, tuple] = "!cutting_tools") -> None:
         self._module_names = module_names
         self._classes: Optional[list] = None
         self._get_classes(self._module_names)
@@ -38,9 +38,9 @@ class Cataloger:
 
 
 if __name__ == "__main__":
-    # cataloger = Cataloger(["logger", "cutting_tools"])
+    # cataloger = Cataloger(["logger", "!cutting_tools"])
     # print(cataloger.classes)
     # print(cataloger.get_class_by_name("Logger"))
 
-    cataloger = Cataloger("cutting_tools")
+    cataloger = Cataloger("!cutting_tools")
     print(cataloger.classes)

@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # ----------------------------------------------------------------------------------------------------------------------
-from tools.obj.exceptions import InvalidValue
-from logger import Dictionarer
+from service import InvalidValue
+from service import Dictionarer
 
 
 class Angles(Dictionarer):

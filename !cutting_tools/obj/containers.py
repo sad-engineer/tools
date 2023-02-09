@@ -56,7 +56,7 @@ class Container(containers.DeclarativeContainer):
 
     cataloger = providers.Singleton(
         cataloger.Cataloger,
-        module_names=["logger", "cutting_tools"],
+        module_names=["logger", "!cutting_tools"],
     )
 
     creator_from_log_line = providers.Factory(

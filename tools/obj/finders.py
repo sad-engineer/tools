@@ -2,8 +2,9 @@
 # -*- coding: utf-8 -*-
 # ----------------------------------------------------------------------------------------------------------------------
 import pandas as pd
+from typing import Optional
 
-from tools.obj.requesters import RecordRequester
+from service import RecordRequester
 
 
 class Finder:
@@ -61,7 +62,7 @@ class Finder:
         df = self._requester.get_records({"Стандарт": standard})
         return df.dropna(how='any', axis=1) if not df.empty else None
 
-    def by_dia_and_type(self, dia: float, dia_out: float, type_tool: str) -> pd.DataFrame:
+    def by_dia_and_type(self, dia: Optional[float], dia_out: Optional[float], type_tool: str) -> pd.DataFrame:
         """ Возвращает найденные записи по значению диаметра в виде таблицы pd.DataFrame.
 
         Аргументы

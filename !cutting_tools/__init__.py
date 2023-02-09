@@ -16,7 +16,7 @@ from cutting_tools.obj.constants import ACCURACY_CLASS_STANDARDS
 from cutting_tools.obj.constants import DECODING
 from cutting_tools.obj.constants import SAVED_FIELDS
 # Методы пакета
-# from cutting_tools.fun import get_name
+# from !cutting_tools.fun import get_name
 # Классы пакета
 from cutting_tools.obj.milling_cutter import MillingCutter
 from cutting_tools.obj.drilling_cutter import DrillingCutter

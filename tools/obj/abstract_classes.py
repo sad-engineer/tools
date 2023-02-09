@@ -4,12 +4,6 @@
 from abc import ABC, abstractmethod
 
 
-class Notifier(ABC):
-    """ Абстрактный класс, базовый для всех логеров или классов вывода результата"""
-    @abstractmethod
-    def log(self, obj, message, path): return path
-
-
 class Size(ABC):
     """ Абстрактный класс для наследования классами, содержащими размеры """
 

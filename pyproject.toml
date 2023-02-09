@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "tools"
-version = "0.2.02"
+version = "0.2.04"
 description = ""
 authors = ["Andrey Nikolaevich Korenyuk <korenyuk.a.n@mail.ru>"]
 readme = "README.md"
@@ -8,9 +8,7 @@ packages = [{include = "cutting_tools"}]
 
 [tool.poetry.dependencies]
 python = "^3.9"
-logger = {path = "I:/Программирование/Pro0.5-logger_for_my_projects/dist/logger-0.1.11.tar.gz"}
-openpyxl = "^3.1.0"
-pyyaml = "^6.0"
+service = {path = "I:/Программирование/Pro0.5-service_for_my_projects/dist/service-0.1.16.tar.gz"}
 
 
 [build-system]

@@ -4,8 +4,8 @@
 import re
 from typing import Optional, Union
 
-from cutting_tools.obj.interfaces import IAccuracy, IToleranceField
-from logger.obj.exceptions import InvalidValue
+from tools.obj.interfaces import IAccuracy, IToleranceField
+from service import InvalidValue
 
 
 class Tolerance(IAccuracy, IToleranceField):

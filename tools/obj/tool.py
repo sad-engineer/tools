@@ -2,9 +2,10 @@
 # -*- coding: utf-8 -*-
 # ----------------------------------------------------------------------------------------------------------------------
 from typing import Union, ClassVar, Optional
+
 from tools.obj.constants import GROUPS_TOOL, TYPES_STANDARD
-from logger.obj.exceptions import InvalidValue
-from logger import Dictionarer
+from service import InvalidValue
+from service import Dictionarer
 
 
 class Tool(Dictionarer):
@@ -28,11 +29,12 @@ class Tool(Dictionarer):
     GROUPS_TOOL: ClassVar[dict] = GROUPS_TOOL
     TYPES_STANDARD: ClassVar[dict] = TYPES_STANDARD
 
-    def __init__(self, group: Union[str, int] = "Инструмент", marking: str = "0000-0000", standard: str = "ГОСТ 5555-99"):
-        self._name: str = None
-        self._group: str = None
-        self._marking: str = None
-        self._standard: str = None
+    def __init__(self, group: Union[str, int] = "Инструмент", marking: str = "0000-0000",
+                 standard: str = "ГОСТ 5555-99"):
+        self._name: Optional[str] = None
+        self._group: Optional[str] = None
+        self._marking: Optional[str] = None
+        self._standard: Optional[str] = None
 
         self.group = group
         self.marking = marking
@@ -46,7 +48,7 @@ class Tool(Dictionarer):
     def group(self, group) -> None:
         if isinstance(group, (int, float)) and group not in self.GROUPS_TOOL.values():
             raise InvalidValue(f'Неверное значение индекса группы инструмента. Значение должно быть из '
-                             f'{self.GROUPS_TOOL}.')
+                               f'{self.GROUPS_TOOL}.')
         if isinstance(group, str) and group not in self.GROUPS_TOOL:
             raise InvalidValue(f'Неверное значение группы инструмента. Значение должно быть из {self.GROUPS_TOOL}.')
         if not isinstance(group, (int, float, str)):
@@ -79,8 +81,7 @@ class Tool(Dictionarer):
 
     @property
     def name(self) -> str:
-        self._name = " ".join([self.group, self.marking, self.standard])
-        return self._name
+        return " ".join([self.group, self.marking, self.standard]) if isinstance(self._name, type(None)) else self._name
 
     @name.setter
     def name(self, value) -> None:
@@ -106,6 +107,8 @@ class CustomTool(Tool):
 
     @marking.setter
     def marking(self, any_marking) -> None:
+        if not isinstance(any_marking, str):
+            raise InvalidValue(f'Обозначение может быть только строкой')
         if any_marking.find("пециал") == -1:
             raise InvalidValue(f'Инструмент может быть только специальным')
         self._marking = any_marking
@@ -127,33 +130,9 @@ class CustomTool(Tool):
 
     @property
     def name(self) -> str:
-        self._name = " ".join([self.group, self.marking, self.standard]).capitalize().strip()
-        return self._name
+        return " ".join([self.group, self.marking, self.standard]).capitalize().strip() \
+            if isinstance(self._name, type(None)) else self._name
 
-
-
-if __name__ == "__main__":
-    obj = Tool()
-
-    obj.group = "Резец"
-    print(obj.group)
-    print(obj.GROUPS_TOOL)
-    # obj.group = "Плашка"
-    # print(obj.group)
-    print(obj.name)
-
-    obj = Tool(group=0)
-    print(obj.group)
-    print(obj.name)
-
-    obj = Tool(group="Фреза")
-    print(obj.group)
-    print(obj.parameters)
-
-    obj = CustomTool("Фреза", "специальная")
-    print(obj.group)
-    print(obj.parameters)
-
-
-
-
+    @name.setter
+    def name(self, value) -> None:
+        self._name = value

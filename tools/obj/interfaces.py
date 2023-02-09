@@ -4,7 +4,6 @@
 from typing import ClassVar
 from typing import Union, Optional
 
-from tools.obj.checker_in_dict import CheckerInDictionary
 from tools.obj.constants import ACCURACY_STANDARDS
 from tools.obj.constants import TOLERANCE_FIELDS
 from tools.obj.constants import ACCURACY_CLASS_STANDARDS
@@ -13,8 +12,9 @@ from tools.obj.constants import TYPES_OF_CUTTING_PART_OF_MILLING_CUTTER
 from tools.obj.constants import TYPES_OF_LARGE_TOOTH
 from tools.obj.constants import TYPES_OF_TOOL_HOLDER
 from tools.obj.constants import TYPES_OF_LOADS
-from tools.obj.exceptions import InvalidValue
-from logger import Dictionarer
+from service import CheckerInDictionary
+from service import InvalidValue
+from service import Dictionarer
 
 
 class IAccuracy(CheckerInDictionary, Dictionarer):

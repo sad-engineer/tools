@@ -5,8 +5,8 @@ from typing import Union, ClassVar
 
 from tools.obj.constants import MATERIALS_OF_CUTTING_PART
 from tools.obj.constants import HARD_ALLOYS, HIGH_SPEED_STEELS
-from tools.obj.exceptions import InvalidValue
-from logger import Dictionarer
+from service import InvalidValue
+from service import Dictionarer
 
 
 class BladeMaterial(Dictionarer):

@@ -2,12 +2,12 @@
 # -*- coding: utf-8 -*-
 # -------------------------------------------------------------------------------
 # from typing import Optional
-# from cutting_tools.obj.constants import DEFAULT_SETTINGS_FOR_CUTTING_TOOL as DEFAULT_SETTINGS
-# from cutting_tools.find import by_marking_and_stand
-# from cutting_tools.fun import get_name
-# from cutting_tools.fun import get_index_type_cutter as index_tc
-# from cutting_tools.fun import get_float_value, get_int_value, get_diameter
-# from cutting_tools.fun import show_cutting_tool
+# from !cutting_tools.obj.constants import DEFAULT_SETTINGS_FOR_CUTTING_TOOL as DEFAULT_SETTINGS
+# from !cutting_tools.find import by_marking_and_stand
+# from !cutting_tools.fun import get_name
+# from !cutting_tools.fun import get_index_type_cutter as index_tc
+# from !cutting_tools.fun import get_float_value, get_int_value, get_diameter
+# from !cutting_tools.fun import show_cutting_tool
 #
 #
 # class CuttingTool:

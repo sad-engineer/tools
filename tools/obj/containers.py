@@ -4,9 +4,20 @@
 import sqlite3
 from dependency_injector import containers, providers
 
-from . import cutters, finders, creators, listers, requesters, catalogers, data_preparers
-from .constants import DEFAULT_SETTINGS_FOR_TOOL as DS
-from .constants import PATH_DB_FOR_TOOLS, REQUESTER_TYPE
+from tools.obj import cutters, finders, creators, listers, data_preparers
+from tools.obj.constants import DEFAULT_SETTINGS_FOR_TOOL as DS
+from tools.obj.constants import PATH_DB_FOR_TOOLS, REQUESTER_TYPE
+
+from service import Cataloger, RequestRecordFromSQLyte
+
+TOOLS_CLASSES_BY_TYPE = {"Инструмент": "Tool",
+                         "Резец": "TurningCutter",
+                         "Фреза": "MillingCutter",
+                         "Сверло": "DrillingCutter",
+                         "Зенкер": "CountersinkingCutter",
+                         "Развертка": "DeploymentCutter",
+                         "Протяжка": "BroachingCutter",
+                         }
 
 
 class ToolContainer(containers.DeclarativeContainer):
@@ -25,7 +36,7 @@ class ToolContainer(containers.DeclarativeContainer):
     csv_requester = providers.Singleton()
 
     sqlyte_requester = providers.Singleton(
-        requesters.RequestRecordFromSQLyte,
+        RequestRecordFromSQLyte,
         tablename="tools",
         database_client=tool_database_client
     )
@@ -43,7 +54,9 @@ class ToolContainer(containers.DeclarativeContainer):
     )
 
     catalog = providers.Factory(
-        catalogers.Cataloger,
+        Cataloger,
+        module_name="tools.obj.cutters",
+        dict_types=TOOLS_CLASSES_BY_TYPE
     )
 
     data_preparer = providers.Factory(
