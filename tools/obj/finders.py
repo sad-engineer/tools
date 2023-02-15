@@ -47,8 +47,7 @@ class Finder:
         marking: str
             Обозначение для поиска в БД
         """
-        dict = {"Обозначение": marking}
-        df = self._requester.get_records(values_dict=dict)
+        df = self._requester.get_records({"Обозначение": marking})
         return df.dropna(how='any', axis=1) if not df.empty else None
 
     def by_stand(self, standard: str) -> pd.DataFrame:

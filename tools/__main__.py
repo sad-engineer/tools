@@ -3,17 +3,12 @@
 # ----------------------------------------------------------------------------------------------------------------------
 import time
 
-from tools.obj.containers import ToolContainer
+from tools.obj.containers import Container
 
 
 def main():
-    container = ToolContainer()
+    container = Container()
 
-    tool_database_client = container.tool_database_client()
-    print(tool_database_client)
-
-    requester = container.requester()
-    print(requester)
 
     catalod = container.catalog()
     print(catalod.classes)

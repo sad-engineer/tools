@@ -19,15 +19,15 @@ from tools.obj.constants import SAVED_FIELDS
 # Методы пакета
 # from tools.fun import get_name
 # Классы пакета
-from tools.obj.containers import ToolContainer
-MillingCutter = ToolContainer.milling_cutter
-DrillingCutter = ToolContainer.drilling_cutter
-CountersinkingCutter = ToolContainer.countersinking_cutter
-DeploymentCutter = ToolContainer.deployment_cutter
-TurningCutter = ToolContainer.turning_cutter
-BroachingCutter = ToolContainer.broaching_cutter
-Lister = ToolContainer.lister
-Finder = ToolContainer.finder
+from tools.obj.containers import Container
+MillingCutter = Container.milling_cutter
+DrillingCutter = Container.drilling_cutter
+CountersinkingCutter = Container.countersinking_cutter
+DeploymentCutter = Container.deployment_cutter
+TurningCutter = Container.turning_cutter
+BroachingCutter = Container.broaching_cutter
+Lister = Container.lister
+Finder = Container.finder
 
 
 if __name__ == "__main__":

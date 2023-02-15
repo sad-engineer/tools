@@ -8,8 +8,7 @@ from tools.obj import cutters, finders, creators, listers, data_preparers
 from tools.obj.constants import DEFAULT_SETTINGS_FOR_TOOL as DS
 from tools.obj.constants import PATH_DB_FOR_TOOLS as DB_PATH
 from tools.obj.constants import REQUESTER_TYPE as DB_type
-from tools.obj.
-from service import Requester
+from service import Requester, Cataloger
 
 TOOLS_CLASSES_BY_TYPE = {"Инструмент": "Tool",
                          "Резец": "TurningCutter",
@@ -32,8 +31,6 @@ class RequesterContainer(Requester):
         Requester.requester,
         tablename="tools",
         )
-
-
 
 
 class Container(containers.DeclarativeContainer):
