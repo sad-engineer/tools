@@ -96,4 +96,3 @@ class Finder:
         """ Возвращает все записи в виде таблицы pd.DataFrame """
         df = self._requester.get_all_records
         return df if not df.empty else None
-

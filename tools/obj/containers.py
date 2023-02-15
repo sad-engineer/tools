@@ -6,9 +6,10 @@ from dependency_injector import containers, providers
 
 from tools.obj import cutters, finders, creators, listers, data_preparers
 from tools.obj.constants import DEFAULT_SETTINGS_FOR_TOOL as DS
-from tools.obj.constants import PATH_DB_FOR_TOOLS, REQUESTER_TYPE
-
-from service import Cataloger, RequestRecordFromSQLyte
+from tools.obj.constants import PATH_DB_FOR_TOOLS as DB_PATH
+from tools.obj.constants import REQUESTER_TYPE as DB_type
+from tools.obj.
+from service import Requester
 
 TOOLS_CLASSES_BY_TYPE = {"Инструмент": "Tool",
                          "Резец": "TurningCutter",
@@ -20,37 +21,37 @@ TOOLS_CLASSES_BY_TYPE = {"Инструмент": "Tool",
                          }
 
 
-class ToolContainer(containers.DeclarativeContainer):
-
-    config = providers.Configuration()
-    config.tool_database.path.from_value(PATH_DB_FOR_TOOLS)
-    config.requester.type.from_value(REQUESTER_TYPE)
-
-    # Gateways
-    tool_database_client = providers.Singleton(
-        sqlite3.connect,
-        config.tool_database.path,
+@containers.copy(Requester)
+class RequesterContainer(Requester):
+    default_settings = providers.Object(
+        {'path': DB_PATH, 'requester_type': DB_type, 'reader_type': 'dict'}
     )
+    Requester.config.from_dict(default_settings())
 
-    # Services
-    csv_requester = providers.Singleton()
-
-    sqlyte_requester = providers.Singleton(
-        RequestRecordFromSQLyte,
+    requester_tools = providers.Factory(
+        Requester.requester,
         tablename="tools",
-        database_client=tool_database_client
-    )
-    # Выбор класса запросов
-    requester = providers.Selector(
-        config.requester.type,
-        csv=csv_requester,
-        sqlite=sqlyte_requester,
+        )
+
+
+
+
+class Container(containers.DeclarativeContainer):
+    default_settings = providers.Object({
+        'tools': {'path': DB_PATH, 'requester_type': DB_type, 'reader_type': 'pandas_table'},
+    })
+    config = providers.Configuration()
+    config.from_dict(default_settings())
+
+    requester_container = providers.Container(
+        RequesterContainer,
+        config=config.tools,
     )
 
     # В record_requester положил созданный класс запросов, т.к. Finder использует методы record_requester а не создает класс запросов
     finder = providers.Factory(
         finders.Finder,
-        record_requester=requester,
+        record_requester=requester_container.requester_tools,
     )
 
     catalog = providers.Factory(

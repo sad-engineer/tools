@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # Константы пакета
+# from tools.obj.constants import PATH_DB_FOR_TOOLS
 from tools.obj.constants import DEFAULT_SETTINGS_FOR_TOOL
 from tools.obj.constants import MATERIALS_OF_CUTTING_PART
 from tools.obj.constants import GROUPS_TOOL
@@ -30,7 +31,10 @@ Finder = ToolContainer.finder
 
 
 if __name__ == "__main__":
+
     cutter = MillingCutter()
     print(cutter.name)
 
+    from tools.obj.constants import PATH_DB_FOR_TOOLS
+    print(PATH_DB_FOR_TOOLS)
 
