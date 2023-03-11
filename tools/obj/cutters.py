@@ -4,7 +4,7 @@
 from typing import ClassVar
 from typing import Union, Optional
 
-from tools.obj.tool import Tool, CustomTool
+from tools.obj.tool import Tool,  CustomTool
 from tools.obj.sizes import AxialSizes
 from tools.obj.sizes import PrismaticSizes
 from tools.obj.blade_material import BladeMaterial

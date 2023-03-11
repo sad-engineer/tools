@@ -20,35 +20,35 @@ TOOLS_CLASSES_BY_TYPE = {"Инструмент": "Tool",
                          }
 
 
-@containers.copy(Requester)
-class RequesterContainer(Requester):
-    default_settings = providers.Object(
-        {'path': DB_PATH, 'requester_type': DB_type, 'reader_type': 'dict'}
-    )
-    Requester.config.from_dict(default_settings())
-
-    requester_tools = providers.Factory(
-        Requester.requester,
-        tablename="tools",
-        )
+# @containers.copy(Requester)
+# class RequesterContainer(Requester):
+#     default_settings = providers.Object(
+#         {'path': DB_PATH, 'requester_type': DB_type, 'reader_type': 'dict'}
+#     )
+#     Requester.config.from_dict(default_settings())
+#
+#     requester_tools = providers.Factory(
+#         Requester.requester,
+#         tablename="tools",
+#         )
 
 
 class Container(containers.DeclarativeContainer):
     default_settings = providers.Object({
-        'tools': {'path': DB_PATH, 'requester_type': DB_type, 'reader_type': 'pandas_table'},
+        'tools': {'path': DB_PATH, 'requester_type': DB_type, 'reader_type': 'pandas_table', 'tablename': "tools"},
     })
     config = providers.Configuration()
     config.from_dict(default_settings())
 
     requester_container = providers.Container(
-        RequesterContainer,
+        Requester,
         config=config.tools,
     )
 
     # В record_requester положил созданный класс запросов, т.к. Finder использует методы record_requester а не создает класс запросов
     finder = providers.Factory(
         finders.Finder,
-        record_requester=requester_container.requester_tools,
+        record_requester=requester_container.requester,
     )
 
     catalog = providers.Factory(
