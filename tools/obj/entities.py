@@ -3,7 +3,7 @@
 # ----------------------------------------------------------------------------------------------------------------------
 import re
 from typing import Optional
-from pydantic import BaseModel, validator, confloat, root_validator, conint
+from pydantic import BaseModel, validator, root_validator, confloat, conint
 
 from service import InvalidValue
 from service import Dictionarer
@@ -54,7 +54,7 @@ class Tool(Base, Dictionarer):
         self._name = value
 
     @validator('standard')
-    def validate_standard(self, value):
+    def validate_standard(cls, value):
         for substring in TYPES_STANDARD:
             if substring in value:
                 return value
@@ -62,7 +62,7 @@ class Tool(Base, Dictionarer):
                            f"{', '.join(str(i) for i in TYPES_STANDARD)}). Получено значение: {value}")
 
     @validator('marking')
-    def validate_marking(self, value):
+    def validate_marking(cls, value):
         if not isinstance(value, str):
             raise InvalidValue(f'Неверное обозначение инструмента. Ожидается строковое выражение. Получено: {value}')
         return value
@@ -79,7 +79,7 @@ class CustomTool(Tool):
     marking: MarkingForSpecialTool = 'специальный'
 
     @validator('standard')
-    def validate_standard(self, value):
+    def validate_standard(cls, value):
         if value == "" or isinstance(value, type(None)):
             return ""
         for substring in TYPES_STANDARD:
@@ -265,9 +265,9 @@ class DrillingCutter(Tolerance, Angles, BladeMaterial, AxialSizes, Tool):
     num_of_cutting_blades: conint(ge=0) = 2
 
     @root_validator
-    def check_group(self, values):
+    def check_group(cls, values):
         if 'group' in values and values['group'] != "Сверло":
-            raise ValueError(f"Нельзя менять группу класса '{self.__class__.__name__}' ({self.group}). "
+            raise ValueError(f"Нельзя менять группу класса '{cls.__class__.__name__}' ({cls.group}). "
                              f"Используйте соответствующий класс")
         return values
 
@@ -314,9 +314,9 @@ class CountersinkingCutter(DrillingCutter):
     num_of_cutting_blades: conint(ge=0) = 8
 
     @root_validator
-    def check_group(self, values):
+    def check_group(cls, values):
         if 'group' in values and values['group'] != "Зенкер":
-            raise ValueError(f"Нельзя менять группу класса '{self.__class__.__name__}' ({self.group}). "
+            raise ValueError(f"Нельзя менять группу класса '{cls.__class__.__name__}' ({cls.group}). "
                              f"Используйте соответствующий класс")
         return values
 
@@ -352,9 +352,9 @@ class DeploymentCutter(DrillingCutter):
     num_of_cutting_blades: conint(ge=0) = 8
 
     @root_validator
-    def check_group(self, values):
+    def check_group(cls, values):
         if 'group' in values and values['group'] != "Развертка":
-            raise ValueError(f"Нельзя менять группу класса '{self.__class__.__name__}' ({self.group}). "
+            raise ValueError(f"Нельзя менять группу класса '{cls.__class__.__name__}' ({cls.group}). "
                              f"Используйте соответствующий класс")
         return values
 
@@ -403,9 +403,9 @@ class MillingCutter(DrillingCutter):
     module: Optional[confloat(ge=0)] = None
 
     @root_validator
-    def check_group(self, values):
+    def check_group(cls, values):
         if 'group' in values and values['group'] != "Фреза":
-            raise ValueError(f"Нельзя менять группу класса '{self.__class__.__name__}' ({self.group}). "
+            raise ValueError(f"Нельзя менять группу класса '{cls.__class__.__name__}' ({cls.group}). "
                              f"Используйте соответствующий класс")
         return values
 
@@ -460,9 +460,9 @@ class TurningCutter(Tolerance, Angles, BladeMaterial, PrismaticSizes, Tool):
     group: InGroupsTool = "Резец"
 
     @root_validator
-    def check_group(self, values):
+    def check_group(cls, values):
         if 'group' in values and values['group'] != "Резец":
-            raise ValueError(f"Нельзя менять группу класса '{self.__class__.__name__}' ({self.group}). "
+            raise ValueError(f"Нельзя менять группу класса '{cls.__class__.__name__}' ({cls.group}). "
                              f"Используйте соответствующий класс")
         return values
 
@@ -496,16 +496,17 @@ class BroachingCutter(CustomTool):
         parameters : (dict) : возвращает словарь параметров и свойств.
     """
     group: InGroupsTool = "Протяжка"
-    angle_of_inclination: confloat = 0
-    pitch_of_teeth: confloat(ge=0) = 0
+    marking: MarkingForSpecialTool = 'специальная'
+    angle_of_inclination: float = 0.0
+    pitch_of_teeth: confloat(ge=0) = 0.0
     number_teeth_section: conint(ge=0) = 0
-    difference: confloat(ge=0) = 0
-    length_of_working_part: confloat(ge=0) = 0
+    difference: confloat(ge=0) = 0.0
+    length_of_working_part: confloat(ge=0) = 0.0
 
     @root_validator
-    def check_group(self, values):
+    def check_group(cls, values):
         if 'group' in values and values['group'] != "Протяжка":
-            raise ValueError(f"Нельзя менять группу класса '{self.__class__.__name__}' ({self.group}). "
+            raise ValueError(f"Нельзя менять группу класса '{cls.__class__.__name__}' ({cls.group}). "
                              f"Используйте соответствующий класс")
         return values
 
@@ -520,7 +521,7 @@ class BroachingCutter(CustomTool):
 
 
 if __name__ == '__main__':
-    tool = TurningCutter()
+    tool = DrillingCutter()
     # print(tool.group)
     # tool.group = 1
     #
