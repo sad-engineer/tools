@@ -1,9 +1,14 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # ----------------------------------------------------------------------------------------------------------------------
-import time
+import logging.config
+
+from service import timeit, timeit_property
 
 from tools.obj.containers import Container
+from tools.logger_settings import config
+
+logging.config.dictConfig(config)
 
 
 def main():
@@ -14,43 +19,10 @@ def main():
     print(catalod.classes)
 
     lister = container.lister()
-    start_time_1 = time.time()
-    cutters = lister.by_marking(marking="2210-0061")
-    end_time_1 = time.time()
-    time_1 = end_time_1 - start_time_1
-    print("Время запроса инструмента по обозначению ", time_1)
+    create = lister.by_marking
+    timeit("Время запроса инструмента по обозначению : {}")(create)(marking="2210-0061")
 
-    start_time_2 = time.time()
-    cutters = lister.all
-    end_time_2 = time.time()
-    time_2 = end_time_2 - start_time_2
-    print("Время запроса всех инструментов", time_2)
-
-    print(f"Разница составила {time_2/time_1} раз(а).", )
-
-    cutter = container.milling_cutter()
-    print(cutter.name)
-    print(cutter.CUTTER_NAME)
-
-    cutter = container.turning_cutter()
-    print(cutter.name)
-    print(cutter.CUTTER_NAME)
-
-    cutter = container.drilling_cutter()
-    print(cutter.name)
-    print(cutter.CUTTER_NAME)
-
-    cutter = container.countersinking_cutter()
-    print(cutter.name)
-    print(cutter.CUTTER_NAME)
-
-    cutter = container.deployment_cutter()
-    print(cutter.name)
-    print(cutter.CUTTER_NAME)
-
-    cutter = container.broaching_cutter()
-    print(cutter.parameters)
-    print(cutter.CUTTER_NAME)
+    timeit_property("Время запроса всех инструментов: {}")(lister)("all")
 
 
 if __name__ == '__main__':
