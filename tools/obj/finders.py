@@ -17,7 +17,6 @@ class Finder:
     def __init__(self, record_requester: RecordRequester) -> None:
         self._requester = record_requester
 
-
     def by_dia(self, dia: float, dia_out: float=None) -> pd.DataFrame:
         """ Возвращает найденные записи по значению диаметра в виде таблицы pd.DataFrame.
 
@@ -55,15 +54,15 @@ class Finder:
         self.debug(f"""По ключу {marking=} найдено записей: {len(records)}""")
         return records if not records.empty else None
 
-    def by_stand(self, standard: str) -> pd.DataFrame:
+    def by_stand(self, standart: str) -> pd.DataFrame:
         """ Возвращает найденные записи по указанному стандарту в виде таблицы pd.DataFrame.
 
         Parameters:
             standart: str : Обозначение стандарта для поиска в БД
         """
-        df = self._requester.get_records({"Стандарт": standard})
+        df = self._requester.get_records({"Стандарт": standart})
         records = df.dropna(how='any', axis=1)
-        self.debug(f"""По ключу {standard=} найдено записей: {len(records)}""")
+        self.debug(f"""По ключу {standart=} найдено записей: {len(records)}""")
         return records if not records.empty else None
 
     def by_dia_and_type(self, dia: Optional[float], dia_out: Optional[float], type_tool: str) -> pd.DataFrame:

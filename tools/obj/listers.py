@@ -6,30 +6,46 @@ from typing import Callable
 from service import logged
 
 from tools.obj.creators import ToolCreator
-from tools.obj.decorator import debugging_message_for_init_method as debug_for_init
+from tools.obj.finders import Finder
+from tools.obj.decorator import debugging_message_for_init_method as output_debug_message_for_init
+
+
+def output_debug_message(message: str):
+    """ Выводит в лог сообщение message"""
+    def decorator(func):
+        def wrapper(self, *args, **kwargs):
+            result = func(self, *args, **kwargs)
+            self.debug(message) if message.find("{") == -1 else self.debug(
+                message.format('; '.join([f'{k}= {v}' for k, v in kwargs.items()])))
+            return result
+        return wrapper
+    return decorator
 
 
 @logged
 class ToolLister:
-    @debug_for_init()
-    def __init__(self, tool_creator: Callable[..., ToolCreator]):
+    @output_debug_message_for_init()
+    def __init__(self, tool_creator: ToolCreator, finder: Finder):
         self._tool_creator = tool_creator
+        self._finder = finder
 
-        self.debug(f"""Создан {self.__class__.__name__} со следующими зависимостями: {tool_creator=} """)
+    @output_debug_message("Создаем список инструментов по ключам: {}.")
+    def by_marking_and_stand(self, marking: str, standart: str) -> list:
+        table_records = self._finder.by_marking_and_stand(marking=marking, standart=standart)
+        return [self._tool_creator.create_tool(row) for index, row in table_records.iterrows()]
 
-    def by_marking_and_stand(self, marking: str, standard: str) -> list:
-        self.debug(f"Создаем список инструментов по ключам: {marking=}, {standard=}.")
-        return [tool for tool in self._tool_creator().by_marking_and_stand(marking=marking, standard=standard)]
-
+    @output_debug_message("Создаем список инструментов по ключу: {}.")
     def by_marking(self, marking: str) -> list:
-        self.debug(f"Создаем список инструментов по ключу: {marking=}.")
-        return [tool for tool in self._tool_creator().by_marking(marking=marking)]
+        table_records = self._finder.by_marking(marking=marking)
+        return [self._tool_creator.create_tool(row) for index, row in table_records.iterrows()]
 
-    def by_stand(self, standard: str) -> list:
-        self.debug(f"Создаем список инструментов по ключу: {standard=}.")
-        return [tool for tool in self._tool_creator().by_stand(standard=standard)]
+    @output_debug_message("Создаем список инструментов по ключу: {}.")
+    def by_stand(self, standart: str) -> list:
+        table_records = self._finder.by_stand(standart=standart)
+        return [self._tool_creator.create_tool(row) for index, row in table_records.iterrows()]
 
     @property
+    @output_debug_message("Создаем список всех инструментов БД.")
     def all(self) -> list:
-        self.debug(f"Получен запрос на создание всех материалов БД")
-        return [tool for tool in self._tool_creator().all]
+        table_records = self._finder.all
+        return [self._tool_creator.create_tool(row) for index, row in table_records.iterrows()]

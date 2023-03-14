@@ -14,7 +14,6 @@ logging.config.dictConfig(config)
 def main():
     container = Container()
 
-
     catalod = container.catalog()
     print(catalod.classes)
 

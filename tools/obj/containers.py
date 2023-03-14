@@ -64,14 +64,14 @@ class Container(containers.DeclarativeContainer):
 
     creator = providers.Factory(
         creators.ToolCreator,
-        finder=finder,
         catalog=catalog,
         preparer_factory=data_preparer.provider,
     )
 
     lister = providers.Factory(
         listers.ToolLister,
-        tool_creator=creator.provider,
+        tool_creator=creator,
+        finder=finder,
     )
 
     milling_cutter = providers.Factory(
