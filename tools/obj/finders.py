@@ -5,8 +5,7 @@ import pandas as pd
 from typing import Optional, Any
 
 from service import RecordRequester, logged
-
-from tools.obj.decorator import output_debug_message_for_init_method as debug_for_init
+from service import output_debug_message_for_init_method as debug_for_init
 
 
 def output_debug_message_with_kwargs_and_length(message: str):
@@ -126,24 +125,3 @@ class Finder:
     def available_values(self) -> Any:
         """ Возвращает наборы доступных в таблице БД значений по категориям."""
         return self._requester.available_values
-
-
-# if __name__ == '__main__':
-#     from tools.obj.constants import PATH_DB_FOR_TOOLS as DB_PATH
-#     from tools.obj.constants import REQUESTER_TYPE as DB_type
-#
-#     from tools.logger_settings import config
-#     import logging.config
-#
-#     logging.config.dictConfig(config)
-#
-#     container = Requester()
-#     container.config.from_dict({
-#         'path': DB_PATH,
-#         'requester_type': DB_type,
-#         'reader_type': 'pandas_table',
-#         'tablename': "tools"
-#     })
-#     requester = container.requester()
-#     finder = Finder(record_requester = requester)
-#     print(finder)

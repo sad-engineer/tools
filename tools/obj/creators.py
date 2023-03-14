@@ -7,10 +7,10 @@ from pydantic import ValidationError
 
 from service import Cataloger
 from service import logged
+from service import output_debug_message_for_init_method as debug_for_init
 
 from tools.obj.data_preparers import DataPreparer
 from tools.obj.entities import ErrorWithData
-from tools.obj.decorator import output_debug_message_for_init_method as debug_for_init
 
 
 def output_debug_message():
