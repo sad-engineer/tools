@@ -4,7 +4,8 @@
 import sqlite3
 from dependency_injector import containers, providers
 
-from tools.obj import cutters, finders, creators, listers, data_preparers
+
+from tools.obj import entities, finders, creators, listers, data_preparers
 from tools.obj.constants import DEFAULT_SETTINGS_FOR_TOOL as DS
 from tools.obj.constants import PATH_DB_FOR_TOOLS as DB_PATH
 from tools.obj.constants import REQUESTER_TYPE as DB_type
@@ -53,7 +54,7 @@ class Container(containers.DeclarativeContainer):
 
     catalog = providers.Factory(
         Cataloger,
-        module_name="tools.obj.cutters",
+        module_name="tools.obj.entities",
         dict_types=TOOLS_CLASSES_BY_TYPE
     )
 
@@ -74,16 +75,16 @@ class Container(containers.DeclarativeContainer):
     )
 
     milling_cutter = providers.Factory(
-        cutters.MillingCutter,
-        marking=DS[cutters.MillingCutter.CUTTER_NAME]["marking"],
-        standard=DS[cutters.MillingCutter.CUTTER_NAME]["Стандарт"],
+        entities.MillingCutter,
+        marking=DS["Фреза"]["marking"],
+        standard=DS["Фреза"]["Стандарт"],
         dia_mm=50,
         length_mm=100,
-        mat_of_cutting_part=DS[cutters.MillingCutter.CUTTER_NAME]["mat_of_cutting_part"],
+        mat_of_cutting_part=DS["Фреза"]["mat_of_cutting_part"],
         main_angle_grad=0,
         front_angle_grad=0,
         inclination_of_main_blade_grad=0,
-        tolerance=DS[cutters.MillingCutter.CUTTER_NAME]["tolerance"],
+        tolerance=DS["Фреза"]["tolerance"],
         type_cutter=1,
         type_of_cutting_part=1,
         num_of_cutting_blades=8,
@@ -96,13 +97,13 @@ class Container(containers.DeclarativeContainer):
     )
 
     turning_cutter = providers.Factory(
-        cutters.TurningCutter,
-        marking=DS[cutters.TurningCutter.CUTTER_NAME]["marking"],
-        standard=DS[cutters.TurningCutter.CUTTER_NAME]["Стандарт"],
+        entities.TurningCutter,
+        marking=DS["Резец"]["marking"],
+        standard=DS["Резец"]["Стандарт"],
         length_mm=100,
         width_mm=25,
         height_mm=16,
-        mat_of_cutting_part=DS[cutters.TurningCutter.CUTTER_NAME]["mat_of_cutting_part"],
+        mat_of_cutting_part=DS["Резец"]["mat_of_cutting_part"],
         main_angle_grad=45,
         front_angle_grad=0,
         inclination_of_main_blade_grad=0,
@@ -114,61 +115,61 @@ class Container(containers.DeclarativeContainer):
     )
 
     drilling_cutter = providers.Factory(
-        cutters.DrillingCutter,
-        marking=DS[cutters.DrillingCutter.CUTTER_NAME]["marking"],
-        standard=DS[cutters.DrillingCutter.CUTTER_NAME]["Стандарт"],
+        entities.DrillingCutter,
+        marking=DS["Сверло"]["marking"],
+        standard=DS["Сверло"]["Стандарт"],
         dia_mm=50,
         length_mm=100,
-        mat_of_cutting_part=DS[cutters.DrillingCutter.CUTTER_NAME]["mat_of_cutting_part"],
+        mat_of_cutting_part=DS["Сверло"]["mat_of_cutting_part"],
         main_angle_grad=0,
         front_angle_grad=0,
         inclination_of_main_blade_grad=0,
         num_of_cutting_blades=8,
         radius_of_cutting_vertex=1,
         quantity=1,
-        tolerance=DS[cutters.DrillingCutter.CUTTER_NAME]["tolerance"],
+        tolerance=DS["Сверло"]["tolerance"],
     )
 
     countersinking_cutter = providers.Factory(
-        cutters.CountersinkingCutter,
-        marking=DS[cutters.CountersinkingCutter.CUTTER_NAME]["marking"],
-        standard=DS[cutters.CountersinkingCutter.CUTTER_NAME]["Стандарт"],
+        entities.CountersinkingCutter,
+        marking=DS["Зенкер"]["marking"],
+        standard=DS["Зенкер"]["Стандарт"],
         dia_mm=50,
         length_mm=100,
-        mat_of_cutting_part=DS[cutters.CountersinkingCutter.CUTTER_NAME]["mat_of_cutting_part"],
+        mat_of_cutting_part=DS["Зенкер"]["mat_of_cutting_part"],
         main_angle_grad=0,
         front_angle_grad=0,
         inclination_of_main_blade_grad=0,
         num_of_cutting_blades=8,
         radius_of_cutting_vertex=1,
         quantity=1,
-        tolerance=DS[cutters.CountersinkingCutter.CUTTER_NAME]["tolerance"],
+        tolerance=DS["Зенкер"]["tolerance"],
     )
 
     deployment_cutter = providers.Factory(
-        cutters.DeploymentCutter,
-        marking=DS[cutters.DeploymentCutter.CUTTER_NAME]["marking"],
-        standard=DS[cutters.DeploymentCutter.CUTTER_NAME]["Стандарт"],
+        entities.DeploymentCutter,
+        marking=DS["Развертка"]["marking"],
+        standard=DS["Развертка"]["Стандарт"],
         dia_mm=50,
         length_mm=100,
-        mat_of_cutting_part=DS[cutters.DeploymentCutter.CUTTER_NAME]["mat_of_cutting_part"],
+        mat_of_cutting_part=DS["Развертка"]["mat_of_cutting_part"],
         main_angle_grad=0,
         front_angle_grad=0,
         inclination_of_main_blade_grad=0,
         num_of_cutting_blades=8,
         radius_of_cutting_vertex=1,
         quantity=1,
-        tolerance=DS[cutters.DeploymentCutter.CUTTER_NAME]["tolerance"],
+        tolerance=DS["Развертка"]["tolerance"],
     )
 
     broaching_cutter = providers.Factory(
-        cutters.BroachingCutter,
+        entities.BroachingCutter,
         marking="специальная",
         standard="",
-        angle_of_inclination=DS[cutters.BroachingCutter.CUTTER_NAME]["angle_of_inclination"],
-        pitch_of_teeth=DS[cutters.BroachingCutter.CUTTER_NAME]["pitch_of_teeth"],
-        number_teeth_section=DS[cutters.BroachingCutter.CUTTER_NAME]["number_teeth_section"],
-        difference=DS[cutters.BroachingCutter.CUTTER_NAME]["difference"],
-        length_of_working_part=DS[cutters.BroachingCutter.CUTTER_NAME]["length_of_working_part"],
+        angle_of_inclination=DS["Протяжка"]["angle_of_inclination"],
+        pitch_of_teeth=DS["Протяжка"]["pitch_of_teeth"],
+        number_teeth_section=DS["Протяжка"]["number_teeth_section"],
+        difference=DS["Протяжка"]["difference"],
+        length_of_working_part=DS["Протяжка"]["length_of_working_part"],
     )
 

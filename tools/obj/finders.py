@@ -7,14 +7,16 @@ from typing import Optional, Any
 from service import RecordRequester, logged
 from service.obj.containers import Requester
 
+from tools.obj.decorator import debugging_message_for_init_method as debug_for_init
+
 
 @logged
 class Finder:
     """ Содержит список методов поиска в БД, обязательных для поиска при любом типе БД """
+    @debug_for_init()
     def __init__(self, record_requester: RecordRequester) -> None:
         self._requester = record_requester
 
-        self.debug(f"""Создан {self.__class__.__name__} со следующими зависимостями: {record_requester=}""")
 
     def by_dia(self, dia: float, dia_out: float=None) -> pd.DataFrame:
         """ Возвращает найденные записи по значению диаметра в виде таблицы pd.DataFrame.

@@ -4,6 +4,7 @@
 import re
 from typing import Optional
 from pydantic import BaseModel, validator, root_validator, confloat, conint
+from collections import namedtuple
 
 from service import InvalidValue
 from service import Dictionarer
@@ -14,6 +15,9 @@ from tools.obj.fields_types import InGroupsTool, StringValue, MarkingForSpecialT
     InAccuracyStandards, InToleranceField, InTypesOfMillingCutter, InTypesOfCuttingPart, InTypesOfLargeTooth, \
     InAccuracyClassStandards
 from tools.obj.abstract_classes import Size
+
+
+ErrorWithData = namedtuple('ErrorWithData', ['err', 'name', 'params', 'raw_data'])   #для сохранения данных с ошибкой
 
 
 class Base(BaseModel):
