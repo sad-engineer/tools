@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # ----------------------------------------------------------------------------------------------------------------------
-def debugging_message_for_init_method():
+def output_debug_message_for_init_method():
     """ Выводит в лог сообщение о созданном классе и зависимостях в нем"""
     def decorator(func):
         def wrapper(self, *args, **kwargs):

@@ -86,8 +86,9 @@ TOLERANCE_FIELDS = {0: 'A', 1: 'B', 2: 'C', 3: 'CD', 4: 'D', 5: 'E', 6: 'EF', 7:
                     42: 'm', 43: 'n', 44: 'p', 45: 'r', 46: 's', 47: 't', 48: 'u', 49: 'v', 50: 'x', 51: 'y', 52: 'z',
                     53: 'za', 54: 'zb', 55: 'zc'}
 # Классы точности инструмента
-ACCURACY_CLASS_STANDARDS = {None: 0, "AAA": 1, "AA": 2, "A": 3, "B": 4, "C": 5, "D": 6, "ААА": 7, "АА": 8, "А": 9, "В": 10, "С": 11, "Д": 12,  }
-# # =====================================================================================================================
+ACCURACY_CLASS_STANDARDS = {None: 0, "AAA": 1, "AA": 2, "A": 3, "B": 4, "C": 5, "D": 6, "ААА": 7, "АА": 8, "А": 9,
+                            "В": 10, "С": 11, "Д": 12}
+# =====================================================================================================================
 # Описание переменных классов
 DECODING = {"type_cutter": "Тип инструмента: {obj}.",
             "angle_of_inclination": "Угол наклона зубьев протяжки: {obj} град.""",
@@ -126,3 +127,12 @@ DECODING = {"type_cutter": "Тип инструмента: {obj}.",
 SAVED_FIELDS = ['name', 'standard', 'marking', 'mat_of_cutting_part', 'tolerance', "quantity", "accuracy_class",
                 "number", "module", "turret", "load", "is_complex_profile", "pitch_of_teeth", "angle_of_inclination",
                 "number_teeth_section", "type_cutter", "difference", "length_of_working_part"]
+# Классы инструментов
+TOOLS_CLASSES_BY_TYPE = {"Инструмент": "Tool",
+                         "Резец": "TurningCutter",
+                         "Фреза": "MillingCutter",
+                         "Сверло": "DrillingCutter",
+                         "Зенкер": "CountersinkingCutter",
+                         "Развертка": "DeploymentCutter",
+                         "Протяжка": "BroachingCutter",
+                         }

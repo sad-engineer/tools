@@ -8,40 +8,48 @@ from pydantic import ValidationError
 from service import Cataloger
 from service import logged
 
-from tools.obj.finders import Finder
 from tools.obj.data_preparers import DataPreparer
 from tools.obj.entities import ErrorWithData
-from tools.obj.decorator import debugging_message_for_init_method as debug_for_init
+from tools.obj.decorator import output_debug_message_for_init_method as debug_for_init
 
 
-def debug_message_when_creating_instance_of_class():
+def output_debug_message():
     """Логирует создание объекта (экземпляра модели данных). При ошибке создания - логирует ошибку."""
     def decorator(func):
         def wrapper(self, *args, **kwargs):
-            object = func(self, *args, **kwargs)
-            if not isinstance(object, ErrorWithData):
-                if self._verbose == True:
-                    self.debug(f"Создан экземпляр класса {object.__class__.__name__}: {object.name}.")
-                return object
+            result = func(self, *args, **kwargs)
+            if not isinstance(result, (ErrorWithData, type(None))) and self._verbose:
+                self.debug(f"Создан экземпляр класса {result.__class__.__name__}: {result.name}.")
+            return result
+        return wrapper
+    return decorator
+
+
+def output_error_message():
+    """Логирует ошибку создания объекта (экземпляра модели данных)."""
+    def decorator(func):
+        def wrapper(self, *args, **kwargs):
+            result = func(self, *args, **kwargs)
+            if not isinstance(result, ErrorWithData):
+                return result
+            if isinstance(result.err, ValueError):
+                self.error(f"Переданные данные не соответствуют ожидаемой схеме модели {result.name}."
+                           f"Данные, полученные из БД: {result.raw_data}."
+                           f"Данные, загружаемые в модель: {result.params}.")
+            elif isinstance(result.err, TypeError):
+                self.error(f"Данные, загружаемые в модель должны быть словарем. "
+                           f"Полученный тип данных: {type(result.params)}.")
+            elif isinstance(result.err, ValidationError):
+                self.error(f"Входные данные содержат неверные значения для полей модели {result.name}."
+                           f"Данные, полученные из БД: {result.raw_data}."
+                           f"Данные, загружаемые в модель: {result.params}.")
+            elif isinstance(result.err, AttributeError):
+                self.error(f"Входные данные содержат неверные значения для полей модели {result.name}."
+                           f"Данные, полученные из БД: {result.raw_data}."
+                           f"Данные, загружаемые в модель: {result.params}.")
             else:
-                if isinstance(object.err, ValueError):
-                    self.error(f"Переданные данные не соответствуют ожидаемой схеме модели {object.name}."
-                               f"Данные, полученные из БД: {object.raw_data}."
-                               f"Данные, загружаемые в модель: {object.params}.")
-                elif isinstance(object.err, TypeError):
-                    self.error(f"Данные, загружаемые в модель должны быть словарем. "
-                               f"Полученный тип данных: {type(object.params)}.")
-                elif isinstance(object.err, ValidationError):
-                    self.error(f"Входные данные содержат неверные значения для полей модели {object.name}."
-                               f"Данные, полученные из БД: {object.raw_data}."
-                               f"Данные, загружаемые в модель: {object.params}.")
-                elif isinstance(object.err, AttributeError):
-                    self.error(f"Входные данные содержат неверные значения для полей модели {object.name}."
-                               f"Данные, полученные из БД: {object.raw_data}."
-                               f"Данные, загружаемые в модель: {object.params}.")
-                else:
-                    self.error(f"Ошибка создания экземпляра класса {object.name} с параметрами {object.params}."
-                               f"Данные, полученные из БД: {object.raw_data}.")
+                self.error(f"Ошибка создания экземпляра класса {result.name} с параметрами {result.params}."
+                           f"Данные, полученные из БД: {result.raw_data}.")
         return wrapper
     return decorator
 
@@ -58,9 +66,10 @@ class ToolCreator:
 
         self._verbose = True
 
-    @debug_message_when_creating_instance_of_class()
+    @output_debug_message()
+    @output_error_message()
     def create_tool(self, records: pd.Series):
-        """ Создает инструмент по переданной записи pd.Series. В случае неудачи, сохранит в ErrorWithData ожибку,
+        """ Создает инструмент по переданной записи pd.Series. В случае неудачи, сохранит в ErrorWithData ошибку,
         класс инструмента, данные из БД и обработанные данные."""
         raw_data = records.dropna().to_dict()
         preparer = self._preparer_factory(raw_data)
@@ -70,4 +79,3 @@ class ToolCreator:
             return cutter_class.parse_obj(params)
         except Exception as error:
             return ErrorWithData(err=error, name=cutter_class.__name__, params=params, raw_data=raw_data)
-

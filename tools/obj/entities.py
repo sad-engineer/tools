@@ -17,7 +17,7 @@ from tools.obj.fields_types import InGroupsTool, StringValue, MarkingForSpecialT
 from tools.obj.abstract_classes import Size
 
 
-ErrorWithData = namedtuple('ErrorWithData', ['err', 'name', 'params', 'raw_data'])   #для сохранения данных с ошибкой
+ErrorWithData = namedtuple('ErrorWithData', ['err', 'name', 'params', 'raw_data'])   # для сохранения данных с ошибкой
 
 
 class Base(BaseModel):
