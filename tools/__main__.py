@@ -19,7 +19,8 @@ def main():
 
     lister = container.lister()
     create = lister.by_marking
-    timeit("Время запроса инструмента по обозначению : {}")(create)(marking="2210-0061")
+    tools = timeit("Время запроса инструмента по обозначению : {}")(create)(marking="2210-0061")
+    print(list(tools))
 
     timeit_property("Время запроса всех инструментов: {}")(lister)("all")
 

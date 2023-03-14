@@ -20,14 +20,9 @@ def debug_message_when_creating_instance_of_class():
         def wrapper(self, *args, **kwargs):
             object = func(self, *args, **kwargs)
             if not isinstance(object, ErrorWithData):
-                try:
-                    while True:
-                        item = next(object)
-                        if self._verbose == True:
-                            self.debug(f"Создан экземпляр класса {item.__class__.__name__}: {item.name}.")
-                        yield item
-                except StopIteration:
-                    pass
+                if self._verbose == True:
+                    self.debug(f"Создан экземпляр класса {object.__class__.__name__}: {object.name}.")
+                return object
             else:
                 if isinstance(object.err, ValueError):
                     self.error(f"Переданные данные не соответствуют ожидаемой схеме модели {object.name}."
@@ -72,7 +67,7 @@ class ToolCreator:
         params = preparer.to_generate
         cutter_class = self._catalog.by_type(type_tool=raw_data["Тип_инструмента"])
         try:
-            yield cutter_class.parse_obj(params)
+            return cutter_class.parse_obj(params)
         except Exception as error:
             return ErrorWithData(err=error, name=cutter_class.__name__, params=params, raw_data=raw_data)
 

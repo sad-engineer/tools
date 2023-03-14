@@ -32,20 +32,24 @@ class ToolLister:
     @output_debug_message("Создаем список инструментов по ключам: {}.")
     def by_marking_and_stand(self, marking: str, standart: str) -> list:
         table_records = self._finder.by_marking_and_stand(marking=marking, standart=standart)
+        self._tool_creator._verbose = True
         return [self._tool_creator.create_tool(row) for index, row in table_records.iterrows()]
 
     @output_debug_message("Создаем список инструментов по ключу: {}.")
     def by_marking(self, marking: str) -> list:
         table_records = self._finder.by_marking(marking=marking)
+        self._tool_creator._verbose = True
         return [self._tool_creator.create_tool(row) for index, row in table_records.iterrows()]
 
     @output_debug_message("Создаем список инструментов по ключу: {}.")
     def by_stand(self, standart: str) -> list:
         table_records = self._finder.by_stand(standart=standart)
+        self._tool_creator._verbose = True
         return [self._tool_creator.create_tool(row) for index, row in table_records.iterrows()]
 
     @property
     @output_debug_message("Создаем список всех инструментов БД.")
     def all(self) -> list:
         table_records = self._finder.all
+        self._tool_creator._verbose = False
         return [self._tool_creator.create_tool(row) for index, row in table_records.iterrows()]
