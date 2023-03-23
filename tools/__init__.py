@@ -28,6 +28,8 @@ TurningCutter = Container.turning_cutter
 BroachingCutter = Container.broaching_cutter
 Lister = Container.lister
 Finder = Container.finder
+from tools.obj.entities import Tool, CustomTool
+
 
 __all__ = [
     # Константы пакета
@@ -58,6 +60,8 @@ __all__ = [
     "BroachingCutter",
     "Lister",
     "Finder",
+    "Tool",
+    "CustomTool",
     ]
 
 # if __name__ == "__main__":
