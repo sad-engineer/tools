@@ -17,21 +17,21 @@ from tools.obj.constants import ACCURACY_CLASS_STANDARDS
 from tools.obj.constants import DECODING
 from tools.obj.constants import SAVED_FIELDS
 # Методы пакета
-# from tools.fun import get_name
+from tools.scr.fun import get_name
 # Классы пакета
-# from tools.obj.containers import Container
-# MillingCutter = Container.milling_cutter
-# DrillingCutter = Container.drilling_cutter
-# CountersinkingCutter = Container.countersinking_cutter
-# DeploymentCutter = Container.deployment_cutter
-# TurningCutter = Container.turning_cutter
-# BroachingCutter = Container.broaching_cutter
-# Lister = Container.lister
-# Finder = Container.finder
+from tools.obj.containers import Container
+MillingCutter = Container.milling_cutter
+DrillingCutter = Container.drilling_cutter
+CountersinkingCutter = Container.countersinking_cutter
+DeploymentCutter = Container.deployment_cutter
+TurningCutter = Container.turning_cutter
+BroachingCutter = Container.broaching_cutter
+Lister = Container.lister
+Finder = Container.finder
 
 __all__ = [
     # Константы пакета
-    "PATH_DB_FOR_TOOLS",
+    # "PATH_DB_FOR_TOOLS",
     "DEFAULT_SETTINGS_FOR_TOOL",
     "MATERIALS_OF_CUTTING_PART",
     "GROUPS_TOOL",
@@ -46,8 +46,18 @@ __all__ = [
     "ACCURACY_CLASS_STANDARDS",
     "DECODING",
     "SAVED_FIELDS",
+    # Методы пакета
+    "get_name",
     # Классы пакета
-
+    "Container",
+    "MillingCutter",
+    "DrillingCutter",
+    "CountersinkingCutter",
+    "DeploymentCutter",
+    "TurningCutter",
+    "BroachingCutter",
+    "Lister",
+    "Finder",
     ]
 
 # if __name__ == "__main__":
