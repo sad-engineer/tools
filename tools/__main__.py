@@ -24,11 +24,14 @@ def main():
 
     # timeit_property("Время запроса всех инструментов: {}")(lister)("all")
 
-    tools = lister.default()
+    creator = container.creator()
+    tools = creator.default()
     print(tools)
 
-    tools = lister.by_group(group="Резец")
+    tools = creator.default(group="Резец")
     print(tools)
+
+
 
 
 if __name__ == '__main__':

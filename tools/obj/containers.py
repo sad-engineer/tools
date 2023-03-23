@@ -45,12 +45,13 @@ class ToolContainer(containers.DeclarativeContainer):
         creators.ToolCreator,
         catalog=catalog,
         preparer_factory=data_preparer.provider,
+        finder=finder.provider,
     )
 
     lister = providers.Factory(
         listers.ToolLister,
-        tool_creator=creator,
-        finder=finder,
+        tool_creator=creator.provider,
+        finder=finder.provider,
     )
 
     milling_cutter = providers.Factory(

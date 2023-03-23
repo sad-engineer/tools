@@ -11,6 +11,9 @@ from service import output_debug_message_for_init_method as debug_for_init
 
 from tools.obj.data_preparers import ToolDataPreparer
 from tools.obj.entities import ErrorWithData
+from tools.obj.finders import ToolFinder
+from tools.obj.constants import DEFAULT_SETTINGS_FOR_TOOL
+from tools.obj.fields_types import InGroupsTool
 from tools.scr.fun import get_name
 
 
@@ -61,18 +64,20 @@ class ToolCreator:
     @debug_for_init()
     def __init__(self,
                  catalog: Cataloger,
-                 preparer_factory: Callable[..., ToolDataPreparer]) -> None:
+                 preparer_factory: Callable[..., ToolDataPreparer],
+                 finder: Callable[..., ToolFinder]) -> None:
         self._catalog = catalog
         self._preparer_factory = preparer_factory
+        self._finder = finder()
 
         self._verbose = True
 
     @output_debug_message()
     @output_error_message()
-    def create_tool(self, records: pd.Series):
+    def create(self, record: pd.Series):
         """ Создает инструмент по переданной записи pd.Series. В случае неудачи, сохранит в ErrorWithData ошибку,
         класс инструмента, данные из БД и обработанные данные."""
-        raw_data = records.dropna().to_dict()
+        raw_data = record.dropna().to_dict()
         preparer = self._preparer_factory(raw_data)
         params = preparer.to_generate
         cutter_class = self._catalog.by_type(type_tool=raw_data["Тип_инструмента"])
@@ -82,3 +87,8 @@ class ToolCreator:
             return ErrorWithData(err=error, name=cutter_class.__name__, params=params, raw_data=raw_data)
         get_name(tool)
         return tool
+
+    def default(self, group: InGroupsTool = "Фреза"):
+        deftool = DEFAULT_SETTINGS_FOR_TOOL[group]
+        record = self._finder.by_marking_and_stand(marking=deftool["marking"], standard=deftool["Стандарт"]).iloc[0]
+        return self.create(record=record)

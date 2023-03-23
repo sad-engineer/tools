@@ -26,6 +26,7 @@ CountersinkingCutter = ToolContainer.countersinking_cutter
 DeploymentCutter = ToolContainer.deployment_cutter
 TurningCutter = ToolContainer.turning_cutter
 BroachingCutter = ToolContainer.broaching_cutter
+ToolCreator = ToolContainer.creator
 ToolLister = ToolContainer.lister
 ToolFinder = ToolContainer.finder
 from tools.obj.entities import Tool, CustomTool
@@ -58,6 +59,7 @@ __all__ = [
     "DeploymentCutter",
     "TurningCutter",
     "BroachingCutter",
+    "ToolCreator",
     "ToolLister",
     "ToolFinder",
     "Tool",
