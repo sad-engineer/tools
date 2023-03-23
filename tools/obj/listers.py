@@ -6,7 +6,8 @@ from service import output_debug_message_for_init_method as debug_for_init
 
 from tools.obj.creators import ToolCreator
 from tools.obj.finders import Finder
-
+from tools.obj.fields_types import InGroupsTool
+from tools.obj.constants import DEFAULT_SETTINGS_FOR_TOOL as DEFAULT_TOOL
 
 def output_debug_message(message: str):
     """ Выводит в лог сообщение message"""
@@ -50,3 +51,13 @@ class ToolLister:
         table_records = self._finder.all
         self._tool_creator._verbose = False
         return [self._tool_creator.create_tool(row) for index, row in table_records.iterrows()]
+
+    @output_debug_message("Создаем список инструментов по ключу: {}.")
+    def by_group(self, group: InGroupsTool = "Фреза") -> list:
+        table_records = self._finder.by_group(group=group)
+        return [self._tool_creator.create_tool(row) for index, row in table_records.iterrows()]
+
+    @output_debug_message("Создаем инструмент с настройками по умолчанию: {}.")
+    def default(self, group: InGroupsTool = "Фреза") -> list:
+        deftool = DEFAULT_TOOL[group]
+        return self.by_marking_and_stand(marking=deftool["marking"], standard=deftool["Стандарт"])

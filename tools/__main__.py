@@ -22,7 +22,13 @@ def main():
     tools = timeit("Время запроса инструмента по обозначению : {}")(create)(marking="2210-0061")
     print(list(tools))
 
-    timeit_property("Время запроса всех инструментов: {}")(lister)("all")
+    # timeit_property("Время запроса всех инструментов: {}")(lister)("all")
+
+    tools = lister.default()
+    print(tools)
+
+    tools = lister.by_group(group="Резец")
+    print(tools)
 
 
 if __name__ == '__main__':

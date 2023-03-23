@@ -5,6 +5,15 @@ config['loggers'] = {
         'handlers': ['consoleHandler', 'fileHandler'],
         'level': 'DEBUG',
         'propagate': False
+    },
+
+    # INFO - выводить все сообщения,
+    # ERROR - ошибки создания имени инструмента,
+    # CRITICAL - отключить ошибки создания имени инструмента,
+    'tool_names': {
+        'handlers': ['consoleHandler', 'fileHandler'],
+        'level': 'CRITICAL',
+        'propagate': False
     }
 }
 

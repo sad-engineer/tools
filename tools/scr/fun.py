@@ -1,31 +1,63 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # -------------------------------------------------------------------------------
-from logger.obj.exceptions import InvalidValue
+import logging.config
+from typing import List
+
+from service.obj.exceptions import InvalidValue
+
+from tools.obj.entities import Tool
+from tools.logger_settings import config
+
+logging.config.dictConfig(config)
 
 
-def get_name(params: dict):
+def output_error_message(attr_names: List[str]):
+    """Логирует ошибку корректировки наименования инструмента"""
+    def decorator(func):
+        def wrapper(tool):
+            for name in attr_names:
+                if isinstance(getattr(tool, name, None), type(None)):
+                    log = logging.getLogger("tool_names")
+                    log.error(f"Поле {name} класса {tool.__class__.__name__} ({tool.name}) не определено.")
+            return func(tool)
+        return wrapper
+    return decorator
+
+
+def output_info_message():
+    """Логирует информационное сообщение при ошибке корректировки наименования инструмента"""
+    def decorator(func):
+        def wrapper(tool):
+            try:
+                return func(tool)
+            except TypeError:
+                log = logging.getLogger("tool_names")
+                log.info(f"Наименование инструмента {tool.name} принято по умолчанию")
+        return wrapper
+    return decorator
+
+
+def get_name(tool: Tool) -> None:
     """ Определяет наименование инструмента в зависимости от ГОСТа
 
-    :param params: словарь параметров инструмента.
-    :param mat_of_cutting_part: материал режущей части.
-    :return: Наименование инструмента по ГОСТу.
+    tool : Tool : Класс инструмента.
     """
-    variants = {
+    name_getters = {
         # Сверла
-        'ГОСТ 886-77': name_tool_with_accuracy,
-        'ГОСТ 2092-77': name_tool_with_accuracy,
-        'ГОСТ 4010-77': name_tool_with_accuracy,
+        'ГОСТ 886-77': get_name_tool_with_accuracy,
+        'ГОСТ 2092-77': get_name_tool_with_accuracy,
+        'ГОСТ 4010-77': get_name_tool_with_accuracy,
         'ГОСТ 8034-76': None,
-        'ГОСТ 10902-77': name_tool_with_accuracy,
-        'ГОСТ 10903-77': name_tool_with_accuracy,
-        'ГОСТ 12121-77': name_tool_with_accuracy,
-        'ГОСТ 12122-77': name_tool_with_accuracy,
+        'ГОСТ 10902-77': get_name_tool_with_accuracy,
+        'ГОСТ 10903-77': get_name_tool_with_accuracy,
+        'ГОСТ 12121-77': get_name_tool_with_accuracy,
+        'ГОСТ 12122-77': get_name_tool_with_accuracy,
         'ГОСТ 14952-75': None,
-        'ГОСТ 17273-71': name_tool_with_material,
-        'ГОСТ 17274-71': name_tool_with_material,  # TODO: Т в наименовании
-        'ГОСТ 17275-71': name_tool_with_material,  # TODO: Т в наименовании
-        'ГОСТ 17276-71': name_tool_with_material,  # TODO: Т в наименовании
+        'ГОСТ 17273-71': get_name_tool_with_material,
+        'ГОСТ 17274-71': get_name_tool_with_material,  # TODO: Т в наименовании
+        'ГОСТ 17275-71': get_name_tool_with_material,  # TODO: Т в наименовании
+        'ГОСТ 17276-71': get_name_tool_with_material,  # TODO: Т в наименовании
         'ГОСТ 19543-74': None,
         'ГОСТ 19544-74': None,
         'ГОСТ 19545-74': None,
@@ -35,44 +67,44 @@ def get_name(params: dict):
         'ГОСТ 20695-75': None,
         'ГОСТ 20696-75': None,
         'ГОСТ 20697-75': None,
-        'ГОСТ 22735-77': name_tool_with_accuracy,
-        'ГОСТ 22736-77': name_tool_with_accuracy,
+        'ГОСТ 22735-77': get_name_tool_with_accuracy,
+        'ГОСТ 22736-77': get_name_tool_with_accuracy,
         'ГОСТ 28319-89': None,
         'ГОСТ 28320-89': None,
         # Зенкеры
-        'ГОСТ 12489-71': name_tool_with_accuracy,
+        'ГОСТ 12489-71': get_name_tool_with_accuracy,
         'ГОСТ 21584-76': None,
         # Фрезы
-        'ГОСТ 1336-77': name_tool_with_accuracy,
-        'ГОСТ 3964-69': name_tool_with_accuracy,
-        'ГОСТ 5348-69': name_tool_with_material,
-        'ГОСТ 6396-78': name_tool_with_accuracy,
-        'ГОСТ 6469-69': name_tool_with_material,
-        'ГОСТ 6637-80': name_tool_with_accuracy_class_and_module,
+        'ГОСТ 1336-77': get_name_tool_with_accuracy,
+        'ГОСТ 3964-69': get_name_tool_with_accuracy,
+        'ГОСТ 5348-69': get_name_tool_with_material,
+        'ГОСТ 6396-78': get_name_tool_with_accuracy,
+        'ГОСТ 6469-69': get_name_tool_with_material,
+        'ГОСТ 6637-80': get_name_tool_with_accuracy_class_and_module,
         'ГОСТ 7063-72': None,
-        'ГОСТ 8027-86': name_tool_with_accuracy_class,
-        'ГОСТ 8543-71': name_tool_with_accuracy,
-        'ГОСТ 9140-78': name_tool_with_accuracy,
+        'ГОСТ 8027-86': get_name_tool_with_accuracy_class,
+        'ГОСТ 8543-71': get_name_tool_with_accuracy,
+        'ГОСТ 9140-78': get_name_tool_with_accuracy,
         'ГОСТ 9304-69': None,
         'ГОСТ 9305-93': None,
-        'ГОСТ 9324-80': name_tool_with_accuracy_class,
-        'ГОСТ 9473-80': name_tool_with_material,
-        'ГОСТ 10331-81': name_tool_with_accuracy_class,
+        'ГОСТ 9324-80': get_name_tool_with_accuracy_class,
+        'ГОСТ 9473-80': get_name_tool_with_material,
+        'ГОСТ 10331-81': get_name_tool_with_accuracy_class,
         'ГОСТ 10673-75': None,
-        'ГОСТ 13838-68': name_tool_with_number,
+        'ГОСТ 13838-68': get_name_tool_with_number,
         'ГОСТ 15086-69': None,
-        'ГОСТ 15127-83': name_tool_with_accuracy_class,
+        'ГОСТ 15127-83': get_name_tool_with_accuracy_class,
         'ГОСТ 16222-81': None,
         'ГОСТ 16223-81': None,
         'ГОСТ 16225-81': None,
         'ГОСТ 16226-81': None,
-        'ГОСТ 16227-81': name_tool_with_accuracy,
+        'ГОСТ 16227-81': get_name_tool_with_accuracy,
         'ГОСТ 16228-81': None,
         'ГОСТ 16229-81': None,
         'ГОСТ 16230-81': None,
         'ГОСТ 16231-81': None,
-        'ГОСТ 16463-80': name_tool_with_accuracy,
-        'ГОСТ 18372-73': name_tool_with_material,
+        'ГОСТ 16463-80': get_name_tool_with_accuracy,
+        'ГОСТ 18372-73': get_name_tool_with_material,
         'ГОСТ 17026-71': None,
         'ГОСТ 20533-75': None,
         'ГОСТ 20534-75': None,
@@ -82,122 +114,59 @@ def get_name(params: dict):
         'ГОСТ 23248-78': None,
         'ГОСТ 24359-80': None,
         'ГОСТ 24637-81': None,
-        'ГОСТ 28527-90': name_tool_with_accuracy,
+        'ГОСТ 28527-90': get_name_tool_with_accuracy,
         'ГОСТ 28709-90': None,
         'ГОСТ 28719-90': None,
         'ГОСТ Р 50181-92': None,
         # Развертки
-        'ГОСТ 7722-77': name_tool_with_accuracy,
+        'ГОСТ 7722-77': get_name_tool_with_accuracy,
         'ГОСТ 11179-71': None,
         'ГОСТ 11180-71': None,
         'ГОСТ 28321-89': None,
-        'ГОСТ 883-80': name_tool_with_accuracy,
+        'ГОСТ 883-80': get_name_tool_with_accuracy,
         # Резцы
         'ГОСТ 10046-72': None,
         'ГОСТ 18871-73': None,
-        'ГОСТ 18878-73': name_tool_with_material,
+        'ГОСТ 18878-73': get_name_tool_with_material,
         }
-    if params['standard'] in variants:
-        name_getter = variants[params['standard']]
-        return name_getter(params) if not isinstance(name_getter, type(None)) else None
-    raise InvalidValue(f"Необходимо добавить вариант определения наименования инструмента для инструмента "
-                       f"{params['group']} {params['standard']}")
+    if tool.standard not in name_getters:
+        raise InvalidValue(f"Необходимо добавить вариант определения наименования инструмента для инструмента "
+                           f"{tool.group} {tool.standard}")
+    name_getter = name_getters[tool.standard]
+    if not isinstance(name_getter, type(None)):
+        name_getter(tool)
 
 
-def name_tool_with_accuracy(params: dict) -> str:
+@output_info_message()
+@output_error_message(["tolerance"])
+def get_name_tool_with_accuracy(tool: Tool) -> None:
     """ Наименование состоит из наименования, обозначения, точности(опционально) и стандарта."""
-    return " ".join([params["group"], params["marking"], params["tolerance"], params["standard"]])
+    tool.name = " ".join([tool.group, tool.marking, tool.tolerance, tool.standard])
 
 
-def name_tool_with_accuracy_class(params: dict) -> str:
+@output_info_message()
+@output_error_message(["accuracy_class"])
+def get_name_tool_with_accuracy_class(tool: Tool) -> None:
     """ Наименование состоит из наименования, обозначения, точности(опционально) и стандарта."""
-    return " ".join([params["group"], params["marking"], params["accuracy_class"], params["standard"]])
+    tool.name = " ".join([tool.group, tool.marking, tool.accuracy_class, tool.standard])
 
 
-def name_tool_with_material(params: dict,) -> str:
+@output_info_message()
+@output_error_message(["mat_of_cutting_part"])
+def get_name_tool_with_material(tool: Tool) -> None:
     """ Наименование состоит из наименования, обозначения, материала режущей части и стандарта. """
-    return " ".join([params["group"], params["marking"], params["mat_of_cutting_part"], params["standard"]])
+    tool.name = " ".join([tool.group, tool.marking, tool.mat_of_cutting_part, tool.standard])
 
 
-def name_tool_with_number(params: dict,) -> str:
+@output_info_message()
+@output_error_message(["cutter_number"])
+def get_name_tool_with_number(tool: Tool) -> None:
     """ Наименование состоит из наименования, обозначения, материала режущей части и стандарта. """
-    return " ".join([params["group"], params["marking"], params["cutter_number"], params["standard"]])
+    tool.name = " ".join([tool.group, tool.marking, tool.cutter_number, tool.standard])
 
 
-def name_tool_with_accuracy_class_and_module(params: dict) -> str:
+@output_info_message()
+@output_error_message(["module", "accuracy_class"])
+def get_name_tool_with_accuracy_class_and_module(tool: Tool) -> None:
     """ Наименование состоит из наименования, обозначения, точности(опционально) и стандарта."""
-    return " ".join([params["group"], params["marking"], params["module"], params["accuracy_class"],
-                     params["standard"]])
-
-
-
-def var_name_tool_2(params: dict, mat_of_cutting_part: str) -> str:
-    """ Наименование состоит из наименования, обозначения, точности(опционально) и стандарта.
-
-    :param params: словарь параметров инструмента.
-    :param mat_of_cutting_part: материал режущей части.
-    :return: Наименование инструмента по ГОСТу.
-    """
-    if "Точность" not in params:
-        return " ".join([params["Тип_инструмента"], params["Обозначение"].replace("*", ""), params["Стандарт"]])
-    elif isinstance(params["Точность"], type(None)):
-        return " ".join([params["Тип_инструмента"], params["Обозначение"].replace("*", ""), params["Стандарт"]])
-    elif params["Точность"] in ["B", "В", "A", "А"]:
-        return " ".join([params["Тип_инструмента"], params["Обозначение"].replace("*", ""), params["Стандарт"]])
-    else:
-        return " ".join([params["Тип_инструмента"], params["Обозначение"].replace("*", ""), params["Точность"],
-                         params["Стандарт"]])
-
-
-# def get_index_type_cutter(type_cutter: str = None, condition: str = None,) -> int:
-#     """ Определяет индекс типа инструмента.
-#
-#     :param type_cutter: Текстовое описание типа инструмента по стандарту.
-#     :param condition: Условие обработки (Например - 'Обработка торца').
-#     :return: Индекс типа инструмента.
-#     """
-#     indexes_types_cutter = {'Концевая (для T-образных пазов)': 6,
-#                             'Торцовая': 1,
-#                             'Торцовая, Цилиндрическая': 1,
-#                             'Угловая': 7,
-#                             'Фасонная, с выпуклым профилем': 8,
-#                             'Дисковая': 2,
-#                             'Концевая': 5,
-#                             'Резьбовая': 0,
-#                             'Шпоночная': 10,
-#                             'Концевая (для обработки Т-образного паза)': 6,
-#                             'Пазовая': 6,
-#                             'Червячная': 0,
-#                             'Отрезная': 4,
-#                             "Круглая": 0,
-#                             "Квадратная": 1,
-#                             "Многогранная": 2,
-#                             "Одношпоночная": 3,
-#                             "Многошпоночная": 4,
-#                             "Шлицевая": 5,
-#                             "Координатная": 6,
-#                             "Прочие": 7}
-#     index = indexes_types_cutter[type_cutter]
-#     if not isinstance(condition, type(None)):
-#         if type_cutter == 'Торцовая, Цилиндрическая':
-#             if condition == 'Торцовая':
-#                 index = 1
-#             elif condition == 'Цилиндрическая':
-#                 index = 0
-#             else:
-#                 raise InvalidValue("Схема обработки не определена!")
-#         elif type_cutter == 'Дисковая':
-#             if condition == 'Обработка торца':
-#                 index = 2
-#             elif condition == 'Обработка паза':
-#                 index = 3
-#             else:
-#                 raise InvalidValue("Схема обработки не определена!")
-#         elif type_cutter == 'Концевая':
-#             if condition == 'Обработка торца':
-#                 index = 5
-#             elif condition == 'Обработка паза':
-#                 index = 6
-#             else:
-#                 raise InvalidValue("Схема обработки не определена!")
-#     return index
+    tool.name = " ".join([tool.group, tool.marking, tool.module, tool.accuracy_class, tool.standard])

@@ -7,6 +7,8 @@ from typing import Optional, Any
 from service import RecordRequester, logged
 from service import output_debug_message_for_init_method as debug_for_init
 
+from tools.obj.fields_types import InGroupsTool
+
 
 def output_debug_message_with_kwargs_and_length(message: str):
     """ Выводит в лог сообщение message"""
@@ -125,3 +127,8 @@ class Finder:
     def available_values(self) -> Any:
         """ Возвращает наборы доступных в таблице БД значений по категориям."""
         return self._requester.available_values
+
+    @output_debug_message_with_kwargs_and_length("По ключу {0} найдено записей: {1}")
+    def by_group(self, group: InGroupsTool = "Фреза") -> list:
+        df = self._requester.get_records({"Тип_инструмента": group})
+        return df if not df.empty else None

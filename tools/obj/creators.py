@@ -11,6 +11,7 @@ from service import output_debug_message_for_init_method as debug_for_init
 
 from tools.obj.data_preparers import DataPreparer
 from tools.obj.entities import ErrorWithData
+from tools.scr.fun import get_name
 
 
 def output_debug_message():
@@ -76,6 +77,8 @@ class ToolCreator:
         params = preparer.to_generate
         cutter_class = self._catalog.by_type(type_tool=raw_data["Тип_инструмента"])
         try:
-            return cutter_class.parse_obj(params)
+            tool = cutter_class.parse_obj(params)
         except Exception as error:
             return ErrorWithData(err=error, name=cutter_class.__name__, params=params, raw_data=raw_data)
+        get_name(tool)
+        return tool
