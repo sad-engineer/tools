@@ -5,9 +5,10 @@ from service import logged
 from service import output_debug_message_for_init_method as debug_for_init
 
 from tools.obj.creators import ToolCreator
-from tools.obj.finders import Finder
+from tools.obj.finders import ToolFinder
 from tools.obj.fields_types import InGroupsTool
 from tools.obj.constants import DEFAULT_SETTINGS_FOR_TOOL as DEFAULT_TOOL
+
 
 def output_debug_message(message: str):
     """ Выводит в лог сообщение message"""
@@ -23,7 +24,7 @@ def output_debug_message(message: str):
 @logged
 class ToolLister:
     @debug_for_init()
-    def __init__(self, tool_creator: ToolCreator, finder: Finder):
+    def __init__(self, tool_creator: ToolCreator, finder: ToolFinder):
         self._tool_creator = tool_creator
         self._finder = finder
 

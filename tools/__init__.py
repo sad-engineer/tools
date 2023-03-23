@@ -19,15 +19,15 @@ from tools.obj.constants import SAVED_FIELDS
 # Методы пакета
 from tools.scr.fun import get_name
 # Классы пакета
-from tools.obj.containers import Container
-MillingCutter = Container.milling_cutter
-DrillingCutter = Container.drilling_cutter
-CountersinkingCutter = Container.countersinking_cutter
-DeploymentCutter = Container.deployment_cutter
-TurningCutter = Container.turning_cutter
-BroachingCutter = Container.broaching_cutter
-Lister = Container.lister
-Finder = Container.finder
+from tools.obj.containers import ToolContainer
+MillingCutter = ToolContainer.milling_cutter
+DrillingCutter = ToolContainer.drilling_cutter
+CountersinkingCutter = ToolContainer.countersinking_cutter
+DeploymentCutter = ToolContainer.deployment_cutter
+TurningCutter = ToolContainer.turning_cutter
+BroachingCutter = ToolContainer.broaching_cutter
+ToolLister = ToolContainer.lister
+ToolFinder = ToolContainer.finder
 from tools.obj.entities import Tool, CustomTool
 
 
@@ -51,15 +51,15 @@ __all__ = [
     # Методы пакета
     "get_name",
     # Классы пакета
-    "Container",
+    "ToolContainer",
     "MillingCutter",
     "DrillingCutter",
     "CountersinkingCutter",
     "DeploymentCutter",
     "TurningCutter",
     "BroachingCutter",
-    "Lister",
-    "Finder",
+    "ToolLister",
+    "ToolFinder",
     "Tool",
     "CustomTool",
     ]

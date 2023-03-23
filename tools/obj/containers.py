@@ -12,7 +12,7 @@ from tools.obj.constants import REQUESTER_TYPE as DB_TYPE
 from tools.obj.constants import TOOLS_CLASSES_BY_TYPE
 
 
-class Container(containers.DeclarativeContainer):
+class ToolContainer(containers.DeclarativeContainer):
     default_settings = providers.Object({
         'tools': {'path': DB_PATH, 'requester_type': DB_TYPE, 'reader_type': 'pandas_table', 'tablename': "tools"},
     })
@@ -27,7 +27,7 @@ class Container(containers.DeclarativeContainer):
     # В record_requester положил созданный класс запросов, т.к. Finder использует методы record_requester,
     # а не создает класс запросов
     finder = providers.Factory(
-        finders.Finder,
+        finders.ToolFinder,
         record_requester=requester_container.requester,
     )
 
@@ -38,7 +38,7 @@ class Container(containers.DeclarativeContainer):
     )
 
     data_preparer = providers.Factory(
-        data_preparers.DataPreparer,
+        data_preparers.ToolDataPreparer,
     )
 
     creator = providers.Factory(

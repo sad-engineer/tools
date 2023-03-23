@@ -72,7 +72,7 @@ def select_data_for_turning(raw_data: dict, default_settings: dict) -> dict:
     return param
 
 
-class DataPreparer:
+class ToolDataPreparer:
     SCRIPTS: ClassVar[dict] = {'Фреза': select_data_for_milling,
                                'Сверло': select_data_for_drilling,
                                'Зенкер': select_data_for_drilling,

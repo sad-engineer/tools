@@ -5,17 +5,17 @@ import logging.config
 
 from service import timeit, timeit_property
 
-from tools.obj.containers import Container
+from tools.obj.containers import ToolContainer
 from tools.logger_settings import config
 
 logging.config.dictConfig(config)
 
 
 def main():
-    container = Container()
+    container = ToolContainer()
 
-    catalod = container.catalog()
-    print(catalod.classes)
+    catalog = container.catalog()
+    print(catalog.classes)
 
     lister = container.lister()
     create = lister.by_marking
@@ -33,5 +33,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
-

@@ -35,7 +35,7 @@ def output_debug_message_with_with_length(message: str):
 
 
 @logged
-class Finder:
+class ToolFinder:
     """ Содержит список методов поиска в БД, обязательных для поиска при любом типе БД """
     @debug_for_init()
     def __init__(self, record_requester: RecordRequester) -> None:

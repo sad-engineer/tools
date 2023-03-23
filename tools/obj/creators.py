@@ -9,7 +9,7 @@ from service import Cataloger
 from service import logged
 from service import output_debug_message_for_init_method as debug_for_init
 
-from tools.obj.data_preparers import DataPreparer
+from tools.obj.data_preparers import ToolDataPreparer
 from tools.obj.entities import ErrorWithData
 from tools.scr.fun import get_name
 
@@ -61,7 +61,7 @@ class ToolCreator:
     @debug_for_init()
     def __init__(self,
                  catalog: Cataloger,
-                 preparer_factory: Callable[..., DataPreparer]) -> None:
+                 preparer_factory: Callable[..., ToolDataPreparer]) -> None:
         self._catalog = catalog
         self._preparer_factory = preparer_factory
 
