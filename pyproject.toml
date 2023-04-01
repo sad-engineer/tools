@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "tools"
-version = "0.2.22"
+version = "0.2.23"
 description = ""
 authors = ["Andrey Nikolaevich Korenyuk <korenyuk.a.n@mail.ru>"]
 readme = "README.md"
@@ -8,7 +8,7 @@ packages = [{include = "tools"}]
 
 [tool.poetry.dependencies]
 python = "^3.9"
-service = {path = "I:/Программирование/Pro0.5-service_for_my_projects/dist/service-0.1.32.tar.gz"}
+service = {path = "I:/Программирование/Pro0.5-service_for_my_projects/dist/service-0.1.33.tar.gz"}
 
 [build-system]
 requires = ["poetry-core"]
