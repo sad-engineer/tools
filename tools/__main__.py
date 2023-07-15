@@ -3,7 +3,7 @@
 # ----------------------------------------------------------------------------------------------------------------------
 import logging.config
 
-from service import timeit, timeit_property
+from service_for_my_projects import timeit, timeit_property
 
 from tools.obj.containers import ToolContainer
 from tools.logger_settings import config

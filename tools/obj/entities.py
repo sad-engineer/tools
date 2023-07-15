@@ -3,12 +3,12 @@
 # ----------------------------------------------------------------------------------------------------------------------
 import re
 from typing import Optional
-from pydantic import BaseModel, validator, root_validator, confloat, conint
+from pydantic import BaseModel, field_validator, model_validator, confloat, conint
 from collections import namedtuple
 
-from service import InvalidValue
-from service import Dictionarer
-# from service import logged
+from service_for_my_projects import InvalidValue
+from service_for_my_projects import Dictionarer
+# from service_for_my_projects import logged
 
 from tools.obj.constants import TYPES_STANDARD, HARD_ALLOYS
 from tools.obj.fields_types import InGroupsTool, StringValue, MarkingForSpecialTool, InMaterialsOfCuttingPart, \
@@ -26,6 +26,7 @@ class Base(BaseModel):
     class Config:
         validate_assignment = True
         extra = "allow"
+        arbitrary_types_allowed = True
 
 
 class Tool(Base, Dictionarer):
@@ -57,7 +58,7 @@ class Tool(Base, Dictionarer):
     def name(self, value) -> None:
         self._name = value
 
-    @validator('standard')
+    @field_validator('standard')
     def validate_standard(cls, value):
         for substring in TYPES_STANDARD:
             if substring in value:
@@ -65,7 +66,7 @@ class Tool(Base, Dictionarer):
         raise InvalidValue(f"Ожидается строка, содержащая название стандарта инструмента (например: "
                            f"{', '.join(str(i) for i in TYPES_STANDARD)}). Получено значение: {value}")
 
-    @validator('marking')
+    @field_validator('marking')
     def validate_marking(cls, value):
         if not isinstance(value, str):
             raise InvalidValue(f'Неверное обозначение инструмента. Ожидается строковое выражение. Получено: {value}')
@@ -82,7 +83,7 @@ class CustomTool(Tool):
 
     marking: MarkingForSpecialTool = 'специальный'
 
-    @validator('standard')
+    @field_validator('standard')
     def validate_standard(cls, value):
         if value == "" or isinstance(value, type(None)):
             return ""
@@ -268,7 +269,7 @@ class DrillingCutter(Tolerance, Angles, BladeMaterial, AxialSizes, Tool):
     group: InGroupsTool = "Сверло"
     num_of_cutting_blades: conint(ge=0) = 2
 
-    @root_validator
+    @model_validator(mode="before")
     def check_group(cls, values):
         if 'group' in values and values['group'] != "Сверло":
             raise ValueError(f"Нельзя менять группу класса '{cls.__class__.__name__}' ({cls.group}). "
@@ -317,7 +318,7 @@ class CountersinkingCutter(DrillingCutter):
     group: InGroupsTool = "Зенкер"
     num_of_cutting_blades: conint(ge=0) = 8
 
-    @root_validator
+    @model_validator(mode="before")
     def check_group(cls, values):
         if 'group' in values and values['group'] != "Зенкер":
             raise ValueError(f"Нельзя менять группу класса '{cls.__class__.__name__}' ({cls.group}). "
@@ -355,7 +356,7 @@ class DeploymentCutter(DrillingCutter):
     group: InGroupsTool = "Развертка"
     num_of_cutting_blades: conint(ge=0) = 8
 
-    @root_validator
+    @model_validator(mode="before")
     def check_group(cls, values):
         if 'group' in values and values['group'] != "Развертка":
             raise ValueError(f"Нельзя менять группу класса '{cls.__class__.__name__}' ({cls.group}). "
@@ -406,7 +407,7 @@ class MillingCutter(DrillingCutter):
     cutter_number: Optional[StringValue] = None
     module: Optional[confloat(ge=0)] = None
 
-    @root_validator
+    @model_validator(mode="before")
     def check_group(cls, values):
         if 'group' in values and values['group'] != "Фреза":
             raise ValueError(f"Нельзя менять группу класса '{cls.__class__.__name__}' ({cls.group}). "
@@ -463,7 +464,7 @@ class TurningCutter(Tolerance, Angles, BladeMaterial, PrismaticSizes, Tool):
     """
     group: InGroupsTool = "Резец"
 
-    @root_validator
+    @model_validator(mode="before")
     def check_group(cls, values):
         if 'group' in values and values['group'] != "Резец":
             raise ValueError(f"Нельзя менять группу класса '{cls.__class__.__name__}' ({cls.group}). "
@@ -507,7 +508,7 @@ class BroachingCutter(CustomTool):
     difference: confloat(ge=0) = 0.0
     length_of_working_part: confloat(ge=0) = 0.0
 
-    @root_validator
+    @model_validator(mode="before")
     def check_group(cls, values):
         if 'group' in values and values['group'] != "Протяжка":
             raise ValueError(f"Нельзя менять группу класса '{cls.__class__.__name__}' ({cls.group}). "

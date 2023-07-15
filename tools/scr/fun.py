@@ -4,10 +4,14 @@
 import logging.config
 from typing import List
 
-from service.obj.exceptions import InvalidValue
+from service_for_my_projects.obj.exceptions import InvalidValue
 
 from tools.obj.entities import Tool
 from tools.logger_settings import config
+
+import os.path
+if not os.path.exists("logs/"):
+    os.makedirs("logs/")
 
 logging.config.dictConfig(config)
 

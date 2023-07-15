@@ -3,7 +3,7 @@
 # ----------------------------------------------------------------------------------------------------------------------
 from typing import ClassVar
 
-from service import InvalidValue, InvalidTypeValue
+from service_for_my_projects import InvalidValue, InvalidTypeValue
 
 from tools.obj.constants import GROUPS_TOOL, MATERIALS_OF_CUTTING_PART, ACCURACY_STANDARDS, TOLERANCE_FIELDS, \
     TYPES_OF_MILLING_CUTTER, TYPES_OF_CUTTING_PART_OF_MILLING_CUTTER, TYPES_OF_LARGE_TOOTH, ACCURACY_CLASS_STANDARDS

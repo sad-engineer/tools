@@ -3,7 +3,7 @@
 # ----------------------------------------------------------------------------------------------------------------------
 from dependency_injector import containers, providers
 
-from service import Requester, Cataloger
+from service_for_my_projects import Requester, Cataloger
 
 from tools.obj import entities, finders, creators, listers, data_preparers
 from tools.obj.constants import DEFAULT_SETTINGS_FOR_TOOL as DS
