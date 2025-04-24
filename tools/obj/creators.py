@@ -82,7 +82,7 @@ class ToolCreator:
         params = preparer.to_generate
         cutter_class = self._catalog.by_type(type_tool=raw_data["Тип_инструмента"])
         try:
-            tool = cutter_class.parse_obj(params)
+            tool = cutter_class.construct(**params)
         except Exception as error:
             return ErrorWithData(err=error, name=cutter_class.__name__, params=params, raw_data=raw_data)
         get_name(tool)

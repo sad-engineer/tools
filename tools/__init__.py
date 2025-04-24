@@ -19,6 +19,7 @@ from tools.obj.constants import SAVED_FIELDS
 # Методы пакета
 from tools.scr.fun import get_name
 # Классы пакета
+from tools.obj.entities import Tool, CustomTool
 from tools.obj.containers import ToolContainer
 MillingCutter = ToolContainer.milling_cutter
 DrillingCutter = ToolContainer.drilling_cutter
@@ -29,7 +30,7 @@ BroachingCutter = ToolContainer.broaching_cutter
 ToolCreator = ToolContainer.creator
 ToolLister = ToolContainer.lister
 ToolFinder = ToolContainer.finder
-from tools.obj.entities import Tool, CustomTool
+
 
 
 __all__ = [

@@ -1,131 +1,134 @@
-# `cutting_tools`
+# `tools`
 
-`cutting_tools` - модуль работы с базой данных инструментов.
----
----
-Поддерживаемые константы:
+`tools` - модуль работы с базой данных инструментов.
 
-    Словарь параметров инструментов по умолчанию (key - тип инструмента, например: "Резец"):
-        tools.DEFAULT_SETTINGS_FOR_TOOL[any_type_tool]
+Материал демонстрационный, показывает навыки работы.
+Проект устарел, показывает предыдущий взгляд на способы решения проблемы доступа и обработки информации к БД 
 
-    Словарь индексов материалов режущей части:
-        tools.MATERIALS_OF_CUTTING_PART
-    
-    Словарь наименований группы инструмента
-        tools.GROUPS_TOOL
+## Установка
+```bash
+pip install git+https://github.com/sad-engineer/tools.git
+```
 
-    Типы стандартов инструмента
-        tools.TYPES_STANDARD
+## Клонирование проекта
+```bash
+git clone https://github.com/sad-engineer/tools.git
+cd tools
+```
 
-    Типы фрез:
-        tools.TYPES_OF_MILLING_CUTTER
+## Подготовка базы данных
+База данных устанавливается вместе с пакетом, и настройка не требуется. Пакет поддерживает базу данных SQLite.
 
-    Типы режущей части фрезы:
-        tools.TYPES_OF_CUTTING_PART_OF_MILLING_CUTTER
+## Использование
 
-    Типы частоты шага:
-        tools.TYPES_OF_LARGE_TOOTH
-    
-    Типы установки резца:
-        tools.TYPES_OF_TOOL_HOLDER
+Пример использования:
+```python
+from tools import ToolContainer
 
-    Типы нагрузок на резец:
-        tools.TYPES_OF_LOADS 
+# Создаем контейнер инструментов
+container = ToolContainer()
 
-    Квалитеты точности обработки:
-        tools.ACCURACY_STANDARDS
+# Создание фрезы с настройками по умолчанию
+cutter = container.milling_cutter()
 
-    Поля допусков:
-        tools.TOLERANCE_FIELDS
+# Создание резца с настройками по умолчанию
+cutter = container.turning_cutter()
 
-    Классы точности инструмента:
-        tools.ACCURACY_CLASS_STANDARDS
+# Создание сверла с настройками по умолчанию
+cutter = container.drilling_cutter()
 
-    Описание переменных классов:
-        tools.DECODING
----
-Поддерживаемые классы (основные):	
-    
-    Контейнер поддерживаемых классов:
-        container = tools.ToolContainer()
-    
-    Класс "Фреза":
-        из контейнера (с настройками по умолчанию):
-            cutter = container.milling_cutter()
-        из пакета (необходимо задать начальные настройки):
-            cutter = tools.MillingCutter(marking = any_marking, standard = any_standard, dia_mm = any_dia,
-                length_mm = any_length, mat_of_cutting_part = any_mat_of_cutting_part, 
-                main_angle_grad = any_main_angle_grad, front_angle_grad = any_front_angle_grad, 
-                inclination_of_main_blade_grad = any_inclination_of_main_blade_grad, tolerance = any_tolerance, 
-                type_cutter = any_type_cutter, type_of_cutting_part = any_type_of_cutting_part, 
-                num_of_cutting_blades = any_num_of_cutting_blades, 
-                radius_of_cutting_vertex = any_radius_of_cutting_vertex, large_tooth = any_large_tooth, 
-                quantity = any_quantity, accuracy_class = any_accuracy_class, number = any_number, 
-                module = any_module)
-        
-    Класс "Резец":
-        из контейнера (с настройками по умолчанию):
-            cutter = container.turning_cutter()
-        из пакета (необходимо задать начальные настройки):
-            cutter = cutting_tools.TurningCutter(marking = any_marking, standard = any_standard, 
-                length_mm = any_length, width_mm = any_width, height_mm = any_height, 
-                mat_of_cutting_part = any_mat_of_cutting_part, 
-                main_angle_grad = any_main_angle_grad, front_angle_grad = any_front_angle_grad, 
-                inclination_of_main_blade_grad = any_inclination_of_main_blade_grad, tolerance = any_tolerance, 
-                type_cutter = any_type_cutter, type_of_cutting_part = any_type_of_cutting_part, 
-                num_of_cutting_blades = any_num_of_cutting_blades, 
-                radius_of_cutting_vertex = any_radius_of_cutting_vertex, large_tooth = any_large_tooth, 
-                quantity = any_quantity, turret = any_turret, load = any_load, is_complex_profile = any_profile,)
+# Создание зенкера с настройками по умолчанию
+cutter = container.countersinking_cutter()
 
-    Класс "Сверло":
-        из контейнера (с настройками по умолчанию):
-            cutter = container.drilling_cutter()
-        из пакета (необходимо задать начальные настройки):
-            cutter = cutting_tools.DrillingCutter(marking = any_marking, standard = any_standard, dia_mm = any_dia,
-                length_mm = any_length, mat_of_cutting_part = any_mat_of_cutting_part, 
-                main_angle_grad = any_main_angle_grad, front_angle_grad = any_front_angle_grad, 
-                inclination_of_main_blade_grad = any_inclination_of_main_blade_grad, tolerance = any_tolerance, 
-                type_cutter = any_type_cutter, type_of_cutting_part = any_type_of_cutting_part, 
-                num_of_cutting_blades = any_num_of_cutting_blades, 
-                radius_of_cutting_vertex = any_radius_of_cutting_vertex, quantity = any_quantity)
+# Создание развертки с настройками по умолчанию
+cutter = container.deployment_cutter()
 
-    Класс "Зенкер":
-        из контейнера (с настройками по умолчанию):
-            cutter = container.countersinking_cutter()
-        из пакета (необходимо задать начальные настройки):
-            cutter = cutting_tools.CountersinkingCutter(marking = any_marking, standard = any_standard, dia_mm = any_dia,
-                length_mm = any_length, mat_of_cutting_part = any_mat_of_cutting_part, 
-                main_angle_grad = any_main_angle_grad, front_angle_grad = any_front_angle_grad, 
-                inclination_of_main_blade_grad = any_inclination_of_main_blade_grad, tolerance = any_tolerance, 
-                type_cutter = any_type_cutter, type_of_cutting_part = any_type_of_cutting_part, 
-                num_of_cutting_blades = any_num_of_cutting_blades, 
-                radius_of_cutting_vertex = any_radius_of_cutting_vertex, quantity = any_quantity)
+# Создание протяжки с настройками по умолчанию
+cutter = container.broaching_cutter()
+```
 
-    Класс "Развертка":
-        из контейнера (с настройками по умолчанию):
-            cutter = container.deployment_cutter()
-        из пакета (необходимо задать начальные настройки):
-            cutter = cutting_tools.DeploymentCutter(marking = any_marking, standard = any_standard, dia_mm = any_dia,
-                length_mm = any_length, mat_of_cutting_part = any_mat_of_cutting_part, 
-                main_angle_grad = any_main_angle_grad, front_angle_grad = any_front_angle_grad, 
-                inclination_of_main_blade_grad = any_inclination_of_main_blade_grad, tolerance = any_tolerance, 
-                type_cutter = any_type_cutter, type_of_cutting_part = any_type_of_cutting_part, 
-                num_of_cutting_blades = any_num_of_cutting_blades, 
-                radius_of_cutting_vertex = any_radius_of_cutting_vertex, quantity = any_quantity)
-    
-    Класс "Протяжка":
-        из контейнера (с настройками по умолчанию):
-            cutter = container.broaching_cutter()
-        из пакета (необходимо задать начальные настройки):
-            cutter = container.DeploymentCutter(marking=any_marking, standard=any_standard, angle_of_inclination=any_angle, 
-            pitch_of_teeth=any_pitch, number_teeth_section=any_number, difference=any_difference, 
-            length_of_working_part=any_length, 
+## Структура проекта
+```
+tools/
+├── tools/
+│ ├── __init__.py
+│ ├── __main__.py
+│ ├── logger_settings.py        # Настройки логирования
+│ ├── data/                     # Данные проекта
+│ ├── logs/                     # Логи проекта
+│ ├── scr/                      # Скрипты проекта
+│ └── obj/                      # Основные классы и объекты
+│     ├── __init__.py
+│     ├── abstract_classes.py   # Абстрактные классы
+│     ├── constants.py          # Константы для классов
+│     ├── containers.py         # Контейнеры инструментов
+│     ├── creators.py           # Создание объектов
+│     ├── data_preparers.py     # Подготовка данных
+│     ├── entities.py           # Сущности предметной области
+│     ├── fields_types.py       # Типы полей
+│     ├── finders.py            # Поиск в базе данных
+│     └── listers.py            # Списки и перечисления
+├── README.md 
+├── poetry.lock 
+├── pyproject.toml 
+└── setup.cfg 
+```
 
-    для основных классов досупны:
-        документация:
-            print(cutter.__doc__)
+## Требования
 
-        словарь параметров и свойств:
-            params = cutter.dict_parameters
+- Python 3.9 или выше
+- pydantic 2.11.3+
+- service-for-my-projects 
+- Poetry
 
----
+## Установка зависимостей
+
+Для установки зависимостей проекта используйте Poetry:
+
+1. Установите Poetry, если он еще не установлен:
+```sh
+# Windows (PowerShell)
+(Invoke-WebRequest -Uri https://install.python-poetry.org -UseBasicParsing).Content | python -
+
+# Linux/MacOS
+curl -sSL https://install.python-poetry.org | python3 -
+```
+
+2. Установите зависимости проекта:
+```sh
+# Перейдите в директорию проекта
+cd tools
+
+# Установите зависимости
+poetry install
+
+# Активируйте виртуальное окружение
+poetry shell
+```
+
+3. Альтернативная установка через pip:
+```sh
+# Создайте виртуальное окружение
+python -m venv venv
+
+# Активируйте виртуальное окружение
+# Windows
+venv\Scripts\activate
+# Linux/MacOS
+source venv/bin/activate
+
+# Установите зависимости
+pip install -r requirements.txt
+```
+
+## Вклад в проект
+
+1. Создайте форк проекта
+2. Создайте ветку для ваших изменений
+3. Внесите изменения
+4. Отправьте pull request
+
+Пожалуйста, убедитесь, что ваши изменения:
+- Сопровождаются тестами
+- Следуют существующему стилю кода
+- Обновляют документацию при необходимости

@@ -3,7 +3,7 @@
 # ----------------------------------------------------------------------------------------------------------------------
 import re
 from typing import Optional
-from pydantic import BaseModel, field_validator, model_validator, confloat, conint
+from pydantic import BaseModel, field_validator, model_validator, confloat, conint, Field
 from collections import namedtuple
 
 from service_for_my_projects import InvalidValue
@@ -44,11 +44,11 @@ class Tool(Base, Dictionarer):
     Methods:
         parameters : (dict) : возвращает словарь параметров и свойств.
     """
-    _name: Optional[str] = None  # Для сохранения кастомного имени инструмента
-    group: InGroupsTool = "Инструмент"
-    marking: StringValue = "ХХХХ-ХХХХ"
-    standard: str = "ГОСТ 1000-90"
-    quantity: conint(ge=0) = 1
+    _name: Optional[str] = Field(default=None, description="Для сохранения кастомного имени инструмента")
+    group: InGroupsTool = Field(default="Инструмент", description="Группа инструмента")
+    marking: StringValue = Field(default="ХХХХ-ХХХХ", description="Обозначение инструмента")
+    standard: str = Field(default="ГОСТ 1000-90", description="Стандарт инструмента")
+    quantity: int = Field(default=1, ge=0, description="Количество одновременно работающих инструментов")
 
     @property
     def name(self) -> str:
@@ -81,7 +81,7 @@ class CustomTool(Tool):
     """ Специальный инструмент. В этом инструменте в поле marking указывается только 'специальный' а поле standard
     можно оставлять пустым."""
 
-    marking: MarkingForSpecialTool = 'специальный'
+    marking: MarkingForSpecialTool = Field(default='специальный', description="Обозначение инструмента")
 
     @field_validator('standard')
     def validate_standard(cls, value):
@@ -109,9 +109,9 @@ class AxialSizes(Base, Dictionarer, Size):
     Methods:
         parameters : (dict) : возвращает словарь параметров и свойств.
     """
-    dia_mm: confloat(ge=0) = 6
-    length_mm: confloat(ge=0) = 100
-    radius_of_cutting_vertex: confloat(ge=0) = 1
+    dia_mm: float = Field(default=6, ge=0, description="Диаметр инструмента")
+    length_mm: float = Field(default=100, ge=0, description="Длина инструмента")
+    radius_of_cutting_vertex: float = Field(default=1, ge=0, description="Радиус режущей вершины")
 
     @property
     def gabarit_volume(self):
@@ -144,10 +144,10 @@ class PrismaticSizes(Base, Dictionarer, Size):
         parameters : (dict) : возвращает словарь параметров и свойств.
     """
 
-    length_mm: confloat(ge=0) = 100
-    width_mm: confloat(ge=0) = 16
-    height_mm: confloat(ge=0) = 25
-    radius_of_cutting_vertex: confloat(ge=0) = 1
+    length_mm: float = Field(default=100, ge=0, description="Длина инструмента")
+    width_mm: float = Field(default=16, ge=0, description="Ширина инструмента")
+    height_mm: float = Field(default=25, ge=0, description="Высота инструмента")
+    radius_of_cutting_vertex: float = Field(default=1, ge=0, description="Радиус режущей вершины")
 
     @property
     def gabarit_volume(self):
@@ -176,7 +176,7 @@ class BladeMaterial(Base, Dictionarer):
         parameters : (dict) : возвращает словарь параметров и свойств.
 
     """
-    mat_of_cutting_part: Optional[InMaterialsOfCuttingPart] = "Т15К6"
+    mat_of_cutting_part: Optional[InMaterialsOfCuttingPart] = Field(default="Т15К6", description="Материал режущей пластины")
 
     @property
     def type_of_mat(self):
@@ -190,16 +190,16 @@ class Angles(Base, Dictionarer):
     """Углы инструмента
 
     Parameters:
-        main_angle_grad : (float >= 0) : главный угол в плане.
-        front_angle_grad  : (float >= 0) : передний угол.
-        inclination_of_main_blade_grad  : (float >= 0) : наклон передней грани
+        main_angle_grad : главный угол в плане.
+        front_angle_grad  : передний угол.
+        inclination_of_main_blade_grad : наклон передней грани
 
     Methods:
         parameters : (dict) : возвращает словарь параметров и свойств.
     """
-    main_angle_grad: float = 0
-    front_angle_grad: float = 0
-    inclination_of_main_blade_grad: float = 0
+    main_angle_grad: float = Field(default=0, description="Главный угол в плане")
+    front_angle_grad: float = Field(default=0, description="Передний угол")
+    inclination_of_main_blade_grad: float = Field(default=0, description="Наклон передней грани")
 
     def _parameters(self):
         return {"main_angle_grad": self.main_angle_grad, "front_angle_grad": self.front_angle_grad,
@@ -216,8 +216,8 @@ class Tolerance(Base, Dictionarer):
     Properties:
         tolerance : (str, int содержит по одному из ACCURACY_STANDARDS, TOLERANCE_FIELDS) : допуск.
     """
-    accuracy: InAccuracyStandards = "14"
-    tolerance_field: InToleranceField = 'H'
+    accuracy: InAccuracyStandards = Field(default="14", description="Квалитет")
+    tolerance_field: InToleranceField = Field(default='H', description="Поле допуска")
 
     @property
     def tolerance(self) -> str:
@@ -266,8 +266,8 @@ class DrillingCutter(Tolerance, Angles, BladeMaterial, AxialSizes, Tool):
     Methods:
         parameters : (dict) : возвращает словарь параметров и свойств.
     """
-    group: InGroupsTool = "Сверло"
-    num_of_cutting_blades: conint(ge=0) = 2
+    group: InGroupsTool = Field(default="Сверло", description="Группа инструмента")
+    num_of_cutting_blades: int = Field(default=2, ge=0, description="Количество режущих граней")
 
     @model_validator(mode="before")
     def check_group(cls, values):
@@ -315,8 +315,8 @@ class CountersinkingCutter(DrillingCutter):
     Methods:
         parameters : (dict) : возвращает словарь параметров и свойств.
     """
-    group: InGroupsTool = "Зенкер"
-    num_of_cutting_blades: conint(ge=0) = 8
+    group: InGroupsTool = Field(default="Зенкер", description="Группа инструмента")
+    num_of_cutting_blades: int = Field(default=8, ge=0, description="Количество режущих граней")
 
     @model_validator(mode="before")
     def check_group(cls, values):
@@ -353,8 +353,8 @@ class DeploymentCutter(DrillingCutter):
     Methods:
         parameters : (dict) : возвращает словарь параметров и свойств.
     """
-    group: InGroupsTool = "Развертка"
-    num_of_cutting_blades: conint(ge=0) = 8
+    group: InGroupsTool = Field(default="Развертка", description="Группа инструмента")
+    num_of_cutting_blades: int = Field(default=8, ge=0, description="Количество режущих граней")
 
     @model_validator(mode="before")
     def check_group(cls, values):
@@ -398,14 +398,14 @@ class MillingCutter(DrillingCutter):
         parameters : (dict) : возвращает словарь параметров и свойств.
     """
 
-    group: InGroupsTool = "Фреза"
-    type_cutter: InTypesOfMillingCutter = "Цилиндрическая"
-    type_of_cutting_part: InTypesOfCuttingPart = "Цельная"
-    large_tooth: InTypesOfLargeTooth = "Крупный шаг"
-    num_of_cutting_blades: conint(ge=0) = 12
-    accuracy_class: Optional[InAccuracyClassStandards] = None
-    cutter_number: Optional[StringValue] = None
-    module: Optional[confloat(ge=0)] = None
+    group: InGroupsTool = Field(default="Фреза", description="Группа инструмента")
+    type_cutter: InTypesOfMillingCutter = Field(default="Цилиндрическая", description="Тип инструмента")
+    type_of_cutting_part: InTypesOfCuttingPart = Field(default="Цельная", description="Тип режущей части")
+    large_tooth: InTypesOfLargeTooth = Field(default="Крупный шаг", description="Крупный/мелкий зуб")
+    num_of_cutting_blades: int = Field(default=12, ge=0, description="Количество режущих граней")
+    accuracy_class: Optional[InAccuracyClassStandards] = Field(default=None, description="Класс точности инструмента")
+    cutter_number: Optional[StringValue] = Field(default=None, description="Номер фрезы")
+    module: Optional[float] = Field(default=None, ge=0, description="Модуль червячной фрезы")
 
     @model_validator(mode="before")
     def check_group(cls, values):
@@ -462,7 +462,7 @@ class TurningCutter(Tolerance, Angles, BladeMaterial, PrismaticSizes, Tool):
         parameters : (dict) : возвращает словарь параметров и свойств.
 
     """
-    group: InGroupsTool = "Резец"
+    group: InGroupsTool = Field(default="Резец", description="Группа инструмента")
 
     @model_validator(mode="before")
     def check_group(cls, values):
@@ -500,13 +500,13 @@ class BroachingCutter(CustomTool):
     Methods:
         parameters : (dict) : возвращает словарь параметров и свойств.
     """
-    group: InGroupsTool = "Протяжка"
-    marking: MarkingForSpecialTool = 'специальная'
-    angle_of_inclination: float = 0.0
-    pitch_of_teeth: confloat(ge=0) = 0.0
-    number_teeth_section: conint(ge=0) = 0
-    difference: confloat(ge=0) = 0.0
-    length_of_working_part: confloat(ge=0) = 0.0
+    group: InGroupsTool = Field(default="Протяжка", description="Группа инструмента")
+    marking: MarkingForSpecialTool = Field(default='специальная', description="Обозначение инструмента")
+    angle_of_inclination: float = Field(default=0.0, description="Угол наклона зубьев протяжки")
+    pitch_of_teeth: float = Field(default=0.0, ge=0, description="Шаг зубьев протяжки")
+    number_teeth_section: int = Field(default=0, ge=0, description="Число зубьев секции протяжки")
+    difference: float = Field(default=0.0, ge=0, description="Подача на зуб протяжки")
+    length_of_working_part: float = Field(default=0.0, ge=0, description="Длина режущей части протяжки")
 
     @model_validator(mode="before")
     def check_group(cls, values):
