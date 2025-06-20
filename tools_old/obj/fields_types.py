@@ -3,10 +3,18 @@
 # ----------------------------------------------------------------------------------------------------------------------
 from typing import ClassVar
 
-from service_for_my_projects import InvalidValue, InvalidTypeValue
+from service_for_my_projects import InvalidTypeValue, InvalidValue
 
-from tools.obj.constants import GROUPS_TOOL, MATERIALS_OF_CUTTING_PART, ACCURACY_STANDARDS, TOLERANCE_FIELDS, \
-    TYPES_OF_MILLING_CUTTER, TYPES_OF_CUTTING_PART_OF_MILLING_CUTTER, TYPES_OF_LARGE_TOOTH, ACCURACY_CLASS_STANDARDS
+from tools_old.obj.constants import (
+    ACCURACY_CLASS_STANDARDS,
+    ACCURACY_STANDARDS,
+    GROUPS_TOOL,
+    MATERIALS_OF_CUTTING_PART,
+    TOLERANCE_FIELDS,
+    TYPES_OF_CUTTING_PART_OF_MILLING_CUTTER,
+    TYPES_OF_LARGE_TOOTH,
+    TYPES_OF_MILLING_CUTTER,
+)
 
 
 class StringValue:
@@ -25,6 +33,7 @@ class StringValue:
 
 class ValueFromDict:
     """Для определения полей, значение которых должны быть из словаря доступных значений"""
+
     AVAILABLE_VALUES: ClassVar[dict] = {}
 
     @classmethod
@@ -33,13 +42,16 @@ class ValueFromDict:
             raise ValueError(f"Ожидается целое число или строка, получено: {type(value)}")
         elif isinstance(value, str):
             if value not in cls.AVAILABLE_VALUES:
-                raise InvalidValue(f"Строковое значение должно быть из списка {list(cls.AVAILABLE_VALUES.keys())}, "
-                                   f"получено: {value}")
+                raise InvalidValue(
+                    f"Строковое значение должно быть из списка {list(cls.AVAILABLE_VALUES.keys())}, "
+                    f"получено: {value}"
+                )
             return value
         elif isinstance(value, int):
             if value not in cls.AVAILABLE_VALUES.values():
-                raise InvalidValue(f"Значение должно быть из списка {list(cls.AVAILABLE_VALUES.values())}, "
-                                   f"получено: {value}")
+                raise InvalidValue(
+                    f"Значение должно быть из списка {list(cls.AVAILABLE_VALUES.values())}, " f"получено: {value}"
+                )
             index = list(cls.AVAILABLE_VALUES.values()).index(value)
             return list(cls.AVAILABLE_VALUES.keys())[index]
 

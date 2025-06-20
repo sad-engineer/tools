@@ -5,8 +5,8 @@ import logging.config
 
 from service_for_my_projects import timeit, timeit_property
 
-from tools.obj.containers import ToolContainer
-from tools.logger_settings import config
+from tools_old.logger_settings import config
+from tools_old.obj.containers import ToolContainer
 
 logging.config.dictConfig(config)
 
@@ -30,8 +30,6 @@ def main():
 
     tools = creator.default(group="Резец")
     print(tools)
-
-
 
 
 if __name__ == '__main__':

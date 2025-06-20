@@ -2,14 +2,14 @@
 # -*- coding: utf-8 -*-
 # -------------------------------------------------------------------------------
 import logging.config
+import os.path
 from typing import List
 
 from service_for_my_projects.obj.exceptions import InvalidValue
 
-from tools.obj.entities import Tool
-from tools.logger_settings import config
+from tools_old.logger_settings import config
+from tools_old.obj.entities import Tool
 
-import os.path
 if not os.path.exists("logs/"):
     os.makedirs("logs/")
 
@@ -18,6 +18,7 @@ logging.config.dictConfig(config)
 
 def output_error_message(attr_names: List[str]):
     """Логирует ошибку корректировки наименования инструмента"""
+
     def decorator(func):
         def wrapper(tool):
             for name in attr_names:
@@ -25,12 +26,15 @@ def output_error_message(attr_names: List[str]):
                     log = logging.getLogger("tool_names")
                     log.error(f"Поле {name} класса {tool.__class__.__name__} ({tool.name}) не определено.")
             return func(tool)
+
         return wrapper
+
     return decorator
 
 
 def output_info_message():
     """Логирует информационное сообщение при ошибке корректировки наименования инструмента"""
+
     def decorator(func):
         def wrapper(tool):
             try:
@@ -38,12 +42,14 @@ def output_info_message():
             except TypeError:
                 log = logging.getLogger("tool_names")
                 log.info(f"Наименование инструмента {tool.name} принято по умолчанию")
+
         return wrapper
+
     return decorator
 
 
 def get_name(tool: Tool) -> None:
-    """ Определяет наименование инструмента в зависимости от ГОСТа
+    """Определяет наименование инструмента в зависимости от ГОСТа
 
     tool : Tool : Класс инструмента.
     """
@@ -132,10 +138,12 @@ def get_name(tool: Tool) -> None:
         'ГОСТ 10046-72': None,
         'ГОСТ 18871-73': None,
         'ГОСТ 18878-73': get_name_tool_with_material,
-        }
+    }
     if tool.standard not in name_getters:
-        raise InvalidValue(f"Необходимо добавить вариант определения наименования инструмента для инструмента "
-                           f"{tool.group} {tool.standard}")
+        raise InvalidValue(
+            f"Необходимо добавить вариант определения наименования инструмента для инструмента "
+            f"{tool.group} {tool.standard}"
+        )
     name_getter = name_getters[tool.standard]
     if not isinstance(name_getter, type(None)):
         name_getter(tool)
@@ -144,33 +152,33 @@ def get_name(tool: Tool) -> None:
 @output_info_message()
 @output_error_message(["tolerance"])
 def get_name_tool_with_accuracy(tool: Tool) -> None:
-    """ Наименование состоит из наименования, обозначения, точности(опционально) и стандарта."""
+    """Наименование состоит из наименования, обозначения, точности(опционально) и стандарта."""
     tool.name = " ".join([tool.group, tool.marking, tool.tolerance, tool.standard])
 
 
 @output_info_message()
 @output_error_message(["accuracy_class"])
 def get_name_tool_with_accuracy_class(tool: Tool) -> None:
-    """ Наименование состоит из наименования, обозначения, точности(опционально) и стандарта."""
+    """Наименование состоит из наименования, обозначения, точности(опционально) и стандарта."""
     tool.name = " ".join([tool.group, tool.marking, tool.accuracy_class, tool.standard])
 
 
 @output_info_message()
 @output_error_message(["mat_of_cutting_part"])
 def get_name_tool_with_material(tool: Tool) -> None:
-    """ Наименование состоит из наименования, обозначения, материала режущей части и стандарта. """
+    """Наименование состоит из наименования, обозначения, материала режущей части и стандарта."""
     tool.name = " ".join([tool.group, tool.marking, tool.mat_of_cutting_part, tool.standard])
 
 
 @output_info_message()
 @output_error_message(["cutter_number"])
 def get_name_tool_with_number(tool: Tool) -> None:
-    """ Наименование состоит из наименования, обозначения, материала режущей части и стандарта. """
+    """Наименование состоит из наименования, обозначения, материала режущей части и стандарта."""
     tool.name = " ".join([tool.group, tool.marking, tool.cutter_number, tool.standard])
 
 
 @output_info_message()
 @output_error_message(["module", "accuracy_class"])
 def get_name_tool_with_accuracy_class_and_module(tool: Tool) -> None:
-    """ Наименование состоит из наименования, обозначения, точности(опционально) и стандарта."""
+    """Наименование состоит из наименования, обозначения, точности(опционально) и стандарта."""
     tool.name = " ".join([tool.group, tool.marking, tool.module, tool.accuracy_class, tool.standard])

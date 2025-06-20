@@ -1,7 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 from typing import ClassVar, Optional
-from tools.obj.constants import DEFAULT_SETTINGS_FOR_TOOL
+
+from tools_old.obj.constants import DEFAULT_SETTINGS_FOR_TOOL
 
 
 def select_data_for_milling(raw_data: dict, default_settings: dict) -> dict:
@@ -17,7 +18,7 @@ def select_data_for_milling(raw_data: dict, default_settings: dict) -> dict:
     param["inclination_of_main_blade_grad"] = float(raw_data.get('lambda_', 0))
     param["tolerance"] = default_settings["tolerance"]
 
-    # TODO: Переделать выбор типа фрезы для вариантов 'Торцовая, Цилиндрическая', 
+    # TODO: Переделать выбор типа фрезы для вариантов 'Торцовая, Цилиндрическая',
     #  'Концевая (для T-образных пазов)', 'Концевая (для обработки Т-образного паза)'
     param["type_cutter"] = raw_data.get('type_cutter_')
 
@@ -33,7 +34,7 @@ def select_data_for_milling(raw_data: dict, default_settings: dict) -> dict:
 
 
 def select_data_for_drilling(raw_data: dict, default_settings: dict) -> dict:
-    """ Из словаря данных, полученных из БД (сырых), выбирает данные для класса 'Сверло'. """
+    """Из словаря данных, полученных из БД (сырых), выбирает данные для класса 'Сверло'."""
     param = dict()
     # param["group"] = raw_data.get('Тип_инструмента')
     param["marking"] = raw_data.get('Обозначение')
@@ -52,7 +53,7 @@ def select_data_for_drilling(raw_data: dict, default_settings: dict) -> dict:
 
 
 def select_data_for_turning(raw_data: dict, default_settings: dict) -> dict:
-    """ Из словаря данных, полученных из БД (сырых), выбирает данные для класса 'Резец'. """
+    """Из словаря данных, полученных из БД (сырых), выбирает данные для класса 'Резец'."""
     param = dict()
     # param["group"] = raw_data.get('Тип_инструмента')
     param["marking"] = raw_data.get('Обозначение')
@@ -73,12 +74,13 @@ def select_data_for_turning(raw_data: dict, default_settings: dict) -> dict:
 
 
 class ToolDataPreparer:
-    SCRIPTS: ClassVar[dict] = {'Фреза': select_data_for_milling,
-                               'Сверло': select_data_for_drilling,
-                               'Зенкер': select_data_for_drilling,
-                               'Развертка': select_data_for_drilling,
-                               'Резец': select_data_for_turning, 
-                               }
+    SCRIPTS: ClassVar[dict] = {
+        'Фреза': select_data_for_milling,
+        'Сверло': select_data_for_drilling,
+        'Зенкер': select_data_for_drilling,
+        'Развертка': select_data_for_drilling,
+        'Резец': select_data_for_turning,
+    }
     DEFAULT_SETTINGS: ClassVar[dict] = DEFAULT_SETTINGS_FOR_TOOL
 
     def __init__(self, raw_data: Optional[dict]):

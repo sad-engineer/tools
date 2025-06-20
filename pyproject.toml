@@ -1,16 +1,50 @@
 [tool.poetry]
 name = "tools"
 version = "0.2.23"
-description = ""
+description = "Пакет для работы с базой данных инструмента и приспособлений"
 authors = ["Andrey Nikolaevich Korenyuk <korenyuk.a.n@mail.ru>"]
 readme = "README.md"
 packages = [{include = "tools"}]
 
 [tool.poetry.dependencies]
 python = "^3.9"
-service-for-my-projects = {git = "https://github.com/sad-engineer/service_for_my_projects.git"}
-pydantic = "^2.0.3"
+dependency-injector = "^4.41.0"
+pydantic = "^2.11.3"
+pydantic-settings = "^2.9.1"
+sqlalchemy = "^2.0.40"
+alembic = "^1.15.2"
+psycopg2 = "^2.9.10"
+psycopg2-binary = "^2.9.10"
+click = "^8.1.7"
+chardet = "^5.2.0"
+pandas = "^2.2.3"
+tolerance = {git = "https://github.com/sad-engineer/tolerance.git"}
 
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+
+[tool.black]
+line-length = 120
+target-version = ['py39']
+include = '\.pyi?$'
+skip-string-normalization = true
+extend-exclude = '''
+/(
+    \.git
+  | \.hg
+  | \.mypy_cache
+  | \.tox
+  | \.venv
+  | _build
+  | buck-out
+  | build
+  | dist
+)/
+'''
+
+[tool.isort]
+profile = "black"
+multi_line_output = 3
+line_length = 120

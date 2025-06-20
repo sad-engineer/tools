@@ -2,22 +2,29 @@
 # -*- coding: utf-8 -*-
 # ----------------------------------------------------------------------------------------------------------------------
 from typing import Callable
+
 from service_for_my_projects import logged
 from service_for_my_projects import output_debug_message_for_init_method as debug_for_init
 
-from tools.obj.creators import ToolCreator
-from tools.obj.finders import ToolFinder
-from tools.obj.fields_types import InGroupsTool
+from tools_old.obj.creators import ToolCreator
+from tools_old.obj.fields_types import InGroupsTool
+from tools_old.obj.finders import ToolFinder
 
 
 def output_debug_message(message: str):
-    """ Выводит в лог сообщение message"""
+    """Выводит в лог сообщение message"""
+
     def decorator(func):
         def wrapper(self, *args, **kwargs):
-            self.debug(message) if message.find("{") == -1 else self.debug(
-                message.format('; '.join([f'{k}= {v}' for k, v in kwargs.items()])))
+            (
+                self.debug(message)
+                if message.find("{") == -1
+                else self.debug(message.format('; '.join([f'{k}= {v}' for k, v in kwargs.items()])))
+            )
             return func(self, *args, **kwargs)
+
         return wrapper
+
     return decorator
 
 

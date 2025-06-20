@@ -2,22 +2,31 @@
 # -*- coding: utf-8 -*-
 # ----------------------------------------------------------------------------------------------------------------------
 import re
-from typing import Optional
-from pydantic import BaseModel, field_validator, model_validator, confloat, conint
 from collections import namedtuple
+from typing import Optional
 
-from service_for_my_projects import InvalidValue
-from service_for_my_projects import Dictionarer
+from pydantic import BaseModel, confloat, conint, field_validator, model_validator
+from service_for_my_projects import Dictionarer, InvalidValue
+
+from tools_old.obj.abstract_classes import Size
+from tools_old.obj.constants import HARD_ALLOYS, TYPES_STANDARD
+from tools_old.obj.fields_types import (
+    InAccuracyClassStandards,
+    InAccuracyStandards,
+    InGroupsTool,
+    InMaterialsOfCuttingPart,
+    InToleranceField,
+    InTypesOfCuttingPart,
+    InTypesOfLargeTooth,
+    InTypesOfMillingCutter,
+    MarkingForSpecialTool,
+    StringValue,
+)
+
 # from service_for_my_projects import logged
 
-from tools.obj.constants import TYPES_STANDARD, HARD_ALLOYS
-from tools.obj.fields_types import InGroupsTool, StringValue, MarkingForSpecialTool, InMaterialsOfCuttingPart, \
-    InAccuracyStandards, InToleranceField, InTypesOfMillingCutter, InTypesOfCuttingPart, InTypesOfLargeTooth, \
-    InAccuracyClassStandards
-from tools.obj.abstract_classes import Size
 
-
-ErrorWithData = namedtuple('ErrorWithData', ['err', 'name', 'params', 'raw_data'])   # для сохранения данных с ошибкой
+ErrorWithData = namedtuple('ErrorWithData', ['err', 'name', 'params', 'raw_data'])  # для сохранения данных с ошибкой
 
 
 class Base(BaseModel):
@@ -44,6 +53,7 @@ class Tool(Base, Dictionarer):
     Methods:
         parameters : (dict) : возвращает словарь параметров и свойств.
     """
+
     _name: Optional[str] = None  # Для сохранения кастомного имени инструмента
     group: InGroupsTool = "Инструмент"
     marking: StringValue = "ХХХХ-ХХХХ"
@@ -63,8 +73,10 @@ class Tool(Base, Dictionarer):
         for substring in TYPES_STANDARD:
             if substring in value:
                 return value
-        raise InvalidValue(f"Ожидается строка, содержащая название стандарта инструмента (например: "
-                           f"{', '.join(str(i) for i in TYPES_STANDARD)}). Получено значение: {value}")
+        raise InvalidValue(
+            f"Ожидается строка, содержащая название стандарта инструмента (например: "
+            f"{', '.join(str(i) for i in TYPES_STANDARD)}). Получено значение: {value}"
+        )
 
     @field_validator('marking')
     def validate_marking(cls, value):
@@ -73,12 +85,17 @@ class Tool(Base, Dictionarer):
         return value
 
     def _parameters(self) -> dict:
-        return {"group": self.group, "marking": self.marking, "standard": self.standard, "name": self.name,
-                "quantity": self.quantity}
+        return {
+            "group": self.group,
+            "marking": self.marking,
+            "standard": self.standard,
+            "name": self.name,
+            "quantity": self.quantity,
+        }
 
 
 class CustomTool(Tool):
-    """ Специальный инструмент. В этом инструменте в поле marking указывается только 'специальный' а поле standard
+    """Специальный инструмент. В этом инструменте в поле marking указывается только 'специальный' а поле standard
     можно оставлять пустым."""
 
     marking: MarkingForSpecialTool = 'специальный'
@@ -90,8 +107,10 @@ class CustomTool(Tool):
         for substring in TYPES_STANDARD:
             if substring in value:
                 return value
-        raise InvalidValue(f"Ожидается строка, содержащая название стандарта инструмента (например: "
-                           f"{', '.join(str(i) for i in TYPES_STANDARD)}). Получено значение: {value}")
+        raise InvalidValue(
+            f"Ожидается строка, содержащая название стандарта инструмента (например: "
+            f"{', '.join(str(i) for i in TYPES_STANDARD)}). Получено значение: {value}"
+        )
 
 
 class AxialSizes(Base, Dictionarer, Size):
@@ -109,6 +128,7 @@ class AxialSizes(Base, Dictionarer, Size):
     Methods:
         parameters : (dict) : возвращает словарь параметров и свойств.
     """
+
     dia_mm: confloat(ge=0) = 6
     length_mm: confloat(ge=0) = 100
     radius_of_cutting_vertex: confloat(ge=0) = 1
@@ -122,9 +142,13 @@ class AxialSizes(Base, Dictionarer, Size):
         return f"øDxL: ø{self.dia_mm}x{self.length_mm} мм."
 
     def _parameters(self) -> dict:
-        return {"dia_mm": self.dia_mm, "length_mm": self.length_mm,
-                "radius_of_cutting_vertex": self.radius_of_cutting_vertex, "gabarit_volume": self.gabarit_volume,
-                "gabarit_str": self.gabarit_str}
+        return {
+            "dia_mm": self.dia_mm,
+            "length_mm": self.length_mm,
+            "radius_of_cutting_vertex": self.radius_of_cutting_vertex,
+            "gabarit_volume": self.gabarit_volume,
+            "gabarit_str": self.gabarit_str,
+        }
 
 
 class PrismaticSizes(Base, Dictionarer, Size):
@@ -158,13 +182,18 @@ class PrismaticSizes(Base, Dictionarer, Size):
         return f"LxBxH: {self.length_mm}x{self.width_mm}x{self.height_mm} мм."
 
     def _parameters(self):
-        return {"length_mm": self.length_mm, "width_mm": self.width_mm, "height_mm": self.height_mm,
-                "radius_of_cutting_vertex": self.radius_of_cutting_vertex, "gabarit_volume": self.gabarit_volume,
-                "gabarit_str": self.gabarit_str}
+        return {
+            "length_mm": self.length_mm,
+            "width_mm": self.width_mm,
+            "height_mm": self.height_mm,
+            "radius_of_cutting_vertex": self.radius_of_cutting_vertex,
+            "gabarit_volume": self.gabarit_volume,
+            "gabarit_str": self.gabarit_str,
+        }
 
 
 class BladeMaterial(Base, Dictionarer):
-    """ Материал лезвия.
+    """Материал лезвия.
 
     Parameters:
         mat_of_cutting_part : (str, int is MATERIALS_OF_CUTTING_PART) : материал режущей пластины.
@@ -176,6 +205,7 @@ class BladeMaterial(Base, Dictionarer):
         parameters : (dict) : возвращает словарь параметров и свойств.
 
     """
+
     mat_of_cutting_part: Optional[InMaterialsOfCuttingPart] = "Т15К6"
 
     @property
@@ -197,13 +227,17 @@ class Angles(Base, Dictionarer):
     Methods:
         parameters : (dict) : возвращает словарь параметров и свойств.
     """
+
     main_angle_grad: float = 0
     front_angle_grad: float = 0
     inclination_of_main_blade_grad: float = 0
 
     def _parameters(self):
-        return {"main_angle_grad": self.main_angle_grad, "front_angle_grad": self.front_angle_grad,
-                "inclination_of_main_blade_grad": self.inclination_of_main_blade_grad, }
+        return {
+            "main_angle_grad": self.main_angle_grad,
+            "front_angle_grad": self.front_angle_grad,
+            "inclination_of_main_blade_grad": self.inclination_of_main_blade_grad,
+        }
 
 
 class Tolerance(Base, Dictionarer):
@@ -216,6 +250,7 @@ class Tolerance(Base, Dictionarer):
     Properties:
         tolerance : (str, int содержит по одному из ACCURACY_STANDARDS, TOLERANCE_FIELDS) : допуск.
     """
+
     accuracy: InAccuracyStandards = "14"
     tolerance_field: InToleranceField = 'H'
 
@@ -240,7 +275,7 @@ class Tolerance(Base, Dictionarer):
 
 
 class DrillingCutter(Tolerance, Angles, BladeMaterial, AxialSizes, Tool):
-    """ Сверло
+    """Сверло
 
     Parameters:
         group : (str is GROUPS_TOOL) : группа инструмента.
@@ -266,14 +301,17 @@ class DrillingCutter(Tolerance, Angles, BladeMaterial, AxialSizes, Tool):
     Methods:
         parameters : (dict) : возвращает словарь параметров и свойств.
     """
+
     group: InGroupsTool = "Сверло"
     num_of_cutting_blades: conint(ge=0) = 2
 
     @model_validator(mode="before")
     def check_group(cls, values):
         if 'group' in values and values['group'] != "Сверло":
-            raise ValueError(f"Нельзя менять группу класса '{cls.__class__.__name__}' ({cls.group}). "
-                             f"Используйте соответствующий класс")
+            raise ValueError(
+                f"Нельзя менять группу класса '{cls.__class__.__name__}' ({cls.group}). "
+                f"Используйте соответствующий класс"
+            )
         return values
 
     def _parameters(self):
@@ -282,14 +320,20 @@ class DrillingCutter(Tolerance, Angles, BladeMaterial, AxialSizes, Tool):
         blade_material_parameters = BladeMaterial._parameters(self)
         angles_parameters = Angles._parameters(self)
         tolerance_parameters = Tolerance._parameters(self)
-        return tool_parameters | size_parameters | blade_material_parameters | angles_parameters | \
-            tolerance_parameters | {
+        return (
+            tool_parameters
+            | size_parameters
+            | blade_material_parameters
+            | angles_parameters
+            | tolerance_parameters
+            | {
                 "num_of_cutting_blades": self.num_of_cutting_blades,
             }
+        )
 
 
 class CountersinkingCutter(DrillingCutter):
-    """ Зенкер
+    """Зенкер
 
     Parameters:
         group : (str is GROUPS_TOOL) : группа инструмента.
@@ -315,19 +359,22 @@ class CountersinkingCutter(DrillingCutter):
     Methods:
         parameters : (dict) : возвращает словарь параметров и свойств.
     """
+
     group: InGroupsTool = "Зенкер"
     num_of_cutting_blades: conint(ge=0) = 8
 
     @model_validator(mode="before")
     def check_group(cls, values):
         if 'group' in values and values['group'] != "Зенкер":
-            raise ValueError(f"Нельзя менять группу класса '{cls.__class__.__name__}' ({cls.group}). "
-                             f"Используйте соответствующий класс")
+            raise ValueError(
+                f"Нельзя менять группу класса '{cls.__class__.__name__}' ({cls.group}). "
+                f"Используйте соответствующий класс"
+            )
         return values
 
 
 class DeploymentCutter(DrillingCutter):
-    """ Развертка
+    """Развертка
 
     Parameters:
         group : (str is GROUPS_TOOL) : группа инструмента.
@@ -353,19 +400,22 @@ class DeploymentCutter(DrillingCutter):
     Methods:
         parameters : (dict) : возвращает словарь параметров и свойств.
     """
+
     group: InGroupsTool = "Развертка"
     num_of_cutting_blades: conint(ge=0) = 8
 
     @model_validator(mode="before")
     def check_group(cls, values):
         if 'group' in values and values['group'] != "Развертка":
-            raise ValueError(f"Нельзя менять группу класса '{cls.__class__.__name__}' ({cls.group}). "
-                             f"Используйте соответствующий класс")
+            raise ValueError(
+                f"Нельзя менять группу класса '{cls.__class__.__name__}' ({cls.group}). "
+                f"Используйте соответствующий класс"
+            )
         return values
 
 
 class MillingCutter(DrillingCutter):
-    """ Управляет полями класса "Фреза".
+    """Управляет полями класса "Фреза".
 
     Parameters:
         group : (str is GROUPS_TOOL) : группа инструмента.
@@ -410,8 +460,10 @@ class MillingCutter(DrillingCutter):
     @model_validator(mode="before")
     def check_group(cls, values):
         if 'group' in values and values['group'] != "Фреза":
-            raise ValueError(f"Нельзя менять группу класса '{cls.__class__.__name__}' ({cls.group}). "
-                             f"Используйте соответствующий класс")
+            raise ValueError(
+                f"Нельзя менять группу класса '{cls.__class__.__name__}' ({cls.group}). "
+                f"Используйте соответствующий класс"
+            )
         return values
 
     def _parameters(self):
@@ -420,20 +472,26 @@ class MillingCutter(DrillingCutter):
         blade_material_parameters = BladeMaterial._parameters(self)
         angles_parameters = Angles._parameters(self)
         tolerance_parameters = Tolerance._parameters(self)
-        return tool_parameters | size_parameters | blade_material_parameters | angles_parameters | \
-            tolerance_parameters | {
-               "type_cutter": self.type_cutter,
-               "type_of_cutting_part": self.type_of_cutting_part,
-               "large_tooth": self.large_tooth,
-               "num_of_cutting_blades": self.num_of_cutting_blades,
-               "accuracy_class": self.accuracy_class,
-               "cutter_number": self.cutter_number,
-               "module": self.module
-               }
+        return (
+            tool_parameters
+            | size_parameters
+            | blade_material_parameters
+            | angles_parameters
+            | tolerance_parameters
+            | {
+                "type_cutter": self.type_cutter,
+                "type_of_cutting_part": self.type_of_cutting_part,
+                "large_tooth": self.large_tooth,
+                "num_of_cutting_blades": self.num_of_cutting_blades,
+                "accuracy_class": self.accuracy_class,
+                "cutter_number": self.cutter_number,
+                "module": self.module,
+            }
+        )
 
 
 class TurningCutter(Tolerance, Angles, BladeMaterial, PrismaticSizes, Tool):
-    """ Резец
+    """Резец
 
     parameters:
         group : (str is GROUPS_TOOL) : группа инструмента.
@@ -462,13 +520,16 @@ class TurningCutter(Tolerance, Angles, BladeMaterial, PrismaticSizes, Tool):
         parameters : (dict) : возвращает словарь параметров и свойств.
 
     """
+
     group: InGroupsTool = "Резец"
 
     @model_validator(mode="before")
     def check_group(cls, values):
         if 'group' in values and values['group'] != "Резец":
-            raise ValueError(f"Нельзя менять группу класса '{cls.__class__.__name__}' ({cls.group}). "
-                             f"Используйте соответствующий класс")
+            raise ValueError(
+                f"Нельзя менять группу класса '{cls.__class__.__name__}' ({cls.group}). "
+                f"Используйте соответствующий класс"
+            )
         return values
 
     def _parameters(self):
@@ -477,12 +538,11 @@ class TurningCutter(Tolerance, Angles, BladeMaterial, PrismaticSizes, Tool):
         blade_material_parameters = BladeMaterial._parameters(self)
         angles_parameters = Angles._parameters(self)
         tolerance_parameters = Tolerance._parameters(self)
-        return tool_parameters | size_parameters | blade_material_parameters | angles_parameters | \
-            tolerance_parameters
+        return tool_parameters | size_parameters | blade_material_parameters | angles_parameters | tolerance_parameters
 
 
 class BroachingCutter(CustomTool):
-    """ Протяжка
+    """Протяжка
 
     Parameters:
         group : (str is GROUPS_TOOL) : группа инструмента.
@@ -500,6 +560,7 @@ class BroachingCutter(CustomTool):
     Methods:
         parameters : (dict) : возвращает словарь параметров и свойств.
     """
+
     group: InGroupsTool = "Протяжка"
     marking: MarkingForSpecialTool = 'специальная'
     angle_of_inclination: float = 0.0
@@ -511,18 +572,21 @@ class BroachingCutter(CustomTool):
     @model_validator(mode="before")
     def check_group(cls, values):
         if 'group' in values and values['group'] != "Протяжка":
-            raise ValueError(f"Нельзя менять группу класса '{cls.__class__.__name__}' ({cls.group}). "
-                             f"Используйте соответствующий класс")
+            raise ValueError(
+                f"Нельзя менять группу класса '{cls.__class__.__name__}' ({cls.group}). "
+                f"Используйте соответствующий класс"
+            )
         return values
 
     def _parameters(self):
         tool_parameter = Tool._parameters(self)
-        return tool_parameter | {"angle_of_inclination": self.angle_of_inclination,
-                                 "pitch_of_teeth": self.pitch_of_teeth,
-                                 "number_teeth_section": self.number_teeth_section,
-                                 "difference": self.difference,
-                                 "length_of_working_part": self.length_of_working_part
-                                 }
+        return tool_parameter | {
+            "angle_of_inclination": self.angle_of_inclination,
+            "pitch_of_teeth": self.pitch_of_teeth,
+            "number_teeth_section": self.number_teeth_section,
+            "difference": self.difference,
+            "length_of_working_part": self.length_of_working_part,
+        }
 
 
 if __name__ == '__main__':

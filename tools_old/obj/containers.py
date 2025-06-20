@@ -2,20 +2,26 @@
 # -*- coding: utf-8 -*-
 # ----------------------------------------------------------------------------------------------------------------------
 from dependency_injector import containers, providers
+from service_for_my_projects import Cataloger, Requester
 
-from service_for_my_projects import Requester, Cataloger
-
-from tools.obj import entities, finders, creators, listers, data_preparers
-from tools.obj.constants import DEFAULT_SETTINGS_FOR_TOOL as DS
-from tools.obj.constants import PATH_DB_FOR_TOOLS as DB_PATH
-from tools.obj.constants import REQUESTER_TYPE as DB_TYPE
-from tools.obj.constants import TOOLS_CLASSES_BY_TYPE
+from tools_old.obj import creators, data_preparers, entities, finders, listers
+from tools_old.obj.constants import DEFAULT_SETTINGS_FOR_TOOL as DS
+from tools_old.obj.constants import PATH_DB_FOR_TOOLS as DB_PATH
+from tools_old.obj.constants import REQUESTER_TYPE as DB_TYPE
+from tools_old.obj.constants import TOOLS_CLASSES_BY_TYPE
 
 
 class ToolContainer(containers.DeclarativeContainer):
-    default_settings = providers.Object({
-        'tools': {'path': DB_PATH, 'requester_type': DB_TYPE, 'reader_type': 'pandas_table', 'tablename': "tools"},
-    })
+    default_settings = providers.Object(
+        {
+            'tools_old': {
+                'path': DB_PATH,
+                'requester_type': DB_TYPE,
+                'reader_type': 'pandas_table',
+                'tablename': "tools_old",
+            },
+        }
+    )
     config = providers.Configuration()
     config.from_dict(default_settings())
 
@@ -31,11 +37,7 @@ class ToolContainer(containers.DeclarativeContainer):
         record_requester=requester_container.requester,
     )
 
-    catalog = providers.Factory(
-        Cataloger,
-        module_name="tools.obj.entities",
-        dict_types=TOOLS_CLASSES_BY_TYPE
-    )
+    catalog = providers.Factory(Cataloger, module_name="tools_old.obj.entities", dict_types=TOOLS_CLASSES_BY_TYPE)
 
     data_preparer = providers.Factory(
         data_preparers.ToolDataPreparer,
