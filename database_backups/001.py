@@ -13,7 +13,7 @@ rows = cursor.fetchall()
 columns = [description[0] for description in cursor.description]
 
 # Сохранение в CSV
-with open('tools.csv', 'w', newline='', encoding='utf-8') as f:
+with open('tools_old.csv', 'w', newline='', encoding='utf-8') as f:
     writer = csv.writer(f)
     writer.writerow(columns)  # заголовки
     writer.writerows(rows)
