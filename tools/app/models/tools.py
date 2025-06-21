@@ -4,6 +4,7 @@
 from sqlalchemy import Column, Integer, String, DateTime
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.sql import func
+from sqlalchemy.orm import relationship
 
 Base = declarative_base()
 
@@ -21,6 +22,9 @@ class Tool(Base):
         standard (str): Стандарт или нормативный документ (например, "ГОСТ 18878-73").
         created_at (datetime): Дата и время создания записи.
         updated_at (datetime): Дата и время последнего обновления записи.
+        
+    Relationships:
+        milling_cutter (MillingCutter): Фрез, связанный с инструментом.
     """
 
     __tablename__ = "tools"
@@ -33,3 +37,6 @@ class Tool(Base):
     # Метаданные
     created_at = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)
     updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now(), nullable=False)
+    
+    # Связи
+    milling_cutter = relationship("MillingCutter", back_populates="tool", uselist=False)

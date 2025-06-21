@@ -88,12 +88,25 @@ def map_csv_to_model(csv_data: List[Dict[str, Any]]) -> List[Tool]:
     for i, row in enumerate(csv_data):
         try:
             # Извлекаем основные поля
+            index = row.get('index')
             marking = str(row.get('Обозначение', f'unknown-{i}'))
             group = str(row.get('Тип_инструмента', ''))
             standard = str(row.get('Стандарт', ''))
             
-            # Создаем модель
+            # Проверяем, что index является числом
+            if index is None or pd.isna(index):
+                logger.warning(f"Строка {i}: Отсутствует index, пропускаем")
+                continue
+            
+            try:
+                tool_id = int(index)
+            except (ValueError, TypeError):
+                logger.warning(f"Строка {i}: Некорректный index '{index}', пропускаем")
+                continue
+            
+            # Создаем модель с указанным id
             tool = Tool(
+                id=tool_id,  # Используем index из CSV как id
                 marking=marking,
                 group=group if group != 'nan' else None,
                 standard=standard if standard != 'nan' else None
@@ -123,12 +136,18 @@ def save_tools_to_db(tools: List[Tool]) -> int:
     
     with get_db() as session:
         try:
+            # Очищаем таблицу tools перед загрузкой новых данных
+            logger.info("Очищаем таблицу tools...")
+            session.query(Tool).delete()
+            session.commit()
+            logger.info("Таблица tools очищена")
+            
             for i, tool in enumerate(tools):
                 try:
-                    # Проверяем, существует ли уже инструмент с таким обозначением
-                    existing = session.query(Tool).filter(Tool.marking == tool.marking).first()
+                    # Проверяем, существует ли уже инструмент с таким id
+                    existing = session.query(Tool).filter(Tool.id == tool.id).first()
                     if existing:
-                        logger.warning(f"Инструмент с обозначением {tool.marking} уже существует, пропускаем")
+                        logger.warning(f"Инструмент с id {tool.id} уже существует, пропускаем")
                         continue
                     
                     session.add(tool)
@@ -139,7 +158,7 @@ def save_tools_to_db(tools: List[Tool]) -> int:
                         logger.info(f"Обработано {i + 1} записей...")
                         
                 except Exception as e:
-                    logger.error(f"Ошибка при сохранении инструмента {tool.marking}: {e}")
+                    logger.error(f"Ошибка при сохранении инструмента {tool.marking} (id={tool.id}): {e}")
                     session.rollback()
                     continue
             
