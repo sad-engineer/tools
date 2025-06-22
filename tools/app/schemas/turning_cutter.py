@@ -34,18 +34,18 @@ class TurningCutter(PrismaticCuttingTool):
 
     def to_dict(self):
         """Возвращает словарь всех параметров и свойств резца.
-        
+
         Returns:
             dict: Словарь с параметрами резца
         """
         # Получаем параметры из базового класса
         base_parameters = super().to_dict()
-        
+
         # Создаем словарь с параметрами текущего класса
         current_parameters = {
             # Резец не добавляет новых параметров, но может переопределить существующие
         }
-        
+
         # Объединяем параметры
         return base_parameters | current_parameters
 
@@ -53,7 +53,7 @@ class TurningCutter(PrismaticCuttingTool):
 if __name__ == '__main__':
     # Пример использования TurningCutter
     print("=== Пример использования TurningCutter ===")
-    
+
     # Создание резца с дефолтными значениями
     cutter = TurningCutter()
     print(f"Резец по умолчанию: {cutter}")
@@ -67,7 +67,7 @@ if __name__ == '__main__':
     print(f"Материал: {cutter.mat_of_cutting_part}")
     print(f"Тип материала: {cutter.type_of_mat}")
     print(f"Допуск: {cutter.tolerance}")
-    
+
     # Изменение параметров
     print("\n=== Изменение параметров ===")
     cutter.marking = "РЕЗЕЦ-25-16-25"
@@ -81,31 +81,31 @@ if __name__ == '__main__':
     cutter.front_angle_grad = 5
     cutter.inclination_of_main_blade_grad = 2
     cutter.radius_of_cutting_vertex = 0.5
-    
+
     print(f"Обновленный резец: {cutter}")
     print(f"Новое имя: {cutter.name}")
     print(f"Группа осталась: {cutter.group}")
     print(f"Габарит: {cutter.gabarit_str}")
     print(f"Объем: {cutter.gabarit_volume} мм³")
-    
+
     # Получение всех параметров
     print("\n=== Все параметры резца ===")
     parameters = cutter.to_dict()
     for key, value in parameters.items():
         print(f"{key}: {value}")
-    
+
     # Проверка валидации
     print("\n=== Проверка валидации ===")
     try:
         cutter.num_of_cutting_blades = 0  # Должно вызвать ошибку
     except Exception as e:
         print(f"Ошибка валидации количества граней: {e}")
-    
+
     try:
         cutter.length_mm = -5  # Должно вызвать ошибку
     except Exception as e:
         print(f"Ошибка валидации длины: {e}")
-    
+
     # Создание резца с кастомными параметрами
     print("\n=== Создание резца с кастомными параметрами ===")
     custom_cutter = TurningCutter(
@@ -119,28 +119,28 @@ if __name__ == '__main__':
         main_angle_grad=60,
         front_angle_grad=10,
         inclination_of_main_blade_grad=5,
-        radius_of_cutting_vertex=1.0
+        radius_of_cutting_vertex=1.0,
     )
-    
+
     print(f"Кастомный резец: {custom_cutter}")
     print(f"Имя: {custom_cutter.name}")
     print(f"Группа: {custom_cutter.group}")
     print(f"Количество граней: {custom_cutter.num_of_cutting_blades}")
     print(f"Материал: {custom_cutter.mat_of_cutting_part}")
     print(f"Тип материала: {custom_cutter.type_of_mat}")
-    
+
     # Демонстрация наследования свойств
     print("\n=== Демонстрация наследования ===")
     print(f"Резец наследует от Tool: {cutter.name}")
     print(f"Резец наследует от PrismaticSizes: {cutter.gabarit_volume} мм³")
     print(f"Резец наследует от BladeMaterial: {cutter.type_of_mat}")
     print(f"Резец наследует от Angles: {cutter.main_angle_grad}°")
-    
+
     # Проверка сериализации
     print("\n=== Сериализация в dict ===")
     cutter_dict = cutter.model_dump()
     print(f"Dict: {cutter_dict}")
-    
+
     # Проверка десериализации
     print("\n=== Десериализация из dict ===")
     cutter_from_dict = TurningCutter(**cutter_dict)

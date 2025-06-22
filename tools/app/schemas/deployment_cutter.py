@@ -36,18 +36,18 @@ class DeploymentCutter(AxialCuttingTool):
 
     def to_dict(self):
         """Возвращает словарь всех параметров и свойств развертки.
-        
+
         Returns:
             dict: Словарь с параметрами развертки
         """
         # Получаем параметры из базового класса
         base_parameters = super().to_dict()
-        
+
         # Создаем словарь с параметрами текущего класса
         current_parameters = {
             "num_of_cutting_blades": self.num_of_cutting_blades,
         }
-        
+
         # Объединяем параметры
         return base_parameters | current_parameters
 
@@ -55,7 +55,7 @@ class DeploymentCutter(AxialCuttingTool):
 if __name__ == '__main__':
     # Пример использования DeploymentCutter
     print("=== Пример использования DeploymentCutter ===")
-    
+
     # Создание развертки с дефолтными значениями
     reamer = DeploymentCutter()
     print(f"Развертка по умолчанию: {reamer}")
@@ -68,7 +68,7 @@ if __name__ == '__main__':
     print(f"Материал: {reamer.mat_of_cutting_part}")
     print(f"Тип материала: {reamer.type_of_mat}")
     print(f"Допуск: {reamer.tolerance}")
-    
+
     # Изменение параметров
     print("\n=== Изменение параметров ===")
     reamer.marking = "РАЗВ-15-120"
@@ -81,31 +81,31 @@ if __name__ == '__main__':
     reamer.front_angle_grad = 0
     reamer.inclination_of_main_blade_grad = 0
     reamer.radius_of_cutting_vertex = 0.5
-    
+
     print(f"Обновленная развертка: {reamer}")
     print(f"Новое имя: {reamer.name}")
     print(f"Группа осталась: {reamer.group}")
     print(f"Габарит: {reamer.gabarit_str}")
     print(f"Объем: {reamer.gabarit_volume} мм³")
-    
+
     # Получение всех параметров
     print("\n=== Все параметры развертки ===")
     parameters = reamer.to_dict()
     for key, value in parameters.items():
         print(f"{key}: {value}")
-    
+
     # Проверка валидации
     print("\n=== Проверка валидации ===")
     try:
         reamer.num_of_cutting_blades = 0  # Должно вызвать ошибку
     except Exception as e:
         print(f"Ошибка валидации количества граней: {e}")
-    
+
     try:
         reamer.dia_mm = -5  # Должно вызвать ошибку
     except Exception as e:
         print(f"Ошибка валидации диаметра: {e}")
-    
+
     # Создание развертки с кастомными параметрами
     print("\n=== Создание развертки с кастомными параметрами ===")
     custom_reamer = DeploymentCutter(
@@ -118,28 +118,28 @@ if __name__ == '__main__':
         main_angle_grad=0,
         front_angle_grad=0,
         inclination_of_main_blade_grad=0,
-        radius_of_cutting_vertex=1.0
+        radius_of_cutting_vertex=1.0,
     )
-    
+
     print(f"Кастомная развертка: {custom_reamer}")
     print(f"Имя: {custom_reamer.name}")
     print(f"Группа: {custom_reamer.group}")
     print(f"Количество граней: {custom_reamer.num_of_cutting_blades}")
     print(f"Материал: {custom_reamer.mat_of_cutting_part}")
     print(f"Тип материала: {custom_reamer.type_of_mat}")
-    
+
     # Демонстрация наследования свойств
     print("\n=== Демонстрация наследования ===")
     print(f"Развертка наследует от Tool: {reamer.name}")
     print(f"Развертка наследует от AxialSizes: {reamer.gabarit_volume} мм³")
     print(f"Развертка наследует от BladeMaterial: {reamer.type_of_mat}")
     print(f"Развертка наследует от Angles: {reamer.main_angle_grad}°")
-    
+
     # Проверка сериализации
     print("\n=== Сериализация в dict ===")
     reamer_dict = reamer.model_dump()
     print(f"Dict: {reamer_dict}")
-    
+
     # Проверка десериализации
     print("\n=== Десериализация из dict ===")
     reamer_from_dict = DeploymentCutter(**reamer_dict)

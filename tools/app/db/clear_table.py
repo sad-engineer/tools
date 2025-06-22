@@ -1,8 +1,9 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # ---------------------------------------------------------------------------------------------------------------------
-import psycopg2
 import logging
+
+import psycopg2
 
 from tools.app.config import get_settings
 
@@ -15,7 +16,7 @@ settings = get_settings()
 
 def clear_table(table_name: str):
     """Очищает указанную таблицу
-    
+
     Args:
         table_name (str): Название таблицы для очистки
     """
@@ -28,28 +29,28 @@ def clear_table(table_name: str):
             host=settings.POSTGRES_HOST,
             port=settings.POSTGRES_PORT,
         )
-        
+
         cursor = conn.cursor()
-        
+
         # Получаем количество записей
         cursor.execute(f"SELECT COUNT(*) FROM {table_name}")
         count = cursor.fetchone()[0]
-        
+
         logger.info(f"Найдено {count} записей в таблице {table_name}")
-        
+
         if count > 0:
             # Очищаем таблицу
             cursor.execute(f"DELETE FROM {table_name}")
             conn.commit()
-            
+
             logger.info(f"✅ Удалено {count} записей из таблицы {table_name}")
         else:
             logger.info(f"Таблица {table_name} уже пуста")
-        
+
         cursor.close()
         conn.close()
         return True
-        
+
     except Exception as e:
         logger.error(f"❌ Ошибка при очистке таблицы {table_name}: {e}")
         return False

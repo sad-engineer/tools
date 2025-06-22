@@ -2,13 +2,13 @@
 # -*- coding: utf-8 -*-
 # ---------------------------------------------------------------------------------------------------------------------
 """
-Скрипт для загрузки данных сверл из CSV файла в таблицу geometry_drilling_cutter.
+Скрипт для загрузки данных разверток из CSV файла в таблицу geometry_deployment_cutter.
 
 Этот скрипт:
-1. Читает CSV файл с данными сверл
-2. Фильтрует только строки с типом "Сверло"
-3. Загружает данные в таблицу geometry_drilling_cutter
-4. Связывает сверла с соответствующими инструментами из таблицы tools
+1. Читает CSV файл с данными разверток
+2. Фильтрует только строки с типом "Развертка"
+3. Загружает данные в таблицу geometry_deployment_cutter
+4. Связывает развертки с соответствующими инструментами из таблицы tools
     через поле tool_id
 """
 
@@ -20,65 +20,46 @@ from typing import Any, Dict, Optional
 from sqlalchemy.orm import Session
 
 from tools.app.db.session_manager import get_session
-from tools.app.models.geometry_drilling_cutter import GeometryDrillingCutter
+from tools.app.models.geometry_deployment_cutter import GeometryDeploymentCutter
 from tools.app.models.tools import Tool
 
 # Настройка логирования
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-# Маппинг колонок CSV на поля модели GeometryDrillingCutter
-DRILL_COLUMN_MAPPING = {
+
+# Маппинг колонок CSV на поля модели GeometryDeploymentCutter
+DEPLOYMENT_COLUMN_MAPPING = {
     # Основные геометрические параметры
-    'a_': 'a_',
     'D': 'D',
     'd_1_': 'd_1_',
     'd_2_': 'd_2_',
     'l_': 'l_',
     'L': 'L',
-    'f_': 'f_',
     'z': 'z',
     # Конусы и исполнения
     'Конус_Морзе': 'morse_taper',
     'Исполнение': 'execution',
     'fi_': 'fi_',
-    # Группа и типы
+    # Материал и группа
+    'mat_': 'mat_',
     'Группа': 'group',
     # Дополнительные размеры
     'D_1': 'D_1',
-    'P': 'P',
     'd_': 'd_',
-    # Направление и параметры
-    'Направление': 'direction',
-    'B': 'B',
-    'K': 'K',
-    # Точность и дополнительные параметры
-    'Точность': 'accuracy',
-    'D_2': 'D_2',
+    'h_': 'h_',
     'l_1_': 'l_1_',
-    'Серия': 'series',
-    'omega_': 'omega_',
+    'l_2_': 'l_2_',
     'r_': 'r_',
-    # Номинальные размеры
-    'D_ном.': 'D_nominal',
-    'D_1_доп.': 'D_1_additional',
-    'D_2_доп.': 'D_2_additional',
-    # Длины
-    'L_1': 'L_1',
-    'L_2': 'L_2',
-    'L_3': 'L_3',
-    'L_3_доп.': 'L_3_additional',
-    # Разряд и тип хвостовика
-    'Разряд': 'rank',
-    'Тип_хвостовика': 'shank_type',
-    # Отклонения
-    'l_откл._': 'l_deviation',
-    'L_откл.': 'L_deviation',
-    'r_откл._': 'r_deviation',
     'l_0_': 'l_0_',
-    'k_': 'k_',
-    'K_откл.': 'K_deviation',
-    'a_откл._': 'a_deviation',
+    # Тип развертки и углы
+    'Тип_развертки': 'reamer_type',
+    'fi_1_': 'fi_1_',
+    'gamma_': 'gamma_',
+    'lambda_': 'lambda_',
+    # Конусность и дополнительные параметры
+    'Конусность_развертки': 'reamer_taper',
+    'd_2_доп.': 'd_2_additional',
 }
 
 
@@ -104,9 +85,9 @@ def parse_int(value: str) -> Optional[int]:
         return None
 
 
-def load_drills_from_csv(csv_file_path: str, session: Session) -> int:
+def load_deployment_cutters_from_csv(csv_file_path: str, session: Session) -> int:
     """
-    Загружает данные сверл из CSV файла в таблицу geometry_drilling_cutter.
+    Загружает данные разверток из CSV файла в таблицу geometry_deployment_cutter.
 
     Args:
         csv_file_path: Путь к CSV файлу
@@ -122,16 +103,16 @@ def load_drills_from_csv(csv_file_path: str, session: Session) -> int:
     loaded_count = 0
     skipped_count = 0
 
-    logger.info(f"Начинаем загрузку данных сверл из файла: {csv_file_path}")
+    logger.info(f"Начинаем загрузку данных разверток из файла: {csv_file_path}")
 
     with open(csv_path, 'r', encoding='utf-8') as file:
         reader = csv.DictReader(file)
 
         for row_num, row in enumerate(reader, start=2):  # Начинаем с 2, так как 1 - заголовок
             try:
-                # Проверяем, что это сверло
+                # Проверяем, что это развертка
                 tool_type = row.get('Тип_инструмента', '').strip()
-                if tool_type != 'Сверло':
+                if tool_type != 'Развертка':
                     skipped_count += 1
                     continue
 
@@ -166,25 +147,27 @@ def load_drills_from_csv(csv_file_path: str, session: Session) -> int:
                     skipped_count += 1
                     continue
 
-                # Проверяем, не существует ли уже сверло для этого инструмента
-                existing_drill = (
-                    session.query(GeometryDrillingCutter).filter(GeometryDrillingCutter.tool_id == tool_id).first()
+                # Проверяем, не существует ли уже развертка для этого инструмента
+                existing_deployment = (
+                    session.query(GeometryDeploymentCutter).filter(GeometryDeploymentCutter.tool_id == tool_id).first()
                 )
-                if existing_drill:
-                    logger.info(f"Строка {row_num}: Сверло для инструмента с id={tool_id} уже существует, пропускаем")
+                if existing_deployment:
+                    logger.info(
+                        f"Строка {row_num}: Развертка для инструмента с id={tool_id} уже существует, пропускаем"
+                    )
                     skipped_count += 1
                     continue
 
-                # Создаем объект сверла
-                drill_data = {}
+                # Создаем объект развертки
+                deployment_data = {}
 
                 # Заполняем поля согласно маппингу
-                for csv_col, model_field in DRILL_COLUMN_MAPPING.items():
+                for csv_col, model_field in DEPLOYMENT_COLUMN_MAPPING.items():
                     if csv_col in row:
                         value = row[csv_col].strip()
 
                         # Определяем тип поля и парсим значение
-                        field_type = getattr(GeometryDrillingCutter, model_field).type
+                        field_type = getattr(GeometryDeploymentCutter, model_field).type
 
                         if hasattr(field_type, 'python_type'):
                             if field_type.python_type == float:
@@ -197,14 +180,14 @@ def load_drills_from_csv(csv_file_path: str, session: Session) -> int:
                             # Для сложных типов (например, DateTime) оставляем как есть
                             parsed_value = value if value else None
 
-                        drill_data[model_field] = parsed_value
+                        deployment_data[model_field] = parsed_value
 
-                # Устанавливаем tool_id сверла равным id инструмента
-                drill_data['tool_id'] = tool_id
+                # Устанавливаем tool_id развертки равным id инструмента
+                deployment_data['tool_id'] = tool_id
 
-                # Создаем и сохраняем сверло
-                drill = GeometryDrillingCutter(**drill_data)
-                session.add(drill)
+                # Создаем и сохраняем развертку
+                deployment = GeometryDeploymentCutter(**deployment_data)
+                session.add(deployment)
 
                 loaded_count += 1
 
@@ -231,14 +214,14 @@ def load_drills_from_csv(csv_file_path: str, session: Session) -> int:
 def main():
     """Основная функция для запуска загрузки."""
     try:
-        # Путь к CSV файлу со сверлами
+        # Путь к CSV файлу с развертками
         project_root = Path(__file__).parent.parent.parent.parent
         csv_file_path = project_root / "database_backups" / "tools_old.csv"
 
         # Получаем сессию базы данных
         with get_session() as session:
-            loaded_count = load_drills_from_csv(csv_file_path, session)
-            print(f"✅ Успешно загружено {loaded_count} записей сверл")
+            loaded_count = load_deployment_cutters_from_csv(csv_file_path, session)
+            print(f"✅ Успешно загружено {loaded_count} записей разверток")
 
     except Exception as e:
         logger.error(f"Ошибка при загрузке данных: {e}")

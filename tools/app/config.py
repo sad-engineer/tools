@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # ---------------------------------------------------------------------------------------------------------------------
+import logging
+import os
 from functools import lru_cache
 from pathlib import Path
-import os
-import logging
 
 from dotenv import load_dotenv
 from pydantic_settings import BaseSettings
@@ -15,13 +15,13 @@ logger = logging.getLogger(__name__)
 
 def get_project_root() -> Path:
     """Возвращает корневую директорию проекта.
-    
+
     Ищет директорию, содержащую файл pyproject.toml, начиная с текущей директории
     и поднимаясь вверх по дереву директорий.
-    
+
     Returns:
         Path: Путь к корневой директории проекта
-        
+
     Raises:
         FileNotFoundError: Если не удается найти корневую директорию проекта
     """
@@ -54,9 +54,9 @@ except PermissionError as e:
 
 def create_env_file() -> None:
     """Создать файл tools.env с шаблоном настроек.
-    
+
     Создает файл с переменными окружения по умолчанию, если он не существует.
-    
+
     Raises:
         PermissionError: Если нет прав на создание файла
         OSError: При других ошибках файловой системы
@@ -102,10 +102,10 @@ except Exception as e:
 
 class Settings(BaseSettings):
     """Основные настройки приложения.
-    
+
     Класс для управления настройками приложения, включая настройки базы данных
     и основные параметры приложения.
-    
+
     Parameters:
     POSTGRES_USER : (str) : имя пользователя PostgreSQL.
     POSTGRES_PASSWORD : (str) : пароль пользователя PostgreSQL.
@@ -115,10 +115,10 @@ class Settings(BaseSettings):
     APP_NAME : (str) : название приложения.
     DEBUG : (bool) : режим отладки.
     API_V1_STR : (str) : префикс API версии 1.
-    
+
     Properties:
     DATABASE_URL : (str) : полный URL для подключения к базе данных.
-    
+
     Methods:
     model_dump : (dict) : возвращает словарь с настройками.
     """
@@ -142,7 +142,7 @@ class Settings(BaseSettings):
     @property
     def DATABASE_URL(self) -> str:
         """Получить полный URL для подключения к базе данных.
-        
+
         Returns:
             str: URL в формате postgresql://user:password@host:port/database
         """
@@ -153,7 +153,7 @@ class Settings(BaseSettings):
 
     def to_dict(self) -> dict:
         """Получить настройки в виде словаря.
-        
+
         Returns:
             dict: Словарь с настройками приложения
         """
@@ -161,52 +161,47 @@ class Settings(BaseSettings):
 
     def validate_database_settings(self) -> bool:
         """Проверить корректность настроек базы данных.
-        
+
         Returns:
             bool: True если настройки корректны, False в противном случае
         """
-        required_fields = [
-            self.POSTGRES_USER,
-            self.POSTGRES_PASSWORD,
-            self.POSTGRES_HOST,
-            self.POSTGRES_DB
-        ]
-        
+        required_fields = [self.POSTGRES_USER, self.POSTGRES_PASSWORD, self.POSTGRES_HOST, self.POSTGRES_DB]
+
         if not all(required_fields):
             logger.error("Не все обязательные поля базы данных заполнены")
             return False
-            
+
         if not isinstance(self.POSTGRES_PORT, int) or self.POSTGRES_PORT <= 0:
             logger.error(f"Некорректный порт базы данных: {self.POSTGRES_PORT}")
             return False
-            
+
         return True
 
 
 @lru_cache()
 def get_settings() -> Settings:
     """Получить настройки приложения.
-    
+
     Использует кэширование для оптимизации производительности.
     При первом вызове загружает настройки из файла или переменных окружения.
-    
+
     Returns:
         Settings: Объект с настройками приложения
-        
+
     Raises:
         ValidationError: Если настройки некорректны
         FileNotFoundError: Если не найден файл настроек
     """
     try:
         settings = Settings()
-        
+
         # Валидируем настройки базы данных
         if not settings.validate_database_settings():
             raise ValueError("Некорректные настройки базы данных")
-            
+
         logger.info("Настройки приложения успешно загружены")
         return settings
-        
+
     except Exception as e:
         logger.error(f"Ошибка при загрузке настроек: {e}")
         raise
@@ -214,11 +209,8 @@ def get_settings() -> Settings:
 
 if __name__ == "__main__":
     # Настройка логирования для тестирования
-    logging.basicConfig(
-        level=logging.INFO,
-        format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-    )
-    
+    logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+
     try:
         settings = get_settings()
         print("✅ Настройки успешно загружены")
@@ -226,15 +218,15 @@ if __name__ == "__main__":
         print(f"📱 Приложение: {settings.APP_NAME}")
         print(f"🐛 Режим отладки: {settings.DEBUG}")
         print(f"🔗 API версия: {settings.API_V1_STR}")
-        
+
         # Тестируем метод to_dict
         settings_dict = settings.to_dict()
         print(f"📋 Настройки в виде словаря: {settings_dict}")
-        
+
         # Тестируем валидацию
         is_valid = settings.validate_database_settings()
         print(f"✅ Валидация настроек БД: {'Успешно' if is_valid else 'Ошибка'}")
-        
+
     except Exception as e:
         print(f"❌ Ошибка при загрузке настроек: {e}")
         exit(1)

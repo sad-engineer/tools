@@ -36,18 +36,18 @@ class DrillingCutter(AxialCuttingTool):
 
     def to_dict(self):
         """Возвращает словарь всех параметров и свойств сверла.
-        
+
         Returns:
             dict: Словарь с параметрами сверла
         """
         # Получаем параметры из базового класса
         base_parameters = super().to_dict()
-        
+
         # Создаем словарь с параметрами текущего класса
         current_parameters = {
             "num_of_cutting_blades": self.num_of_cutting_blades,
         }
-        
+
         # Объединяем параметры
         return base_parameters | current_parameters
 

@@ -11,7 +11,7 @@ from tools.app.schemas.axial_cutting_tool import AxialCuttingTool
 
 class MillingCutter(AxialCuttingTool):
     """Фреза - это инструмент класса AxialCuttingTool с 12 (или более) режущими кромками.
-    
+
     Наследует параметры от AxialCuttingTool:
     - Tool: group, marking, standard
     - AxialSizes: dia_mm, length_mm, radius_of_cutting_vertex
@@ -94,13 +94,13 @@ class MillingCutter(AxialCuttingTool):
 
     def to_dict(self):
         """Возвращает словарь всех параметров и свойств фрезы.
-        
+
         Returns:
             dict: Словарь с параметрами фрезы
         """
         # Получаем параметры из базового класса
         base_parameters = super().to_dict()
-        
+
         # Создаем словарь с параметрами текущего класса
         current_parameters = {
             "type_cutter": self.type_cutter,
@@ -111,7 +111,7 @@ class MillingCutter(AxialCuttingTool):
             "cutter_number": self.cutter_number,
             "module": self.module,
         }
-        
+
         # Объединяем параметры
         return base_parameters | current_parameters
 
@@ -195,9 +195,9 @@ if __name__ == '__main__':
         large_tooth="Мелкий шаг",
         accuracy_class="B",
         cutter_number=1,
-        module=2.0
+        module=2.0,
     )
-    
+
     print(f"Кастомная фреза: {custom_cutter}")
     print(f"Имя: {custom_cutter.name}")
     print(f"Группа: {custom_cutter.group}")
@@ -208,7 +208,7 @@ if __name__ == '__main__':
     print(f"Количество граней: {custom_cutter.num_of_cutting_blades}")
     print(f"Номер инструмента: {custom_cutter.cutter_number}")
     print(f"Модуль: {custom_cutter.module}")
-    
+
     # Демонстрация наследования свойств
     print("\n=== Демонстрация наследования ===")
     print(f"Фреза наследует от Tool: {cutter.name}")
@@ -216,12 +216,12 @@ if __name__ == '__main__':
     print(f"Фреза наследует от BladeMaterial: {cutter.type_of_mat}")
     print(f"Фреза наследует от Angles: {cutter.main_angle_grad}°")
     print(f"Фреза наследует tolerance: {cutter.tolerance}")
-    
+
     # Проверка сериализации
     print("\n=== Сериализация в dict ===")
     cutter_dict = cutter.model_dump()
     print(f"Dict: {cutter_dict}")
-    
+
     # Проверка десериализации
     print("\n=== Десериализация из dict ===")
     cutter_from_dict = MillingCutter(**cutter_dict)

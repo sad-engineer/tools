@@ -122,13 +122,13 @@ class Tool(BaseTool):
     @field_validator('standard')
     def validate_standard(cls, value):
         """Валидатор для проверки корректности стандарта инструмента.
-        
+
         Args:
             value: Строка с названием стандарта
-            
+
         Returns:
             str: Проверенное значение стандарта
-            
+
         Raises:
             ValueError: Если стандарт не соответствует допустимым значениям
         """
@@ -144,7 +144,7 @@ class Tool(BaseTool):
 
 class CustomTool(BaseTool):
     """Специальный инструмент.
-    
+
     В этом инструменте в поле marking указывается только 'специальный' а поле standard
     можно оставлять пустым.
 

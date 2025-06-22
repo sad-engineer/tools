@@ -8,7 +8,7 @@ from tools.app.db.session_manager import session_manager
 
 def show_table(table_name: str):
     """Показывает все записи в указанной таблице
-    
+
     Args:
         table_name (str): Название таблицы для отображения
     """
@@ -25,4 +25,3 @@ def show_table(table_name: str):
 if __name__ == "__main__":
     show_table("tools")
     # show_table("geometry_milling_cutters")
-

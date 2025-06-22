@@ -68,13 +68,13 @@ if __name__ == '__main__':
     print(f"Материал: {tool.mat_of_cutting_part}")
     print(f"Тип материала: {tool.type_of_mat}")
     print(f"Допуск: {tool.tolerance}")
-    
+
     # Демонстрация метода to_dict
     print("\n=== Все параметры инструмента ===")
     parameters = tool.to_dict()
     for key, value in parameters.items():
         print(f"{key}: {value}")
-    
+
     # Изменение параметров
     print("\n=== Изменение параметров ===")
     tool.marking = "ИНСТ-10-100"
@@ -87,19 +87,19 @@ if __name__ == '__main__':
     tool.front_angle_grad = 5
     tool.inclination_of_main_blade_grad = 2
     tool.radius_of_cutting_vertex = 0.5
-    
+
     print(f"Обновленный инструмент: {tool}")
     print(f"Новое имя: {tool.name}")
     print(f"Габарит: {tool.gabarit_str}")
     print(f"Объем: {tool.gabarit_volume} мм³")
-    
+
     # Проверка валидации
     print("\n=== Проверка валидации ===")
     try:
         tool.num_of_cutting_blades = 0  # Должно вызвать ошибку
     except Exception as e:
         print(f"Ошибка валидации количества граней: {e}")
-    
+
     try:
         tool.dia_mm = -5  # Должно вызвать ошибку
     except Exception as e:

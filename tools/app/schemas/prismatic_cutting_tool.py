@@ -39,7 +39,7 @@ class PrismaticCuttingTool(
 
     def to_dict(self):
         """Возвращает словарь всех параметров и свойств призматического инструмента.
-        
+
         Returns:
             dict: Словарь с параметрами инструмента
         """
@@ -62,7 +62,7 @@ class PrismaticCuttingTool(
 if __name__ == '__main__':
     # Пример использования PrismaticCuttingTool
     print("=== Пример использования PrismaticCuttingTool ===")
-    
+
     # Создание призматического инструмента с дефолтными значениями
     tool = PrismaticCuttingTool()
     print(f"Инструмент по умолчанию: {tool}")
@@ -76,7 +76,7 @@ if __name__ == '__main__':
     print(f"Материал: {tool.mat_of_cutting_part}")
     print(f"Тип материала: {tool.type_of_mat}")
     print(f"Допуск: {tool.tolerance}")
-    
+
     # Изменение параметров
     print("\n=== Изменение параметров ===")
     tool.marking = "ПРИЗМ-25-16-25"
@@ -90,30 +90,30 @@ if __name__ == '__main__':
     tool.front_angle_grad = 5
     tool.inclination_of_main_blade_grad = 2
     tool.radius_of_cutting_vertex = 1.0
-    
+
     print(f"Обновленный инструмент: {tool}")
     print(f"Новое имя: {tool.name}")
     print(f"Габарит: {tool.gabarit_str}")
     print(f"Объем: {tool.gabarit_volume} мм³")
-    
+
     # Получение всех параметров
     print("\n=== Все параметры инструмента ===")
     parameters = tool.to_dict()
     for key, value in parameters.items():
         print(f"{key}: {value}")
-    
+
     # Проверка валидации
     print("\n=== Проверка валидации ===")
     try:
         tool.num_of_cutting_blades = 0  # Должно вызвать ошибку
     except Exception as e:
         print(f"Ошибка валидации количества граней: {e}")
-    
+
     try:
         tool.length_mm = -5  # Должно вызвать ошибку
     except Exception as e:
         print(f"Ошибка валидации длины: {e}")
-    
+
     # Создание инструмента с кастомными параметрами
     print("\n=== Создание инструмента с кастомными параметрами ===")
     custom_tool = PrismaticCuttingTool(
@@ -127,28 +127,28 @@ if __name__ == '__main__':
         main_angle_grad=60,
         front_angle_grad=10,
         inclination_of_main_blade_grad=5,
-        radius_of_cutting_vertex=1.5
+        radius_of_cutting_vertex=1.5,
     )
-    
+
     print(f"Кастомный инструмент: {custom_tool}")
     print(f"Имя: {custom_tool.name}")
     print(f"Группа: {custom_tool.group}")
     print(f"Количество граней: {custom_tool.num_of_cutting_blades}")
     print(f"Материал: {custom_tool.mat_of_cutting_part}")
     print(f"Тип материала: {custom_tool.type_of_mat}")
-    
+
     # Демонстрация наследования свойств
     print("\n=== Демонстрация наследования ===")
     print(f"Инструмент наследует от Tool: {tool.name}")
     print(f"Инструмент наследует от PrismaticSizes: {tool.gabarit_volume} мм³")
     print(f"Инструмент наследует от BladeMaterial: {tool.type_of_mat}")
     print(f"Инструмент наследует от Angles: {tool.main_angle_grad}°")
-    
+
     # Проверка сериализации
     print("\n=== Сериализация в dict ===")
     tool_dict = tool.model_dump()
     print(f"Dict: {tool_dict}")
-    
+
     # Проверка десериализации
     print("\n=== Десериализация из dict ===")
     tool_from_dict = PrismaticCuttingTool(**tool_dict)

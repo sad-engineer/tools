@@ -27,7 +27,7 @@ def show_unique_values(table_name: str, column_name: str) -> None:
 def show_all_unique_values(table_name: str = "tools") -> None:
     """
     Показывает уникальные значения для всех колонок указанной таблицы
-    
+
     Args:
         table_name (str): Название таблицы (по умолчанию "tools")
     """
@@ -44,6 +44,6 @@ def show_all_unique_values(table_name: str = "tools") -> None:
 if __name__ == "__main__":
     # Пример использования для конкретной колонки
     show_unique_values("tools", "accuracy")
-    
+
     # Пример использования для всех колонок
     # show_all_unique_values("tools")

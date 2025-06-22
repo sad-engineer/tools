@@ -42,13 +42,13 @@ class BroachingCutter(CustomTool):
 
     def to_dict(self):
         """Возвращает словарь всех параметров и свойств протяжки.
-        
+
         Returns:
             dict: Словарь с параметрами протяжки
         """
         # Получаем параметры из базового класса
         base_parameters = super()._parameters
-        
+
         # Создаем словарь с параметрами текущего класса
         current_parameters = {
             "angle_of_inclination": self.angle_of_inclination,
@@ -57,7 +57,7 @@ class BroachingCutter(CustomTool):
             "difference": self.difference,
             "length_of_working_part": self.length_of_working_part,
         }
-        
+
         # Объединяем параметры
         return base_parameters | current_parameters
 
@@ -65,7 +65,7 @@ class BroachingCutter(CustomTool):
 if __name__ == '__main__':
     # Пример использования BroachingCutter
     print("=== Пример использования BroachingCutter ===")
-    
+
     # Создание протяжки с дефолтными значениями
     broach = BroachingCutter()
     print(f"Протяжка по умолчанию: {broach}")
@@ -73,14 +73,14 @@ if __name__ == '__main__':
     print(f"Имя: {broach.name}")
     print(f"Обозначение: {broach.marking}")
     print(f"Стандарт: {broach.standard}")
-    
+
     # Демонстрация параметров протяжки
     print(f"Угол наклона зубьев: {broach.angle_of_inclination}°")
     print(f"Шаг зубьев: {broach.pitch_of_teeth} мм")
     print(f"Число зубьев секции: {broach.number_teeth_section}")
     print(f"Подача на зуб: {broach.difference} мм")
     print(f"Длина режущей части: {broach.length_of_working_part} мм")
-    
+
     # Изменение параметров
     print("\n=== Изменение параметров ===")
     broach.standard = "ГОСТ 5009-82"
@@ -89,28 +89,28 @@ if __name__ == '__main__':
     broach.number_teeth_section = 12
     broach.difference = 0.02
     broach.length_of_working_part = 150.0
-    
+
     print(f"Обновленная протяжка: {broach}")
     print(f"Новое имя: {broach.name}")
-    
+
     # Получение всех параметров
     print("\n=== Все параметры протяжки ===")
     parameters = broach.to_dict()
     for key, value in parameters.items():
         print(f"{key}: {value}")
-    
+
     # Проверка валидации
     print("\n=== Проверка валидации ===")
     try:
         broach.angle_of_inclination = 400  # Должно вызвать ошибку
     except Exception as e:
         print(f"Ошибка валидации угла наклона: {e}")
-    
+
     try:
         broach.pitch_of_teeth = -5  # Должно вызвать ошибку
     except Exception as e:
         print(f"Ошибка валидации шага зубьев: {e}")
-    
+
     # Создание протяжки с кастомными параметрами
     print("\n=== Создание протяжки с кастомными параметрами ===")
     custom_broach = BroachingCutter(
@@ -119,13 +119,13 @@ if __name__ == '__main__':
         pitch_of_teeth=10.0,
         number_teeth_section=15,
         difference=0.03,
-        length_of_working_part=200.0
+        length_of_working_part=200.0,
     )
-    
+
     print(f"Кастомная протяжка: {custom_broach}")
     print(f"Имя: {custom_broach.name}")
     print(f"Группа: {custom_broach.group}")
-    
+
     # Демонстрация наследования
     print("\n=== Демонстрация наследования ===")
     print(f"Протяжка наследует от CustomTool: {broach.name}")

@@ -54,7 +54,7 @@ class BladeMaterial(BaseModel, validate_assignment=True):
     @property
     def mat_of_cutting_part(self) -> str:
         """Материал режущей пластины.
-        
+
         Returns:
             str: Строковое представление материала режущей пластины
         """
@@ -63,10 +63,10 @@ class BladeMaterial(BaseModel, validate_assignment=True):
     @mat_of_cutting_part.setter
     def mat_of_cutting_part(self, value: Union[str, CuttingPartMaterials]) -> None:
         """Установка материала режущей пластины.
-        
+
         Args:
             value: Материал в виде строки или объекта CuttingPartMaterials
-            
+
         Raises:
             ValueError: Если передан неизвестный материал
         """
@@ -78,7 +78,7 @@ class BladeMaterial(BaseModel, validate_assignment=True):
     @property
     def type_of_mat(self) -> int:
         """Тип материала режущей пластины.
-        
+
         Returns:
             int: 0 - быстрорежущая сталь, 1 - твердый сплав, -1 - неизвестный материал
         """
@@ -87,7 +87,7 @@ class BladeMaterial(BaseModel, validate_assignment=True):
     @property
     def description_type(self) -> str:
         """Описание типа материала.
-        
+
         Returns:
             str: Текстовое описание типа материала (быстрорежущая сталь или твердый сплав)
         """

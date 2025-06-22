@@ -15,14 +15,14 @@
 import csv
 import logging
 from pathlib import Path
-from typing import Dict, Any, Optional
-from sqlalchemy.orm import Session
+from typing import Any, Dict, Optional
+
 from sqlalchemy import func
+from sqlalchemy.orm import Session
 
 from tools.app.db.session_manager import get_session
-from tools.app.models.tools import Tool
 from tools.app.models.geometry_milling_cutters import GeometryMillingCutters
-
+from tools.app.models.tools import Tool
 
 # Настройка логирования
 logging.basicConfig(level=logging.INFO)
@@ -33,11 +33,10 @@ logger = logging.getLogger(__name__)
 MILLING_CUTTER_COLUMN_MAPPING = {
     # Основные геометрические параметры
     'D': 'D',
-    'L': 'L', 
+    'L': 'L',
     'l': 'l',
     'd': 'd',
     'z': 'z',
-    
     # Дополнительные геометрические параметры
     'a_': 'a_',
     'd_1_': 'd_1_',
@@ -46,18 +45,15 @@ MILLING_CUTTER_COLUMN_MAPPING = {
     'L_': 'L_',
     'f_': 'f_',
     'q_': 'q_',
-    
     # Конусы и исполнения
     'Конус_Морзе': 'morse_taper',
     'Исполнение': 'execution',
     'fi_': 'fi_',
     'type_cutter_': 'type_cutter_',
-    
     # Материалы и типы
     'mat_': 'material',
     'type_of_cutting_part_': 'type_of_cutting_part_',
     'Группа': 'group',
-
     # Дополнительные размеры
     'D_1': 'D_1',
     'f_доп._': 'f_additional_',
@@ -67,7 +63,6 @@ MILLING_CUTTER_COLUMN_MAPPING = {
     'd_': 'd_',
     'd_доп._': 'd_additional_',
     'd_1_доп._': 'd_1_additional_',
-    
     # Направление и параметры
     'Направление': 'direction',
     'B': 'B',
@@ -80,7 +75,6 @@ MILLING_CUTTER_COLUMN_MAPPING = {
     'L_доп.': 'L_additional',
     'K': 'K',
     'K_доп.': 'K_additional',
-    
     # Точность и дополнительные параметры
     'Точность': 'accuracy',
     'D_2': 'D_2',
@@ -96,7 +90,6 @@ MILLING_CUTTER_COLUMN_MAPPING = {
     'Подгруппа': 'subgroup',
     'h_доп._': 'h_additional_',
     'm_': 'm_',
-    
     # Метрические параметры
     'Метрический_хвостовик': 'metric_shank',
     'b_': 'b_',
@@ -144,26 +137,26 @@ def parse_int(value: str) -> Optional[int]:
 def load_geometry_milling_cutters_from_csv(csv_file_path: str, session: Session) -> int:
     """
     Загружает данные фрез из CSV файла в таблицу geometry_milling_cutters.
-    
+
     Args:
         csv_file_path: Путь к CSV файлу
         session: Сессия базы данных
-        
+
     Returns:
         Количество загруженных записей
     """
     csv_path = Path(csv_file_path)
     if not csv_path.exists():
         raise FileNotFoundError(f"CSV файл не найден: {csv_path}")
-    
+
     loaded_count = 0
     skipped_count = 0
-    
+
     logger.info(f"Начинаем загрузку данных фрез из файла: {csv_file_path}")
-    
+
     with open(csv_path, 'r', encoding='utf-8') as file:
         reader = csv.DictReader(file)
-        
+
         for row_num, row in enumerate(reader, start=2):  # Начинаем с 2, так как 1 - заголовок
             try:
                 # Проверяем, что это фреза
@@ -171,14 +164,14 @@ def load_geometry_milling_cutters_from_csv(csv_file_path: str, session: Session)
                 if tool_type != 'Фреза':
                     skipped_count += 1
                     continue
-                
+
                 # Получаем id инструмента
                 id_str = row.get('index', '').strip()
                 if not id_str:
                     logger.warning(f"Строка {row_num}: Отсутствует id инструмента")
                     skipped_count += 1
                     continue
-                
+
                 # Конвертируем id в число
                 try:
                     tool_id = int(id_str)
@@ -186,7 +179,7 @@ def load_geometry_milling_cutters_from_csv(csv_file_path: str, session: Session)
                     logger.warning(f"Строка {row_num}: Некорректный id '{id_str}' - не является числом")
                     skipped_count += 1
                     continue
-                
+
                 # Ищем соответствующий инструмент в таблице tools по id
                 tool = session.query(Tool).filter(Tool.id == tool_id).first()
                 if not tool:
@@ -194,34 +187,36 @@ def load_geometry_milling_cutters_from_csv(csv_file_path: str, session: Session)
                     # Добавляем отладочную информацию
                     total_tools = session.query(Tool).count()
                     logger.debug(f"Всего инструментов в БД: {total_tools}")
-                    
+
                     # Показываем несколько примеров id из базы
                     if row_num <= 5:
                         sample_tools = session.query(Tool.id, Tool.marking).limit(5).all()
                         logger.info(f"Примеры инструментов в БД: {sample_tools}")
-                    
+
                     skipped_count += 1
                     continue
-                
+
                 # Проверяем, не существует ли уже фреза для этого инструмента
                 # Теперь проверяем по tool_id
-                existing_cutter = session.query(GeometryMillingCutters).filter(GeometryMillingCutters.tool_id == tool.id).first()
+                existing_cutter = (
+                    session.query(GeometryMillingCutters).filter(GeometryMillingCutters.tool_id == tool.id).first()
+                )
                 if existing_cutter:
                     logger.info(f"Строка {row_num}: Фреза для инструмента с id={tool.id} уже существует, пропускаем")
                     skipped_count += 1
                     continue
-                
+
                 # Создаем объект фрезы
                 cutter_data = {}
-                
+
                 # Заполняем поля согласно маппингу
                 for csv_col, model_field in MILLING_CUTTER_COLUMN_MAPPING.items():
                     if csv_col in row:
                         value = row[csv_col].strip()
-                        
+
                         # Определяем тип поля и парсим значение
                         field_type = getattr(GeometryMillingCutters, model_field).type
-                        
+
                         if hasattr(field_type, 'python_type'):
                             if field_type.python_type == float:
                                 parsed_value = parse_float(value)
@@ -232,26 +227,26 @@ def load_geometry_milling_cutters_from_csv(csv_file_path: str, session: Session)
                         else:
                             # Для сложных типов (например, DateTime) оставляем как есть
                             parsed_value = value if value else None
-                        
+
                         cutter_data[model_field] = parsed_value
-                
+
                 # Устанавливаем связь с инструментом через tool_id
                 cutter_data['tool_id'] = tool.id
-                
+
                 # Создаем и сохраняем фрезу
                 cutter = GeometryMillingCutters(**cutter_data)
                 session.add(cutter)
-                
+
                 loaded_count += 1
-                
+
                 if loaded_count % 100 == 0:
                     logger.info(f"Загружено {loaded_count} записей...")
-                
+
             except Exception as e:
                 logger.error(f"Ошибка при обработке строки {row_num}: {e}")
                 session.rollback()
                 continue
-    
+
     # Сохраняем все изменения
     try:
         session.commit()
@@ -260,7 +255,7 @@ def load_geometry_milling_cutters_from_csv(csv_file_path: str, session: Session)
         logger.error(f"Ошибка при сохранении данных: {e}")
         session.rollback()
         raise
-    
+
     return loaded_count
 
 
