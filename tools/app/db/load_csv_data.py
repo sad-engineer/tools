@@ -7,7 +7,7 @@ import os
 from pathlib import Path
 from typing import List, Dict, Any
 
-from tools.app.db.session_manager import get_db
+from tools.app.db.session_manager import get_session
 from tools.app.models.tools import Tool
 from tools.app.config import get_settings
 
@@ -134,7 +134,7 @@ def save_tools_to_db(tools: List[Tool]) -> int:
     """
     saved_count = 0
     
-    with get_db() as session:
+    with get_session() as session:
         try:
             # Очищаем таблицу tools перед загрузкой новых данных
             logger.info("Очищаем таблицу tools...")

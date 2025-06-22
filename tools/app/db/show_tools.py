@@ -23,6 +23,6 @@ def show_table(table_name: str):
 
 
 if __name__ == "__main__":
-    # show_table("tools")
-    show_table("milling_cutters")
+    show_table("tools")
+    # show_table("geometry_milling_cutters")
 

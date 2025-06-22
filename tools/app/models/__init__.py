@@ -2,10 +2,12 @@
 # -*- coding: utf-8 -*-
 # ---------------------------------------------------------------------------------------------------------------------
 from tools.app.models.tools import Tool, Base
-from tools.app.models.milling_cutters import MillingCutter
+from tools.app.models.geometry_milling_cutters import GeometryMillingCutters
+from tools.app.models.geometry_drilling_cutter import GeometryDrillingCutter
 
 __all__ = [
     "Tool",
-    "MillingCutter",
+    "GeometryMillingCutters",
+    "GeometryDrillingCutter",
     "Base",
 ]

@@ -24,7 +24,8 @@ class Tool(Base):
         updated_at (datetime): Дата и время последнего обновления записи.
         
     Relationships:
-        milling_cutter (MillingCutter): Фрез, связанный с инструментом.
+        geometry_milling_cutters (GeometryMillingCutters): Фреза, связанная с инструментом.
+        geometry_drilling_cutter (GeometryDrillingCutter): Сверло, связанное с инструментом.
     """
 
     __tablename__ = "tools"
@@ -39,4 +40,5 @@ class Tool(Base):
     updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now(), nullable=False)
     
     # Связи
-    milling_cutter = relationship("MillingCutter", back_populates="tool", uselist=False)
+    geometry_milling_cutters = relationship("GeometryMillingCutters", back_populates="tool", uselist=False)
+    geometry_drilling_cutter = relationship("GeometryDrillingCutter", back_populates="tool", uselist=False)

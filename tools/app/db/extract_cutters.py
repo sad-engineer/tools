@@ -129,9 +129,12 @@ def extract_milling_cutters(
 def main():
     """Основная функция."""
     try:
-        logger.info("🚀 Извлекаем фрезы из CSV файла")
+        logger.info("🚀 Извлекаем инструменты из CSV файла")
         
-        success = extract_milling_cutters()
+        success = extract_milling_cutters(
+            tool_type_value="Сверло",
+            output_file="database_backups/drilling_cutters.csv"
+        )
         
         if success:
             logger.info("✅ Операция завершена успешно")
@@ -144,4 +147,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main() 
+    main()

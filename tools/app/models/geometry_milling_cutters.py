@@ -9,15 +9,16 @@ from sqlalchemy.orm import relationship
 from tools.app.models.tools import Base
 
 
-class MillingCutter(Base):
+class GeometryMillingCutters(Base):
     """SQLAlchemy модель фрезы с геометрическими параметрами.
     
     Представляет таблицу фрез в базе данных. Каждая фреза связана с инструментом
-    через первичный ключ, который является внешним ключом на таблицу tools.
+    через поле tool_id, которое является внешним ключом на таблицу tools.
     Связь: один-к-одному (один инструмент = одна фреза).
     
     Attributes:
-        id (int): Первичный ключ, который также является внешним ключом на tools.id.
+        id (int): Первичный ключ (автоинкрементный).
+        tool_id (int): Внешний ключ на таблицу tools.id.
         D (float): Диаметр фрезы в мм.
         L (float): Общая длина в мм.
         l (float): Длина режущей части в мм.
@@ -30,10 +31,13 @@ class MillingCutter(Base):
         tool (Tool): Связь с основным инструментом (один-к-одному).
     """
 
-    __tablename__ = "milling_cutters"
+    __tablename__ = "geometry_milling_cutters"
 
-    # Первичный ключ, который также является внешним ключом на tools.id
-    id = Column(Integer, ForeignKey("tools.id"), primary_key=True, index=True)
+    # Первичный ключ (автоинкрементный)
+    id = Column(Integer, primary_key=True, autoincrement=True, index=True)
+    
+    # Внешний ключ на таблицу tools
+    tool_id = Column(Integer, ForeignKey("tools.id"), nullable=False, unique=True, index=True)
     
     # Основные геометрические параметры
     D = Column(Float, nullable=True)  # D - Диаметр фрезы в мм
@@ -61,9 +65,7 @@ class MillingCutter(Base):
     material = Column(String(100), nullable=True)  # mat_ - Материал
     type_of_cutting_part_ = Column(String(100), nullable=True)  # type_of_cutting_part_ - Тип режущей части
     group = Column(String(100), nullable=True)  # Группа
-    tool_type = Column(String(100), nullable=True)  # Тип_инструмента
-    standard = Column(String(100), nullable=True)  # Стандарт
-    
+
     # Дополнительные размеры
     D_1 = Column(Float, nullable=True)  # D_1 - Диаметр D1
     f_additional_ = Column(Float, nullable=True)  # f_доп._ - Дополнительный параметр f
@@ -128,4 +130,4 @@ class MillingCutter(Base):
     updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now(), nullable=False)
     
     # Связи (один-к-одному)
-    tool = relationship("Tool", back_populates="milling_cutter", uselist=False)
+    tool = relationship("Tool", back_populates="geometry_milling_cutters", uselist=False)
