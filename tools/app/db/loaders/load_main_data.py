@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 # ---------------------------------------------------------------------------------------------------------------------
 import logging
-import os
 from pathlib import Path
 from typing import Any, Dict, List
 
@@ -49,7 +48,7 @@ def load_csv_data(csv_file_path: str = None) -> List[Dict[str, Any]]:
     """
     if csv_file_path is None:
         # Определяем путь к CSV файлу относительно корня проекта
-        project_root = Path(__file__).parent.parent.parent.parent
+        project_root = Path(__file__).parent.parent.parent.parent.parent
         csv_file_path = project_root / "database_backups" / "tools_old.csv"
 
     try:
@@ -175,7 +174,7 @@ def save_tools_to_db(tools: List[Tool]) -> int:
     return saved_count
 
 
-def main():
+def load_main_data():
     """Основная функция загрузки данных."""
     try:
         logger.info("🚀 Начинаем загрузку данных из CSV в базу данных")
@@ -197,4 +196,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    load_main_data()
