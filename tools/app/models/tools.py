@@ -26,6 +26,7 @@ class Tool(Base):
     Relationships:
         geometry_milling_cutters (GeometryMillingCutters): Фреза, связанная с инструментом.
         geometry_drilling_cutter (GeometryDrillingCutter): Сверло, связанное с инструментом.
+        geometry_countersinking_cutter (GeometryCountersinkingCutter): Шпоночная фреза, связанная с инструментом.
     """
 
     __tablename__ = "tools"
@@ -42,3 +43,4 @@ class Tool(Base):
     # Связи
     geometry_milling_cutters = relationship("GeometryMillingCutters", back_populates="tool", uselist=False)
     geometry_drilling_cutter = relationship("GeometryDrillingCutter", back_populates="tool", uselist=False)
+    geometry_countersinking_cutter = relationship("GeometryCountersinkingCutter", back_populates="tool", uselist=False)

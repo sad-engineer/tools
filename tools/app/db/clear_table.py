@@ -56,5 +56,5 @@ def clear_table(table_name: str):
 
 
 if __name__ == "__main__":
-    clear_table("geometry_milling_cutters")
-    clear_table("tools")
+    clear_table("geometry_countersinking_cutter")
+    # clear_table("tools")
