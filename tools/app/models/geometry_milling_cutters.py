@@ -1,21 +1,21 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # ---------------------------------------------------------------------------------------------------------------------
-from sqlalchemy import Column, DateTime, Float, ForeignKey, Integer, String, Text
+from sqlalchemy import Column, Integer, String, Float, DateTime, ForeignKey, Text
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
+from sqlalchemy.orm import relationship
 
 from tools.app.models.tools import Base
 
 
 class GeometryMillingCutters(Base):
     """SQLAlchemy модель фрезы с геометрическими параметрами.
-
+    
     Представляет таблицу фрез в базе данных. Каждая фреза связана с инструментом
-    через поле tool_id, которое является внешним ключом на таблицу tools.
+    через первичный ключ, который является внешним ключом на таблицу tools.
     Связь: один-к-одному (один инструмент = одна фреза).
-
+    
     Attributes:
         id (int): Первичный ключ (автоинкрементный).
         tool_id (int): Внешний ключ на таблицу tools.id.
@@ -26,7 +26,7 @@ class GeometryMillingCutters(Base):
         z (int): Количество зубьев.
         created_at (datetime): Дата и время создания записи.
         updated_at (datetime): Дата и время последнего обновления записи.
-
+        
     Relationships:
         tool (Tool): Связь с основным инструментом (один-к-одному).
     """
@@ -35,17 +35,17 @@ class GeometryMillingCutters(Base):
 
     # Первичный ключ (автоинкрементный)
     id = Column(Integer, primary_key=True, autoincrement=True, index=True)
-
+    
     # Внешний ключ на таблицу tools
     tool_id = Column(Integer, ForeignKey("tools.id"), nullable=False, unique=True, index=True)
-
+    
     # Основные геометрические параметры
     D = Column(Float, nullable=True)  # D - Диаметр фрезы в мм
     L = Column(Float, nullable=True)  # L - Общая длина в мм
     l = Column(Float, nullable=True)  # l - Длина режущей части в мм
     d = Column(Float, nullable=True)  # d - Диаметр хвостовика в мм
     z = Column(Integer, nullable=True)  # z - Количество зубьев
-
+    
     # Дополнительные геометрические параметры
     a_ = Column(Float, nullable=True)  # a_ - Параметр a
     d_1_ = Column(Float, nullable=True)  # d_1_ - Диаметр d1
@@ -54,13 +54,13 @@ class GeometryMillingCutters(Base):
     L_ = Column(Float, nullable=True)  # L_ - Длина L
     f_ = Column(Float, nullable=True)  # f_ - Параметр f
     q_ = Column(Float, nullable=True)  # q_ - Параметр q
-
+    
     # Конусы и исполнения
     morse_taper = Column(String(50), nullable=True)  # Конус_Морзе
     execution = Column(String(100), nullable=True)  # Исполнение
     fi_ = Column(Float, nullable=True)  # fi_ - Угол fi
     type_cutter_ = Column(String(100), nullable=True)  # type_cutter_ - Тип фрезы
-
+    
     # Материалы и типы
     material = Column(String(100), nullable=True)  # mat_ - Материал
     type_of_cutting_part_ = Column(String(100), nullable=True)  # type_of_cutting_part_ - Тип режущей части
@@ -75,7 +75,7 @@ class GeometryMillingCutters(Base):
     d_ = Column(Float, nullable=True)  # d_ - Диаметр d
     d_additional_ = Column(Float, nullable=True)  # d_доп._ - Дополнительный диаметр d
     d_1_additional_ = Column(Float, nullable=True)  # d_1_доп._ - Дополнительный диаметр d1
-
+    
     # Направление и параметры
     direction = Column(String(100), nullable=True)  # Направление
     B = Column(Float, nullable=True)  # B - Параметр B
@@ -88,7 +88,7 @@ class GeometryMillingCutters(Base):
     L_additional = Column(Float, nullable=True)  # L_доп._ - Дополнительная длина L
     K = Column(Float, nullable=True)  # K - Параметр K
     K_additional = Column(Float, nullable=True)  # K_доп._ - Дополнительный параметр K
-
+    
     # Точность и дополнительные параметры
     accuracy = Column(String(100), nullable=True)  # Точность
     D_2 = Column(Float, nullable=True)  # D_2 - Диаметр D2
@@ -104,7 +104,7 @@ class GeometryMillingCutters(Base):
     subgroup = Column(String(100), nullable=True)  # Подгруппа
     h_additional_ = Column(Float, nullable=True)  # h_доп._ - Дополнительная высота h
     m_ = Column(Float, nullable=True)  # m_ - Параметр m
-
+    
     # Метрические параметры
     metric_shank = Column(String(100), nullable=True)  # Метрический_хвостовик
     b_ = Column(Float, nullable=True)  # b_ - Параметр b
@@ -124,10 +124,10 @@ class GeometryMillingCutters(Base):
     c_keyway_ = Column(Float, nullable=True)  # c_для_шпоночных_пазов_ - Параметр c для шпоночных пазов
     metric_taper = Column(String(100), nullable=True)  # Конус_метрический
     alpha_ = Column(Float, nullable=True)  # alpha_ - Угол alpha
-
+    
     # Метаданные
     created_at = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)
     updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now(), nullable=False)
-
+    
     # Связи (один-к-одному)
     tool = relationship("Tool", back_populates="geometry_milling_cutters", uselist=False)

@@ -28,6 +28,7 @@ class Tool(Base):
         geometry_deployment_cutter (GeometryDeploymentCutter): Геометрия развертки, связанная с инструментом.
         geometry_drilling_cutter (GeometryDrillingCutter): Геометрия сверла, связанная с инструментом.
         geometry_milling_cutters (GeometryMillingCutters): Геометрия фрезы, связанная с инструментом.
+        geometry_turning_cutters (GeometryTurningCutters): Геометрия токарного инструмента, связанная с инструментом.
     """
 
     __tablename__ = "tools"
@@ -46,3 +47,4 @@ class Tool(Base):
     geometry_deployment_cutter = relationship("GeometryDeploymentCutter", back_populates="tool", uselist=False)
     geometry_drilling_cutter = relationship("GeometryDrillingCutter", back_populates="tool", uselist=False)
     geometry_milling_cutters = relationship("GeometryMillingCutters", back_populates="tool", uselist=False)
+    geometry_turning_cutters = relationship("GeometryTurningCutters", back_populates="tool", uselist=False)

@@ -133,7 +133,8 @@ def main():
         logger.info("🚀 Извлекаем инструменты из CSV файла")
 
         success = extract_milling_cutters(
-            tool_type_value="Развертка", output_file="database_backups/deployment_cutters.txt"
+            tool_type_value="Резец"
+                            "", output_file="database_backups/turning_cutters.txt"
         )
 
         if success:
