@@ -120,7 +120,7 @@ def export_all_tables(output_dir: str = None, encoding: str = 'utf-8') -> List[s
 
 def export_table_to_csv_with_options(all_tables: bool = False):
     """Основная функция экспорта.
-    
+
     Args:
         all_tables (bool): Экспортировать все таблицы (тихий режим)
     """
