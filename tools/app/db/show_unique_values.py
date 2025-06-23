@@ -1,27 +1,34 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # ---------------------------------------------------------------------------------------------------------------------
+"""
+Скрипт для показа уникальных значений в колонках таблиц
+"""
+
+import logging
+
 from sqlalchemy import text
 
-from tools.app.db.session_manager import session_manager
+from tools.app.db.session_manager import get_session
+
+# Настройка логирования
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 
-def show_unique_values(table_name: str, column_name: str) -> None:
-    """
-    Показывает уникальные значения для указанной колонки в указанной таблице.
+def show_unique_values(table_name: str, column_name: str):
+    """Показывает уникальные значения в указанной колонке таблицы"""
 
-    Args:
-        table_name (str): Название таблицы
-        column_name (str): Название колонки для получения уникальных значений
-    """
-    with session_manager.engine.connect() as connection:
-        query = text(f"SELECT DISTINCT {column_name} FROM {table_name} ORDER BY {column_name}")
-        result = connection.execute(query)
+    with get_session() as session:
+        # Получаем уникальные значения
+        result = session.execute(text(f"SELECT DISTINCT {column_name} FROM {table_name} ORDER BY {column_name}"))
+        rows = result.fetchall()
 
-        print(f"\nУникальные значения для колонки '{column_name}' в таблице '{table_name}':")
-        print("-" * 60)
-        for row in result:
-            print(row[0])
+        logger.info(f"\nУникальные значения для колонки '{column_name}' в таблице '{table_name}':")
+        logger.info("-" * 60)
+
+        for row in rows:
+            logger.info(row[0])
 
 
 def show_all_unique_values(table_name: str = "tools") -> None:
@@ -31,9 +38,9 @@ def show_all_unique_values(table_name: str = "tools") -> None:
     Args:
         table_name (str): Название таблицы (по умолчанию "tools")
     """
-    with session_manager.engine.connect() as connection:
+    with get_session() as session:
         # Получаем список всех колонок
-        result = connection.execute(text(f"SELECT * FROM {table_name} LIMIT 1"))
+        result = session.execute(text(f"SELECT * FROM {table_name} LIMIT 1"))
         columns = result.keys()
 
         # Для каждой колонки получаем уникальные значения

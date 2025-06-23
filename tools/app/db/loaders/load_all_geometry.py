@@ -67,8 +67,8 @@ def load_all_geometry_data(csv_file_path: str = None) -> dict:
         dict: Словарь с результатами загрузки для каждого типа
     """
     if csv_file_path is None:
-        project_root = Path(__file__).parent.parent.parent.parent.parent
-        csv_file_path = project_root / "database_backups" / "tools_old.csv"
+        project_root = Path(__file__).parent.parent.parent
+        csv_file_path = project_root / "resources" / "tables_csv" / "tools_old.csv"
 
     results = {}
 

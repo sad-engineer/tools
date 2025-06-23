@@ -8,6 +8,7 @@ from typing import Any, Dict, List
 import pandas as pd
 
 from tools.app.config import get_settings
+from tools.app.db.loaders.progress_bar import print_progress_bar
 from tools.app.db.session_manager import get_session
 from tools.app.models.tools import Tool
 
@@ -48,8 +49,8 @@ def load_csv_data(csv_file_path: str = None) -> List[Dict[str, Any]]:
     """
     if csv_file_path is None:
         # Определяем путь к CSV файлу относительно корня проекта
-        project_root = Path(__file__).parent.parent.parent.parent.parent
-        csv_file_path = project_root / "database_backups" / "tools_old.csv"
+        project_root = Path(__file__).parent.parent.parent
+        csv_file_path = project_root / "resources" / "tables_csv" / "tools_old.csv"
 
     try:
         # Определяем кодировку
@@ -60,12 +61,6 @@ def load_csv_data(csv_file_path: str = None) -> List[Dict[str, Any]]:
         df = pd.read_csv(csv_file_path, encoding=encoding)
 
         logger.info(f"Загружено {len(df)} записей")
-        logger.info(f"Колонки: {list(df.columns)}")
-
-        # Показываем первые несколько строк
-        logger.info("Первые 3 записи:")
-        for i, row in df.head(3).iterrows():
-            logger.info(f"  {i}: {dict(row)}")
 
         return df.to_dict('records')
 
@@ -133,6 +128,7 @@ def save_tools_to_db(tools: List[Tool]) -> int:
         int: Количество сохраненных записей
     """
     saved_count = 0
+    total_tools = len(tools)
 
     with get_session() as session:
         try:
@@ -141,6 +137,8 @@ def save_tools_to_db(tools: List[Tool]) -> int:
             session.query(Tool).delete()
             session.commit()
             logger.info("Таблица tools очищена")
+
+            logger.info(f"Начинаю сохранение {total_tools} инструментов...")
 
             for i, tool in enumerate(tools):
                 try:
@@ -153,9 +151,14 @@ def save_tools_to_db(tools: List[Tool]) -> int:
                     session.add(tool)
                     saved_count += 1
 
-                    # Логируем прогресс каждые 100 записей
-                    if (i + 1) % 100 == 0:
-                        logger.info(f"Обработано {i + 1} записей...")
+                    # Показываем прогресс-бар каждые 10 записей или на последней записи
+                    if (i + 1) % 10 == 0 or (i + 1) == total_tools:
+                        print_progress_bar(
+                            current=i + 1,
+                            total=total_tools,
+                            prefix="Сохранение инструментов",
+                            suffix=f"({saved_count}/{total_tools})",
+                        )
 
                 except Exception as e:
                     logger.error(f"Ошибка при сохранении инструмента {tool.marking} (id={tool.id}): {e}")

@@ -21,6 +21,7 @@ from typing import Any, Dict, Optional, Type
 
 from sqlalchemy.orm import Session
 
+from tools.app.db.loaders.progress_bar import print_progress_bar
 from tools.app.db.session_manager import get_session
 from tools.app.models.tools import Tool
 
@@ -195,16 +196,29 @@ class BaseGeometryLoader(ABC):
 
         logger.info(f"Начинаем загрузку данных {self.tool_type} из файла: {csv_file_path}")
 
+        # Сначала подсчитываем общее количество строк для прогресс-бара
+        with open(csv_path, 'r', encoding='utf-8') as file:
+            total_rows = sum(1 for _ in file) - 1  # Вычитаем заголовок
+
+        logger.info(f"Всего строк в файле: {total_rows}")
+
         with open(csv_path, 'r', encoding='utf-8') as file:
             reader = csv.DictReader(file)
 
             for row_num, row in enumerate(reader, start=2):  # Начинаем с 2, так как 1 - заголовок
                 if self.process_row(row, row_num, session):
                     loaded_count += 1
-                    if loaded_count % 100 == 0:
-                        logger.info(f"Загружено {loaded_count} записей...")
                 else:
                     skipped_count += 1
+
+                # Показываем прогресс-бар каждые 50 записей или на последней записи
+                if row_num % 50 == 0 or row_num == total_rows + 1:
+                    print_progress_bar(
+                        current=row_num - 1,  # Вычитаем 1, так как начинаем с 2
+                        total=total_rows,
+                        prefix=f"Загрузка {self.tool_type}",
+                        suffix=f"(загружено: {loaded_count}, пропущено: {skipped_count})",
+                    )
 
         # Сохраняем все изменения
         try:
@@ -229,8 +243,8 @@ class BaseGeometryLoader(ABC):
         """
         if csv_file_path is None:
             # Определяем путь к CSV файлу относительно корня проекта
-            project_root = Path(__file__).parent.parent.parent.parent
-            csv_file_path = project_root / "database_backups" / "tools_old.csv"
+            project_root = Path(__file__).parent.parent.parent
+            csv_file_path = project_root / "resources" / "tables_csv" / "tools_old.csv"
 
         try:
             with get_session() as session:

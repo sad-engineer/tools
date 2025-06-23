@@ -72,8 +72,10 @@ DRILL_COLUMN_MAPPING = {
 # Создаем загрузчик
 loader = BaseGeometryLoader(tool_type="Сверло", model_class=GeometryDrillingCutter, column_mapping=DRILL_COLUMN_MAPPING)
 
+
 def load_drilling_cutters():
     loader.run()
+
 
 if __name__ == "__main__":
     load_drilling_cutters()

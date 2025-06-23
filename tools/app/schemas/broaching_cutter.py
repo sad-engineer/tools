@@ -23,7 +23,7 @@ class BroachingCutter(CustomTool):
     length_of_working_part: (float >= 0) : Длина режущей части протяжки в мм.
 
     Properties:
-    name : (str) : возвращает название инструмента.
+        name : (str) : возвращает название инструмента.
     group : (str) : возвращает группу инструмента (всегда "Протяжка").
 
     Methods:

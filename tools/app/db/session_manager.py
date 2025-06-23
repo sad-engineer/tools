@@ -98,3 +98,4 @@ session_manager = SessionManager()
 get_session = session_manager.get_session
 close_session = session_manager.close_session
 get_db = session_manager.get_db
+get_engine = lambda: session_manager.engine

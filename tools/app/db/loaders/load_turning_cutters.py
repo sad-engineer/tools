@@ -58,8 +58,10 @@ loader = BaseGeometryLoader(
     tool_type="Резец", model_class=GeometryTurningCutters, column_mapping=TURNING_COLUMN_MAPPING
 )
 
+
 def load_turning_cutters():
     loader.run()
+
 
 if __name__ == "__main__":
     load_turning_cutters()

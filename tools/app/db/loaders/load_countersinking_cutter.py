@@ -40,8 +40,10 @@ loader = BaseGeometryLoader(
     tool_type="Зенкер", model_class=GeometryCountersinkingCutter, column_mapping=COUNTERSINKING_COLUMN_MAPPING
 )
 
+
 def load_countersinking_cutters():
-    loader.run()    
-    
+    loader.run()
+
+
 if __name__ == "__main__":
     load_countersinking_cutters()

@@ -102,8 +102,10 @@ loader = BaseGeometryLoader(
     tool_type="Фреза", model_class=GeometryMillingCutters, column_mapping=MILLING_CUTTER_COLUMN_MAPPING
 )
 
+
 def load_milling_cutters():
     loader.run()
+
 
 if __name__ == "__main__":
     load_milling_cutters()

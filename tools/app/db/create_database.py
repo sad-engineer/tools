@@ -1,10 +1,16 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # ---------------------------------------------------------------------------------------------------------------------
+import logging
+
 import psycopg2
 from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
 
 from tools.app.config import get_settings
+
+# Настройка логирования
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 settings = get_settings()
 
@@ -29,18 +35,18 @@ def create_database():
         exists = cursor.fetchone()
 
         if exists:
-            print(f"✅ База данных '{settings.POSTGRES_DB}' уже существует")
+            logger.info(f"✅ База данных '{settings.POSTGRES_DB}' уже существует")
         else:
             # Создаем базу данных
             cursor.execute(f"CREATE DATABASE {settings.POSTGRES_DB}")
-            print(f"✅ База данных '{settings.POSTGRES_DB}' создана успешно")
+            logger.info(f"✅ База данных '{settings.POSTGRES_DB}' создана успешно")
 
         cursor.close()
         conn.close()
         return True
 
     except Exception as e:
-        print(f"❌ Ошибка при создании базы данных: {e}")
+        logger.error(f"❌ Ошибка при создании базы данных: {e}")
         return False
 
 

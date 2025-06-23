@@ -54,8 +54,10 @@ loader = BaseGeometryLoader(
     tool_type="Развертка", model_class=GeometryDeploymentCutter, column_mapping=DEPLOYMENT_COLUMN_MAPPING
 )
 
+
 def load_deployment_cutters():
     loader.run()
+
 
 if __name__ == "__main__":
     load_deployment_cutters()

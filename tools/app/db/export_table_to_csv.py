@@ -2,10 +2,9 @@
 # -*- coding: utf-8 -*-
 # ---------------------------------------------------------------------------------------------------------------------
 import logging
-import os
 from datetime import datetime
 from pathlib import Path
-from typing import List, Optional
+from typing import List
 
 import pandas as pd
 from sqlalchemy import text
@@ -59,7 +58,7 @@ def export_table_to_csv(table_name: str, output_dir: str = None, encoding: str =
     if output_dir is None:
         # Создаем директорию по умолчанию
         project_root = Path(__file__).parent.parent.parent.parent
-        output_dir = project_root / "tools" / "app" / "resources" / "tables_csv"
+        output_dir = project_root / "database_backups"
 
     # Создаем директорию, если её нет
     Path(output_dir).mkdir(parents=True, exist_ok=True)
@@ -119,31 +118,23 @@ def export_all_tables(output_dir: str = None, encoding: str = 'utf-8') -> List[s
     return exported_files
 
 
-def main():
-    """Основная функция экспорта."""
-    import argparse
-
-    parser = argparse.ArgumentParser(description='Экспорт таблиц из БД в CSV')
-    parser.add_argument('--table', '-t', help='Название таблицы для экспорта')
-    parser.add_argument('--all', '-a', action='store_true', help='Экспортировать все таблицы')
-    parser.add_argument('--output', '-o', help='Директория для сохранения файлов')
-    parser.add_argument('--encoding', '-e', default='utf-8', help='Кодировка файлов')
-
-    args = parser.parse_args()
-
+def export_table_to_csv_with_options(all_tables: bool = False):
+    """Основная функция экспорта.
+    
+    Args:
+        all_tables (bool): Экспортировать все таблицы (тихий режим)
+    """
     try:
-        if args.all:
-            logger.info("🚀 Экспортируем все таблицы")
-            exported_files = export_all_tables(args.output, args.encoding)
+        if all_tables:
+            # Тихий режим - экспорт всех таблиц
+            logger.info("🚀 Экспортируем все таблицы (тихий режим)")
+            exported_files = export_all_tables()
             logger.info(f"✅ Экспорт завершен! Создано файлов: {len(exported_files)}")
-
-        elif args.table:
-            logger.info(f"🚀 Экспортируем таблицу '{args.table}'")
-            filepath = export_table_to_csv(args.table, args.output, args.encoding)
-            logger.info(f"✅ Экспорт завершен! Файл: {filepath}")
+            for filepath in exported_files:
+                logger.info(f"  📄 {filepath}")
 
         else:
-            # Интерактивный режим
+            # Интерактивный режим (по умолчанию)
             tables = get_table_list()
 
             if not tables:
@@ -151,8 +142,8 @@ def main():
                 return
 
             print("\n📋 Доступные таблицы:")
-            for i, table in enumerate(tables, 1):
-                print(f"  {i}. {table}")
+            for i, table_name in enumerate(tables, 1):
+                print(f"  {i}. {table_name}")
 
             print(f"\n  {len(tables) + 1}. Экспортировать все таблицы")
             print("  0. Выход")
@@ -165,12 +156,14 @@ def main():
                     return
                 elif choice == len(tables) + 1:
                     logger.info("🚀 Экспортируем все таблицы")
-                    exported_files = export_all_tables(args.output, args.encoding)
+                    exported_files = export_all_tables()
                     logger.info(f"✅ Экспорт завершен! Создано файлов: {len(exported_files)}")
+                    for filepath in exported_files:
+                        logger.info(f"  📄 {filepath}")
                 elif 1 <= choice <= len(tables):
                     table_name = tables[choice - 1]
                     logger.info(f"🚀 Экспортируем таблицу '{table_name}'")
-                    filepath = export_table_to_csv(table_name, args.output, args.encoding)
+                    filepath = export_table_to_csv(table_name)
                     logger.info(f"✅ Экспорт завершен! Файл: {filepath}")
                 else:
                     logger.error("Неверный выбор")
@@ -185,5 +178,16 @@ def main():
         raise
 
 
+def export_table_to_csv_cli():
+    """CLI функция для запуска с аргументами командной строки."""
+    import argparse
+
+    parser = argparse.ArgumentParser(description='Экспорт таблиц из БД в CSV')
+    parser.add_argument('--all', '-a', action='store_true', help='Экспортировать все таблицы (тихий режим)')
+
+    args = parser.parse_args()
+    export_table_to_csv_with_options(all_tables=args.all)
+
+
 if __name__ == "__main__":
-    main()
+    export_table_to_csv_cli()
