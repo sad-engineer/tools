@@ -16,20 +16,19 @@ Cкрипт инициализации базы данных tools.
 import logging
 import sys
 
-import psycopg2
-
 from tools.app.config import get_settings
 from tools.app.db.checks import check_connection, check_database_exists_via_postgres, check_tables_exist_detailed
 from tools.app.db.create_database import create_database
-from tools.app.db.loaders.load_all_geometry import load_all_geometry
-from tools.app.db.loaders.load_main_data import load_main_data
+from tools.app.db.loaders import load_all_geometry, load_main_data
 from tools.app.db.session_manager import get_session
-from tools.app.models.geometry_countersinking_cutter import GeometryCountersinkingCutter
-from tools.app.models.geometry_deployment_cutter import GeometryDeploymentCutter
-from tools.app.models.geometry_drilling_cutter import GeometryDrillingCutter
-from tools.app.models.geometry_milling_cutters import GeometryMillingCutters
-from tools.app.models.geometry_turning_cutters import GeometryTurningCutters
-from tools.app.models.tools import Tool
+from tools.app.models import (
+    GeometryCountersinkingCutter,
+    GeometryDeploymentCutter,
+    GeometryDrillingCutter,
+    GeometryMillingCutters,
+    GeometryTurningCutters,
+    Tool,
+)
 
 # Настройка логирования
 logging.basicConfig(level=logging.INFO)
@@ -38,14 +37,7 @@ logger = logging.getLogger(__name__)
 settings = get_settings()
 
 # Список необходимых таблиц
-REQUIRED_TABLES = [
-    'tools',
-    'geometry_milling_cutters',
-    'geometry_drilling_cutter',
-    'geometry_countersinking_cutter',
-    'geometry_deployment_cutter',
-    'geometry_turning_cutters',
-]
+REQUIRED_TABLES = settings.TABLE_NAMES
 
 
 def check_tables_have_data() -> bool:

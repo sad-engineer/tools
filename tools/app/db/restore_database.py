@@ -15,8 +15,6 @@ import argparse
 import logging
 from typing import List
 
-from sqlalchemy import inspect, text
-
 from tools.app.config import get_settings
 from tools.app.db.checks import check_database_exists, get_missing_tables
 from tools.app.db.clear_database import clear_database
@@ -26,7 +24,7 @@ from tools.app.db.loaders import (
     load_main_data,
 )
 from tools.app.db.session_manager import get_db, get_engine
-from tools.app.db.utils.confirm_actions import confirm_restore
+from tools.app.db.utils import confirm_restore
 from tools.app.models import (
     GeometryCountersinkingCutter,
     GeometryDeploymentCutter,
@@ -53,63 +51,7 @@ MODELS = [
 ]
 
 # Список имен таблиц
-TABLE_NAMES = [
-    "tools",
-    "geometry_countersinking_cutter",
-    "geometry_deployment_cutter",
-    "geometry_drilling_cutter",
-    "geometry_milling_cutters",
-    "geometry_turning_cutters",
-]
-
-
-def check_database_exists() -> bool:
-    """
-    Проверяет существование базы данных.
-
-    Returns:
-        bool: True если база данных существует, False в противном случае
-    """
-    try:
-        engine = get_engine()
-        with engine.connect() as conn:
-            result = conn.execute(text("SELECT 1"))
-            result.fetchone()
-        logger.info("✅ База данных доступна")
-        return True
-    except Exception as e:
-        logger.error(f"❌ База данных недоступна: {e}")
-        return False
-
-
-def check_tables_exist() -> List[str]:
-    """
-    Проверяет существование всех необходимых таблиц.
-
-    Returns:
-        List[str]: Список отсутствующих таблиц
-    """
-    missing_tables = []
-
-    try:
-        engine = get_engine()
-        inspector = inspect(engine)
-        existing_tables = inspector.get_table_names()
-
-        logger.info(f"Найдены таблицы: {existing_tables}")
-
-        for table_name in TABLE_NAMES:
-            if table_name not in existing_tables:
-                missing_tables.append(table_name)
-                logger.warning(f"❌ Таблица '{table_name}' отсутствует")
-            else:
-                logger.info(f"✅ Таблица '{table_name}' существует")
-
-        return missing_tables
-
-    except Exception as e:
-        logger.error(f"❌ Ошибка при проверке таблиц: {e}")
-        return TABLE_NAMES  # Возвращаем все таблицы как отсутствующие
+TABLE_NAMES = settings.TABLE_NAMES
 
 
 def create_missing_tables(missing_tables: List[str]) -> bool:

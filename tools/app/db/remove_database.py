@@ -22,9 +22,8 @@ from sqlalchemy import inspect, text
 from tools.app.config import get_settings
 from tools.app.db.checks import check_database_exists, check_tables_exist
 from tools.app.db.session_manager import get_db, get_engine
-from tools.app.db.utils.confirm_actions import confirm_removal
+from tools.app.db.utils import confirm_removal
 from tools.app.models import (
-    Base,
     GeometryCountersinkingCutter,
     GeometryDeploymentCutter,
     GeometryDrillingCutter,
@@ -50,66 +49,7 @@ MODELS = [
 ]
 
 # Список имен таблиц
-TABLE_NAMES = [
-    "tools",
-    "geometry_countersinking_cutter",
-    "geometry_deployment_cutter",
-    "geometry_drilling_cutter",
-    "geometry_milling_cutters",
-    "geometry_turning_cutters",
-]
-
-
-def check_database_exists() -> bool:
-    """
-    Проверяет существование базы данных.
-
-    Returns:
-        bool: True если база данных существует, False в противном случае
-    """
-    try:
-        engine = get_engine()
-        with engine.connect() as conn:
-            result = conn.execute(text("SELECT 1"))
-            result.fetchone()
-        logger.info("✅ База данных доступна")
-        return True
-    except Exception as e:
-        logger.error(f"❌ База данных недоступна: {e}")
-        return False
-
-
-def check_tables_exist(tables: List[str]) -> List[str]:
-    """
-    Проверяет существование всех необходимых таблиц.
-
-    Args:
-        tables (List[str]): Список имен таблиц
-
-    Returns:
-        List[str]: Список существующих таблиц
-    """
-    existing_tables = []
-
-    try:
-        engine = get_engine()
-        inspector = inspect(engine)
-        all_tables = inspector.get_table_names()
-
-        logger.info(f"Найдены таблицы: {all_tables}")
-
-        for table_name in tables:
-            if table_name in all_tables:
-                existing_tables.append(table_name)
-                logger.info(f"✅ Таблица '{table_name}' существует")
-            else:
-                logger.info(f"ℹ️ Таблица '{table_name}' отсутствует")
-
-        return existing_tables
-
-    except Exception as e:
-        logger.error(f"❌ Ошибка при проверке таблиц: {e}")
-        return []
+TABLE_NAMES = settings.TABLE_NAMES
 
 
 def clear_tables_data(existing_tables: List[str]) -> bool:

@@ -14,5 +14,7 @@ env.bak /
 .idea/
 dist/
 temp/
+logs
 logs/
-/!cutting_tools.rar
+settings
+settings/

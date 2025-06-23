@@ -8,8 +8,8 @@ from typing import Any, Dict, List
 import pandas as pd
 
 from tools.app.config import get_settings
-from tools.app.db.loaders.progress_bar import print_progress_bar
 from tools.app.db.session_manager import get_session
+from tools.app.db.utils import print_progress_bar
 from tools.app.models.tools import Tool
 
 # Настройка логирования

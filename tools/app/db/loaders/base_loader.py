@@ -21,8 +21,8 @@ from typing import Any, Dict, Optional, Type
 
 from sqlalchemy.orm import Session
 
-from tools.app.db.loaders.progress_bar import print_progress_bar
 from tools.app.db.session_manager import get_session
+from tools.app.db.utils import print_progress_bar
 from tools.app.models.tools import Tool
 
 # Настройка логирования

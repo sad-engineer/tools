@@ -2,10 +2,13 @@
 # -*- coding: utf-8 -*-
 # ---------------------------------------------------------------------------------------------------------------------
 import logging
+from typing import List
 
 import psycopg2
+from sqlalchemy import inspect, text
 
 from tools.app.config import get_settings
+from tools.app.db.session_manager import get_engine
 
 # Настройка логирования
 logging.basicConfig(level=logging.INFO)

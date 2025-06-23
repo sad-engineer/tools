@@ -14,12 +14,12 @@ import argparse
 import logging
 from typing import List
 
-from sqlalchemy import inspect, text
+from sqlalchemy import text
 
 from tools.app.config import get_settings
 from tools.app.db.checks import check_database_exists, check_tables_exist
-from tools.app.db.session_manager import get_db, get_engine
-from tools.app.db.utils.confirm_actions import confirm_clear
+from tools.app.db.session_manager import get_db
+from tools.app.db.utils import confirm_clear
 from tools.app.models import (
     GeometryCountersinkingCutter,
     GeometryDeploymentCutter,
@@ -46,14 +46,7 @@ MODELS = [
 ]
 
 # Список имен таблиц
-TABLE_NAMES = [
-    "tools",
-    "geometry_countersinking_cutter",
-    "geometry_deployment_cutter",
-    "geometry_drilling_cutter",
-    "geometry_milling_cutters",
-    "geometry_turning_cutters",
-]
+TABLE_NAMES = settings.TABLE_NAMES
 
 
 def clear_tables_data(existing_tables: List[str]) -> bool:

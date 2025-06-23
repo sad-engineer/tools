@@ -100,6 +100,16 @@ except Exception as e:
     raise
 
 
+TABLE_NAMES: list = [
+    "tools",
+    "geometry_countersinking_cutter",
+    "geometry_deployment_cutter",
+    "geometry_drilling_cutter",
+    "geometry_milling_cutters",
+    "geometry_turning_cutters",
+]
+
+
 class Settings(BaseSettings):
     """Основные настройки приложения.
 
@@ -115,6 +125,7 @@ class Settings(BaseSettings):
     APP_NAME : (str) : название приложения.
     DEBUG : (bool) : режим отладки.
     API_V1_STR : (str) : префикс API версии 1.
+    TABLE_NAMES : (list) : список названий таблиц в базе данных.
 
     Properties:
     DATABASE_URL : (str) : полный URL для подключения к базе данных.
@@ -134,6 +145,9 @@ class Settings(BaseSettings):
     APP_NAME: str
     DEBUG: bool
     API_V1_STR: str
+
+    # Список таблиц
+    TABLE_NAMES: list = TABLE_NAMES
 
     class Config:
         env_file = str(TEST_ENV if TEST_ENV and Path(TEST_ENV).exists() else ENV_FILE)
@@ -218,6 +232,7 @@ if __name__ == "__main__":
         print(f"📱 Приложение: {settings.APP_NAME}")
         print(f"🐛 Режим отладки: {settings.DEBUG}")
         print(f"🔗 API версия: {settings.API_V1_STR}")
+        print(f"📋 Список таблиц: {settings.TABLE_NAMES}")
 
         # Тестируем метод to_dict
         settings_dict = settings.to_dict()
