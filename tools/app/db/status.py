@@ -39,14 +39,9 @@ def get_status():
     try:
         # Проверяем доступность базы данных
         if check_database_exists():
-            logger.info("✅ База данных доступна")
-
             # Показываем таблицы
             existing_tables = check_tables_exist(TABLE_NAMES)
             logger.info(f"📋 Найдено таблиц: {len(existing_tables)}")
-
-            for table in existing_tables:
-                logger.info(f"  ✅ {table}")
 
             missing_tables = [table for table in TABLE_NAMES if table not in existing_tables]
             if missing_tables:
@@ -54,7 +49,7 @@ def get_status():
                 for table in missing_tables:
                     logger.info(f"  ❌ {table}")
         else:
-            logger.info("❌ База данных недоступна")
+            logger.info("❌ База данных отсутствует или недоступна")
 
     except Exception as e:
         logger.error(f"❌ Ошибка при проверке статуса: {e}")

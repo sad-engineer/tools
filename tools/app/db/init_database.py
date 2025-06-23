@@ -20,8 +20,9 @@ from tools.app.config import get_settings
 from tools.app.db.checks import check_connection, check_database_exists_via_postgres, check_tables_exist_detailed
 from tools.app.db.create_database import create_database
 from tools.app.db.loaders import load_all_geometry, load_main_data
-from tools.app.db.session_manager import get_session
+from tools.app.db.session_manager import get_engine, get_session
 from tools.app.models import (
+    Base,
     GeometryCountersinkingCutter,
     GeometryDeploymentCutter,
     GeometryDrillingCutter,
@@ -81,10 +82,6 @@ def create_tables():
     """Создает все необходимые таблицы"""
     try:
         logger.info("Создаю таблицы...")
-
-        # Импортируем Base и все модели для создания таблиц
-        from tools.app.db.session_manager import get_engine
-        from tools.app.models import Base
 
         engine = get_engine()
         Base.metadata.create_all(engine)
@@ -152,7 +149,7 @@ def init_database():
             logger.error("❌ Не удалось загрузить данные")
             return False
     else:
-        logger.info("✅ База данных уже содержит данные, инициализация не требуется")
+        logger.info("✅ Инициализация не требуется")
 
     logger.info("🎉 Инициализация базы данных завершена успешно!")
     return True
@@ -161,10 +158,7 @@ def init_database():
 if __name__ == "__main__":
     try:
         success = init_database()
-        if success:
-            logger.info("✅ Инициализация завершена успешно")
-            sys.exit(0)
-        else:
+        if not success:
             logger.error("❌ Инициализация завершена с ошибками")
             sys.exit(1)
     except KeyboardInterrupt:

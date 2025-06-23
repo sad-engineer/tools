@@ -102,15 +102,7 @@ def restore_database() -> bool:
             logger.error("❌ Не удалось создать базу данных")
             return False
 
-    # Шаг 2: Проверяем существование таблиц
-    missing_tables = get_missing_tables(TABLE_NAMES)
-
-    # Шаг 3: Создаем отсутствующие таблицы
-    if not create_missing_tables(missing_tables):
-        logger.error("❌ Не удалось создать отсутствующие таблицы")
-        return False
-
-    # Шаг 4: Очищаем существующие данные
+    # Шаг 2: Очищаем существующие данные
     logger.info("Очищаем существующие данные...")
     try:
         clear_database()
@@ -119,7 +111,7 @@ def restore_database() -> bool:
         logger.error(f"❌ Ошибка при очистке данных: {e}")
         return False
 
-    # Шаг 5: Загружаем данные
+    # Шаг 3: Загружаем данные
     logger.info("Загружаем данные...")
     try:
         # Загружаем основные данные

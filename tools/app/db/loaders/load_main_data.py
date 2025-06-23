@@ -58,7 +58,7 @@ def load_csv_data(csv_file_path: str = None) -> List[Dict[str, Any]]:
 
         # Читаем CSV файл
         logger.info(f"Загружаем данные из {csv_file_path}")
-        df = pd.read_csv(csv_file_path, encoding=encoding)
+        df = pd.read_csv(csv_file_path, encoding=encoding, low_memory=False)
 
         logger.info(f"Загружено {len(df)} записей")
 

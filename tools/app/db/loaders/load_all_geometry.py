@@ -100,13 +100,13 @@ def load_all_geometry():
         results = load_all_geometry_data()
 
         # Выводим итоговую статистику
-        logger.info("\n📊 ИТОГОВАЯ СТАТИСТИКА:")
+        logger.info("📊 ИТОГОВАЯ СТАТИСТИКА:")
         total_loaded = 0
         for tool_type, count in results.items():
             logger.info(f"  {tool_type}: {count} записей")
             total_loaded += count
 
-        logger.info(f"\n✅ Загрузка завершена! Всего загружено: {total_loaded} записей")
+        logger.info(f"✅ Загрузка завершена! Всего загружено: {total_loaded} записей")
 
     except Exception as e:
         logger.error(f"❌ Критическая ошибка: {e}")

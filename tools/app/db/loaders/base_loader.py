@@ -15,6 +15,7 @@
 
 import csv
 import logging
+import time
 from abc import ABC
 from pathlib import Path
 from typing import Any, Dict, Optional, Type
@@ -201,6 +202,7 @@ class BaseGeometryLoader(ABC):
             total_rows = sum(1 for _ in file) - 1  # Вычитаем заголовок
 
         logger.info(f"Всего строк в файле: {total_rows}")
+        time.sleep(0.0005)  # Небольшая задержка для синхронизации вывода
 
         with open(csv_path, 'r', encoding='utf-8') as file:
             reader = csv.DictReader(file)
@@ -213,16 +215,19 @@ class BaseGeometryLoader(ABC):
 
                 # Показываем прогресс-бар каждые 50 записей или на последней записи
                 if row_num % 50 == 0 or row_num == total_rows + 1:
+                    time.sleep(0.0005)  # Задержка перед прогресс-баром
                     print_progress_bar(
                         current=row_num - 1,  # Вычитаем 1, так как начинаем с 2
                         total=total_rows,
                         prefix=f"Загрузка {self.tool_type}",
                         suffix=f"(загружено: {loaded_count}, пропущено: {skipped_count})",
                     )
+                    time.sleep(0.0005)  # Задержка после прогресс-бара
 
         # Сохраняем все изменения
         try:
             session.commit()
+            time.sleep(0.0005)  # Задержка перед финальным логом
             logger.info(f"Загрузка завершена. Загружено: {loaded_count}, Пропущено: {skipped_count}")
         except Exception as e:
             logger.error(f"Ошибка при сохранении данных: {e}")
@@ -248,9 +253,7 @@ class BaseGeometryLoader(ABC):
 
         try:
             with get_session() as session:
-                loaded_count = self.load_from_csv(csv_file_path, session)
-                print(f"✅ Успешно загружено {loaded_count} записей {self.tool_type}")
-                return loaded_count
+                return self.load_from_csv(csv_file_path, session)
 
         except Exception as e:
             logger.error(f"Ошибка при загрузке данных: {e}")
