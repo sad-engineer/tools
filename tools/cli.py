@@ -142,7 +142,7 @@ def show():
 @tool.command()
 @click.option('--all', '-a', is_flag=True, help='Экспорт всех таблиц (тихий режим)')
 @click.help_option('-h', '--help')
-def export(all):
+def export(all_tables):
     """
     Экспортирует данные из базы данных в CSV файлы.
 
@@ -150,7 +150,7 @@ def export(all):
       tool export                           # Интерактивный экспорт (по умолчанию)
       tool export --all                     # Экспорт всех таблиц (тихий режим)
     """
-    export_table_to_csv_with_options(all_tables=all)
+    export_table_to_csv_with_options(all_tables=all_tables)
 
 
 if __name__ == "__main__":

@@ -19,6 +19,7 @@ click = "^8.1.7"
 chardet = "^5.2.0"
 pandas = "^2.2.3"
 tolerance = {git = "https://github.com/sad-engineer/tolerance.git"}
+sqlalchemy2-stubs = "^0.0.2a38"
 
 [build-system]
 requires = ["poetry-core"]
