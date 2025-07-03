@@ -1,6 +1,9 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # ---------------------------------------------------------------------------------------------------------------------
+""" 
+Перечисления для работы с данными.
+"""
 from tolerance import AccuracyStandards, Tolerance, ToleranceFields
 
 from tools.app.enumerations.accuracy_class_standards import AccuracyClassStandards

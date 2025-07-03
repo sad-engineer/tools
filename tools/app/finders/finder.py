@@ -13,11 +13,15 @@ from tools.app.formatters import (
     ListFormatter,
     ToolFormatter,
 )
+from tools.app.factories.mapper import MapperFactory
+from tools.app.factories import default_strategy_factory
 
 
 class ToolFinder:
     """
     Класс для поиска инструментов по различным критериям.
+    
+    Использует стратегии поиска для выполнения различных типов запросов.
     """
 
     def __init__(
@@ -25,6 +29,8 @@ class ToolFinder:
         session: Optional[Session] = None,
         limit: Optional[int] = None,
         formatter: Optional[ToolFormatter] = None,
+        mapper_factory: Optional[MapperFactory] = None,
+        strategy_factory=None,
     ):
         """
         Инициализация поисковика.
@@ -33,11 +39,15 @@ class ToolFinder:
             session (Session, optional): Сессия БД. Если не указана, будет создана новая.
             limit (int, optional): Глобальный лимит для всех запросов
             formatter (ToolFormatter, optional): Форматтер для результатов. По умолчанию ListFormatter
+            mapper_factory (MapperFactory, optional): Фабрика мапперов. Если не указана, используется дефолтная
+            strategy_factory: Фабрика стратегий (по умолчанию используется default_strategy_factory)
         """
         self.session: Session = session or get_session()
         self._builder: QueryBuilder = QueryBuilder(self.session)
         self._global_limit: int = limit
         self._formatter: ToolFormatter = formatter or ListFormatter()
+        self._mapper_factory: MapperFactory = mapper_factory or MapperFactory()
+        self._strategy_factory = strategy_factory or default_strategy_factory
 
         if self._global_limit:
             self._builder.limit(self._global_limit)
@@ -100,6 +110,91 @@ class ToolFinder:
         self._formatter = formatter
         return self
 
+    def set_mapper_factory(self, mapper_factory: MapperFactory) -> "ToolFinder":
+        """
+        Устанавливает фабрику мапперов.
+
+        Args:
+            mapper_factory (MapperFactory): Новая фабрика мапперов
+
+        Returns:
+            ToolFinder: self для цепочки вызовов
+        """
+        self._mapper_factory = mapper_factory
+        return self
+
+    def get_mapper_factory(self) -> MapperFactory:
+        """
+        Возвращает текущую фабрику мапперов.
+
+        Returns:
+            MapperFactory: Текущая фабрика мапперов
+        """
+        return self._mapper_factory
+
+    def register_mapper(self, tool_type: str, mapper) -> "ToolFinder":
+        """
+        Регистрирует новый маппер в текущей фабрике.
+
+        Args:
+            tool_type (str): Тип инструмента для маппера
+            mapper: Маппер для регистрации
+
+        Returns:
+            ToolFinder: self для цепочки вызовов
+        """
+        self._mapper_factory.register(tool_type, mapper)
+        return self
+
+    def set_mapper(self, tool_type: str, mapper) -> "ToolFinder":
+        """
+        Заменяет существующий маппер на новый для указанного типа инструмента.
+
+        Args:
+            tool_type (str): Тип инструмента
+            mapper: Новый маппер для замены
+
+        Returns:
+            ToolFinder: self для цепочки вызовов
+        """
+        self._mapper_factory.register(tool_type, mapper)
+        return self
+
+    def find(self, strategy: str, limit: Optional[int] = None, **kwargs) -> List[Any]:
+        """
+        Универсальный метод поиска с использованием стратегий.
+        
+        Args:
+            strategy (str): Имя стратегии поиска
+            limit (Optional[int]): Ограничение количества результатов
+            **kwargs: Параметры для стратегии поиска
+            
+        Returns:
+            List[Any]: Результаты поиска
+            
+        Raises:
+            ValueError: Если стратегия не найдена
+        """
+        # Получаем стратегию из фабрики
+        search_strategy = self._strategy_factory.create(strategy)
+        if not search_strategy:
+            available_strategies = self._strategy_factory.get_names()
+            raise ValueError(f"Стратегия '{strategy}' не найдена. Доступные стратегии: {available_strategies}")
+        
+        # Создаем новый QueryBuilder для этого запроса
+        query_builder = QueryBuilder(self.session)
+        
+        # Применяем лимит
+        actual_limit = limit if limit is not None else self._global_limit
+        if actual_limit is not None:
+            query_builder.limit(actual_limit)
+        
+        # Выполняем поиск с помощью стратегии
+        tools = search_strategy.execute(query_builder, **kwargs)
+        
+        # Форматируем результаты
+        return self._formatter.format(tools, self._mapper_factory)
+
     def find_by_id(self, tool_id: Union[int, List[int]], limit: int = None) -> List[Any]:
         """Получение инструментов по ID
 
@@ -107,14 +202,7 @@ class ToolFinder:
             tool_id (Union[int, List[int]]): ID инструмента или список ID
             limit (int, optional): Ограничение количества результатов
         """
-        builder = self._builder.filter_by_id(tool_id)
-
-        if limit:
-            builder = builder.limit(limit)
-
-        tools = builder.execute()
-        self.reset_builder()
-        return self._formatter.format(tools)
+        return self.find(strategy="by_id", tool_id=tool_id, limit=limit)
 
     def find_by_marking(
         self, marking: str, case_sensitive: bool = False, exact_match: bool = True, limit: int = None
@@ -127,16 +215,13 @@ class ToolFinder:
             exact_match (bool, optional): Точное совпадение. По умолчанию True
             limit (int, optional): Ограничение количества результатов
         """
-        builder = self._builder.filter_by_marking(
-            marking=marking, case_sensitive=case_sensitive, exact_match=exact_match
+        return self.find(
+            strategy="by_marking", 
+            marking=marking, 
+            case_sensitive=case_sensitive, 
+            exact_match=exact_match, 
+            limit=limit
         )
-
-        if limit:
-            builder = builder.limit(limit)
-
-        tools = builder.execute()
-        self.reset_builder()
-        return self._formatter.format(tools)
 
     def find_by_group(self, group: Union[str, List[str]], limit: int = None) -> List[Any]:
         """Получение инструментов по группе
@@ -145,14 +230,7 @@ class ToolFinder:
             group (Union[str, List[str]]): Группа инструмента или список групп
             limit (int, optional): Ограничение количества результатов
         """
-        builder = self._builder.filter_by_group(group)
-
-        if limit:
-            builder = builder.limit(limit)
-
-        tools = builder.execute()
-        self.reset_builder()
-        return self._formatter.format(tools)
+        return self.find(strategy="by_group", group=group, limit=limit)
 
     def find_by_standard(self, standard: Union[str, List[str]], limit: int = None) -> List[Any]:
         """Получение инструментов по стандарту
@@ -161,14 +239,7 @@ class ToolFinder:
             standard (Union[str, List[str]]): Стандарт или список стандартов
             limit (int, optional): Ограничение количества результатов
         """
-        builder = self._builder.filter_by_standard(standard)
-
-        if limit:
-            builder = builder.limit(limit)
-
-        tools = builder.execute()
-        self.reset_builder()
-        return self._formatter.format(tools)
+        return self.find(strategy="by_standard", standard=standard, limit=limit)
 
     def find_by_marking_and_group(
         self,
@@ -187,29 +258,25 @@ class ToolFinder:
             exact_match (bool, optional): Точное совпадение. По умолчанию True
             limit (int, optional): Ограничение количества результатов
         """
-        builder = self._builder.filter_by_marking(
-            marking=marking, case_sensitive=case_sensitive, exact_match=exact_match
-        ).filter_by_group(group)
-
-        if limit:
-            builder = builder.limit(limit)
-
-        tools = builder.execute()
-        self.reset_builder()
-        return self._formatter.format(tools)
+        return self.find(
+            strategy="by_marking_and_group",
+            marking=marking,
+            group=group,
+            case_sensitive=case_sensitive,
+            exact_match=exact_match,
+            limit=limit
+        )
 
     def find_by_group_and_standard(
         self, group: Union[str, List[str]], standard: Union[str, List[str]], limit: int = None
     ) -> List[Any]:
         """Поиск инструментов по группе и стандарту"""
-        builder = self._builder.filter_by_group(group).filter_by_standard(standard)
-
-        if limit:
-            builder = builder.limit(limit)
-
-        tools = builder.execute()
-        self.reset_builder()
-        return self._formatter.format(tools)
+        return self.find(
+            strategy="by_group_and_standard",
+            group=group,
+            standard=standard,
+            limit=limit
+        )
 
     def find_all(self, limit: int = None) -> List[Any]:
         """Получение всех инструментов
@@ -217,14 +284,7 @@ class ToolFinder:
         Args:
             limit (int, optional): Ограничение количества результатов
         """
-        builder = self._builder
-
-        if limit:
-            builder = builder.limit(limit)
-
-        tools = builder.execute()
-        self.reset_builder()
-        return self._formatter.format(tools)
+        return self.find(strategy="all", limit=limit)
 
     def reset_builder(self):
         """Сброс всех параметров поиска"""
@@ -232,12 +292,74 @@ class ToolFinder:
         if self._global_limit:
             self._builder.limit(self._global_limit)
 
+    def get_available_strategies(self) -> list[str]:
+        """
+        Возвращает список доступных стратегий поиска.
+        
+        Returns:
+            list[str]: Список имен стратегий
+        """
+        return self._strategy_factory.get_names()
+
+    def add_strategy(self, name: str, strategy) -> "ToolFinder":
+        """
+        Добавляет новую стратегию поиска.
+        
+        Args:
+            name (str): Имя стратегии
+            strategy: Экземпляр стратегии
+            
+        Returns:
+            ToolFinder: self для цепочки вызовов
+        """
+        self._strategy_factory.register(name, strategy)
+        return self
+
+    def remove_strategy(self, name: str) -> "ToolFinder":
+        """
+        Удаляет стратегию поиска.
+        
+        Args:
+            name (str): Имя стратегии
+            
+        Returns:
+            ToolFinder: self для цепочки вызовов
+        """
+        self._strategy_factory.unregister(name)
+        return self
+
 
 # Пример использования:
 if __name__ == "__main__":
     # Использование как контекстный менеджер
     with ToolFinder(limit=5) as finder:  # Устанавливаем глобальный лимит
-        # Получение инструментов в виде списка схем (по умолчанию)
+        print(f"Доступные стратегии: {finder.get_available_strategies()}")
+        
+        # Использование универсального метода find()
+        print("\n=== Использование универсального метода find() ===")
+        
+        # Поиск по ID
+        tools_by_id = finder.find(strategy="by_id", tool_id=[1, 2, 3])
+        print(f"Инструменты по ID [1, 2, 3]: {len(tools_by_id)} найдено")
+        
+        # Поиск по обозначению
+        tools_by_marking = finder.find(
+            strategy="by_marking", 
+            marking="2100", 
+            exact_match=False
+        )
+        print(f"Инструменты с '2100' в обозначении: {len(tools_by_marking)} найдено")
+        
+        # Поиск по группе
+        tools_by_group = finder.find(strategy="by_group", group=["Фреза", "Сверло"])
+        print(f"Инструменты групп Фреза/Сверло: {len(tools_by_group)} найдено")
+        
+        # Поиск всех инструментов
+        all_tools = finder.find(strategy="all")
+        print(f"Все инструменты: {len(all_tools)} найдено")
+        
+        # Использование традиционных методов (работают через find())
+        print("\n=== Использование традиционных методов ===")
         tools_by_group = finder.find_by_group(["Фреза", "Сверло"])
         print("Инструменты группы Фреза и Сверло:")
         for tool_schema in tools_by_group:

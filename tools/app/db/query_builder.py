@@ -32,80 +32,28 @@ class QueryBuilder:
         self._offset = None
         return self
 
-    def filter_by_id(self, tool_id: Union[int, List[int]]) -> "QueryBuilder":
-        """Фильтр по ID инструмента
+    def add_filter(self, filter_condition) -> "QueryBuilder":
+        """Добавляет фильтр к запросу
 
         Args:
-            tool_id (Union[int, List[int]]): Одно значение ID или список значений ID
+            filter_condition: Условие фильтрации (например, Tool.id == 1)
+
+        Returns:
+            QueryBuilder: self для цепочки вызовов
         """
-        if isinstance(tool_id, list):
-            self._filters.append(Tool.id.in_(tool_id))
-        else:
-            self._filters.append(Tool.id == tool_id)
+        self._filters.append(filter_condition)
         return self
 
-    def filter_by_marking(
-        self, marking: str, case_sensitive: bool = False, exact_match: bool = False
-    ) -> "QueryBuilder":
-        """Фильтр по обозначению инструмента
+    def add_filters(self, filter_conditions: List) -> "QueryBuilder":
+        """Добавляет несколько фильтров к запросу
 
         Args:
-            marking (str): Обозначение инструмента для поиска
-            case_sensitive (bool, optional): Учитывать регистр. По умолчанию False
-            exact_match (bool, optional): Точное совпадение. По умолчанию False
+            filter_conditions (List): Список условий фильтрации
+
+        Returns:
+            QueryBuilder: self для цепочки вызовов
         """
-        if exact_match:
-            if case_sensitive:
-                self._filters.append(Tool.marking == marking)
-            else:
-                self._filters.append(Tool.marking.ilike(marking))
-        else:
-            if case_sensitive:
-                self._filters.append(Tool.marking.contains(marking))
-            else:
-                self._filters.append(Tool.marking.ilike(f"%{marking}%"))
-        return self
-
-    def filter_by_group(self, group: Union[str, List[str]], case_sensitive: bool = False) -> "QueryBuilder":
-        """Фильтр по группе инструмента
-
-        Args:
-            group (Union[str, List[str]]): Одно значение группы или список значений групп
-            case_sensitive (bool, optional): Учитывать регистр. По умолчанию False
-        """
-        if isinstance(group, list):
-            if case_sensitive:
-                self._filters.append(Tool.group.in_(group))
-            else:
-                # Для регистронезависимого поиска в списке
-                group_filters = [Tool.group.ilike(g) for g in group]
-                self._filters.append(or_(*group_filters))
-        else:
-            if case_sensitive:
-                self._filters.append(Tool.group == group)
-            else:
-                self._filters.append(Tool.group.ilike(group))
-        return self
-
-    def filter_by_standard(self, standard: Union[str, List[str]], case_sensitive: bool = False) -> "QueryBuilder":
-        """Фильтр по стандарту
-
-        Args:
-            standard (Union[str, List[str]]): Одно значение стандарта или список значений стандартов
-            case_sensitive (bool, optional): Учитывать регистр. По умолчанию False
-        """
-        if isinstance(standard, list):
-            if case_sensitive:
-                self._filters.append(Tool.standard.in_(standard))
-            else:
-                # Для регистронезависимого поиска в списке
-                standard_filters = [Tool.standard.ilike(s) for s in standard]
-                self._filters.append(or_(*standard_filters))
-        else:
-            if case_sensitive:
-                self._filters.append(Tool.standard == standard)
-            else:
-                self._filters.append(Tool.standard.ilike(standard))
+        self._filters.extend(filter_conditions)
         return self
 
     def limit(self, limit: int) -> "QueryBuilder":
@@ -247,48 +195,3 @@ class QueryBuilder:
         """
         query = self.build()
         return str(query.compile(compile_kwargs={"literal_binds": True}))
-
-
-# Пример использования:
-if __name__ == "__main__":
-    from tools.app.db.session_manager import get_session
-
-    with get_session() as session:
-        try:
-            # Создаем построитель запросов
-            builder = QueryBuilder(session)
-
-            # Сначала найдем инструмент с обозначением "2100-0001" без фильтра по группе
-            print("=== Поиск инструмента с обозначением '2100-0001' ===")
-            tools_by_marking = builder.reset_builder().filter_by_marking("2100-0001", exact_match=True).execute()
-            print(f"Найдено инструментов по обозначению: {len(tools_by_marking)}")
-            for tool in tools_by_marking:
-                print(f"ID: {tool.id}, Обозначение: {tool.marking}, Группа: {tool.group}")
-
-            # Теперь проверим комбинированный запрос
-            print("\n=== Комбинированный запрос ===")
-            tools = (
-                builder.reset_builder()
-                .filter_by_group(["Резец", "Сверло"])
-                .filter_by_marking("2100", exact_match=False)
-                .limit(10)
-                .execute()
-            )
-            print(f"Найдено инструментов в комбинированном запросе: {len(tools)}")
-
-            # Выведем SQL запрос для отладки
-            print(f"\nSQL запрос:")
-            print(
-                builder.reset_builder()
-                .filter_by_group(["Фреза", "Сверло"])
-                .filter_by_marking("2100-0001", exact_match=True)
-                .debug_query()
-            )
-
-            # Получение уникальных значений
-            unique_groups = builder.reset_builder().get_unique_values("group")
-            print("\nУникальные группы:", unique_groups)
-
-        except Exception as e:
-            print(f"Ошибка: {e}")
-            session.rollback()
